@@ -1,0 +1,17 @@
+{
+  "name": "logam-mulia-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.1",
+    "playwright-aws-lambda": "^0.9.0",
+    "playwright-core": "^1.25.2"
+  },
+  "devDependencies": {
+    "playwright": "^1.25.2"
+  }
+}
