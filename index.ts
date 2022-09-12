@@ -1,9 +1,16 @@
-const express = require('express');
+// const express = require('express');
+import express, { Express, Request, Response } from "express";
+import dotenv from "dotenv";
 
-let playwright;
+dotenv.config();
 
-const app = express();
+// let playwright;
+
+const app: Express = express();
+const port = 3000;
+
 const AWS_LAMBDA_FUNCTION = (process.env.AWS_LAMBDA_FUNCTION == "true") || false;
+
 
 app.get("/", (req, res) => {
     res.json({
@@ -41,6 +48,7 @@ app.get("/prices", (req, res) => {
 });
 
 async function scrape() {
+    let scraper;
     let browser;
     let engine;
     let context;
@@ -48,7 +56,7 @@ async function scrape() {
     try {
 
         if (!AWS_LAMBDA_FUNCTION) {
-            playwright = require('playwright');
+            const playwright = require('playwright');
 
             engine = "playwright";
 
@@ -57,7 +65,7 @@ async function scrape() {
             });
 
         } else {
-            playwright = require('playwright-aws-lambda');
+            const playwright = require('playwright-aws-lambda');
             engine = "playwright-aws-lambda";
             browser = await playwright.launchChromium();
         }
@@ -68,7 +76,7 @@ async function scrape() {
 
         const page = await context.newPage();
 
-        await page.route("**/*", route => {
+        await page.route("**/*", (route: any) => {
             const blockReq = ['image', 'script', 'stylesheet', 'font', 'other'];
             if (blockReq.includes(route.request().resourceType())) {
                 return route.abort();
@@ -84,9 +92,10 @@ async function scrape() {
 
         await page.goto('https://www.anekalogam.co.id/id');
 
-        let antam = {};
-        antam.sell = await page.$eval('body > div.grouped-section > section:nth-child(2) > div > div > div.grid-child.n-768-1per3.n-992-2per5 > div > div:nth-child(1) > div > p > span.tprice', e => parseFloat(e.innerText.trim().replace(".", "")));
-        antam.buy = await page.$eval('body > div.grouped-section > section:nth-child(2) > div > div > div.grid-child.n-768-1per3.n-992-2per5 > div > div:nth-child(2) > div > p > span.tprice', e => parseFloat(e.innerText.trim().replace(".", "")));
+        let antam : any= {};
+
+        antam.sell = await page.$eval('body > div.grouped-section > section:nth-child(2) > div > div > div.grid-child.n-768-1per3.n-992-2per5 > div > div:nth-child(1) > div > p > span.tprice', (e : any) => parseFloat(e.innerText.trim().replace(".", "")));
+        antam.buy = await page.$eval('body > div.grouped-section > section:nth-child(2) > div > div > div.grid-child.n-768-1per3.n-992-2per5 > div > div:nth-child(2) > div > p > span.tprice', (e: any) => parseFloat(e.innerText.trim().replace(".", "")));
 
         await browser.close();
 
@@ -101,4 +110,4 @@ async function scrape() {
     }
 }
 
-app.listen(3000, () => console.log(`http://localhost:3000`));
+app.listen(port, () => console.log(`http://localhost:${port}`));
