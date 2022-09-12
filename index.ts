@@ -1,10 +1,8 @@
-// const express = require('express');
-import express, { Express, Request, Response } from "express";
+import { appHandler } from './handlers/app.handler';
+import express, { Express } from "express";
 import dotenv from "dotenv";
 
 dotenv.config();
-
-// let playwright;
 
 const app: Express = express();
 const port = 3000;
@@ -12,46 +10,46 @@ const port = 3000;
 const AWS_LAMBDA_FUNCTION = (process.env.AWS_LAMBDA_FUNCTION == "true") || false;
 
 
-app.get("/", (req, res) => {
-    res.json({
-        message: 'welcome to logam mulia api',
-        data: {
-            requestId: new Date().getTime(),
-            awsLambdaFunction: AWS_LAMBDA_FUNCTION,
-            engine: AWS_LAMBDA_FUNCTION ? "playwright-aws-lambda" : "playwright"
-        },
-        meta: {
-            auth: {
-                state: false
-            },
-            availablePath: [
-                {
-                    "method": "get",
-                    "path": "prices",
-                    "params": {
-                        "site": "anekalogam|etc"
-                    },
-                },
-                {
-                    "method": "get",
-                    "path": "sites",
-                }
-            ]
-        }
-    });
-});
+app.get("/", appHandler.getHome);
 
 app.get("/prices", (req, res) => {
-    scrape().then((_content) => {
-        res.json(_content);
-    });
+    const avail = ['anekalogam'];
+    const site = req.query?.site;
+      if (avail.includes(`${site}`)) {
+        scrape(req.query).then((_content) => {
+          res.json(_content);
+        });
+    } else {
+          res.json({
+            data: null,
+            meta: {
+              message: site ? "site not in list" : "site cannot empty",
+            },
+          });
+      }
 });
 
-async function scrape() {
-    let scraper;
+async function scrape(query?:any) {
     let browser;
     let engine;
     let context;
+
+    const siteMap: any = {
+      anekalogam: {
+        url: "https://www.anekalogam.co.id/id",
+        selector: {
+          sell: "body > div.grouped-section > section:nth-child(2) > div > div > div.grid-child.n-768-1per3.n-992-2per5 > div > div:nth-child(2) > div > p > span.tprice",
+          buy: "body > div.grouped-section > section:nth-child(2) > div > div > div.grid-child.n-768-1per3.n-992-2per5 > div > div:nth-child(1) > div > p > span.tprice",
+        },
+      },
+      logammulia: {
+        url: "https://www.logammulia.com/id",
+        selector: {
+          sell: "body > section.index-hero > div.hero-price > div.child.child-2.has-bg.has-overlay.overlay-gold > div > p.price > span.current",
+          buy: null,
+        },
+      },
+    };
 
     try {
 
@@ -90,17 +88,42 @@ async function scrape() {
             }
         })
 
-        await page.goto('https://www.anekalogam.co.id/id');
+        await page.goto(siteMap[query?.site].url);
 
-        let antam : any= {};
+        let antam: any = {
+            sell: 0,
+            buy: 0,
+        };
 
-        antam.sell = await page.$eval('body > div.grouped-section > section:nth-child(2) > div > div > div.grid-child.n-768-1per3.n-992-2per5 > div > div:nth-child(1) > div > p > span.tprice', (e : any) => parseFloat(e.innerText.trim().replace(".", "")));
-        antam.buy = await page.$eval('body > div.grouped-section > section:nth-child(2) > div > div > div.grid-child.n-768-1per3.n-992-2per5 > div > div:nth-child(2) > div > p > span.tprice', (e: any) => parseFloat(e.innerText.trim().replace(".", "")));
+
+        if (siteMap[query?.site]?.selector?.sell) {
+          antam.sell = await page.$eval(
+            siteMap[query?.site].selector.sell,
+            (e: any) =>
+              e.innerText
+                .trim()
+                .replace(/[,.]00$/, "")
+                .replace(/([a-zA-Z\/\s|\.\,])*/g, "")
+          );
+        }
+
+        if (siteMap[query?.site]?.selector?.buy) {
+            antam.buy = await page.$eval(
+            siteMap[query?.site].selector.buy,
+            (e: any) => e.innerText.trim().replace(/\w/, "")
+            );
+        }
 
         await browser.close();
 
+        antam.sell = parseInt(antam.sell);
+        antam.buy = parseInt(antam.buy);
+
         console.log({ antam })
-        return { data: { antam }, meta: { engine, site: { name: "anekalogam", url: "https://www.anekalogam.co.id/id"} } };
+
+        const { url, name } = siteMap[query?.site];
+
+        return { data: { antam }, meta: { engine, site: {url, name}} };
     } catch (e) {
         if(browser != null) {
             await browser.close();
@@ -109,5 +132,5 @@ async function scrape() {
         return { data: null, meta: {engine} };
     }
 }
-
+// scrape({site:"logammulia"});
 app.listen(port, () => console.log(`http://localhost:${port}`));
