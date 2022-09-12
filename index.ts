@@ -13,7 +13,7 @@ const AWS_LAMBDA_FUNCTION = (process.env.AWS_LAMBDA_FUNCTION == "true") || false
 app.get("/", appHandler.getHome);
 
 app.get("/prices", (req, res) => {
-    const avail = ['anekalogam'];
+    const avail = ["anekalogam", "logammulia"];
     const site = req.query?.site;
       if (avail.includes(`${site}`)) {
         scrape(req.query).then((_content) => {
@@ -103,7 +103,7 @@ async function scrape(query?:any) {
               e.innerText
                 .trim()
                 .replace(/[,.]00$/, "")
-                .replace(/([a-zA-Z\/\s|\.\,])*/g, "")
+                .replace(/([a-zA-Z\/\s\.\,])*/g, "")
           );
         }
 
@@ -132,5 +132,5 @@ async function scrape(query?:any) {
         return { data: null, meta: {engine} };
     }
 }
-// scrape({site:"logammulia"});
+
 app.listen(port, () => console.log(`http://localhost:${port}`));
