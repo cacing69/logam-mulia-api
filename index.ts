@@ -75,29 +75,43 @@ async function scrape(query?:any) {
         const page = await context.newPage();
 
         await page.route("**/*", (route: any) => {
-            const blockReq = ['image', 'script', 'stylesheet', 'font', 'other'];
-            if (blockReq.includes(route.request().resourceType())) {
-                return route.abort();
+            // const blockReq = ['image', 'script', 'stylesheet', 'font', 'other'];
+            // if (blockReq.includes(route.request().resourceType())) {
+            if (
+              route
+                .request()
+                .resourceType()
+                .match(/^(image|script|stylesheet|font|other)/)
+            ) {
+              return route.abort();
             } else {
-                if (route.request().url().match(/https?:\/\/.*youtube.*/)) {
-                    return route.abort();
-                } else {
-                    console.log(route.request().resourceType(), route.request().url())
-                    return route.continue();
-                }
+              if (
+                route
+                  .request()
+                  .url()
+                  .match(/https?:\/\/.*youtube.*/)
+              ) {
+                return route.abort();
+              } else {
+                console.log(
+                  route.request().resourceType(),
+                  route.request().url()
+                );
+                return route.continue();
+              }
             }
         })
 
         await page.goto(siteMap[query?.site].url);
 
-        let antam: any = {
-            sell: 0,
-            buy: 0,
+        let rate: any = {
+          sell: 0,
+          buy: 0,
+          type: 'antam'
         };
 
-
         if (siteMap[query?.site]?.selector?.sell) {
-          antam.sell = await page.$eval(
+          rate.sell = await page.$eval(
             siteMap[query?.site].selector.sell,
             (e: any) =>
               e.innerText
@@ -108,28 +122,30 @@ async function scrape(query?:any) {
         }
 
         if (siteMap[query?.site]?.selector?.buy) {
-            antam.buy = await page.$eval(
-            siteMap[query?.site].selector.buy,
-            (e: any) => e.innerText.trim().replace(/\w/, "")
+            rate.buy = await page.$eval(
+              siteMap[query?.site].selector.buy,
+              (e: any) => e.innerText.trim()
+                .replace(/[,.]00$/, "")
+                .replace(/([a-zA-Z\/\s\.\,])*/g, "")
             );
         }
 
         await browser.close();
 
-        antam.sell = parseInt(antam.sell);
-        antam.buy = parseInt(antam.buy);
+        rate.sell = parseInt(rate.sell);
+        rate.buy = parseInt(rate.buy);
 
-        console.log({ antam })
+        console.log({ rate });
 
         const { url, name } = siteMap[query?.site];
 
-        return { data: { antam }, meta: { engine, site: {url, name}} };
+        return { data: { rate }, meta: { engine, site: { url, name } } };
     } catch (e) {
         if(browser != null) {
             await browser.close();
         }
         console.error(e)
-        return { data: null, meta: {engine} };
+        return { data: null, meta: { engine, error: (e as any)?.message } };
     }
 }
 
