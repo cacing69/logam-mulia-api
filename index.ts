@@ -43,9 +43,9 @@ async function scrape(query?:any) {
         },
       },
       logammulia: {
-        url: "https://www.logammulia.com/id",
+        url: "https://www.logammulia.com/id/harga-emas-hari-ini",
         selector: {
-          sell: "body > section.index-hero > div.hero-price > div.child.child-2.has-bg.has-overlay.overlay-gold > div > p.price > span.current",
+          sell: "body > section.section-padding.n-no-padding-top > div > div:nth-child(3) > table:nth-child(3) > tbody > tr:nth-child(4) > td:nth-child(2)",
           buy: null,
         },
       },
