@@ -2,8 +2,6 @@ import { appHandler } from './handlers/app.handler';
 import express, { Express } from "express";
 import dotenv from "dotenv";
 
-dotenv.config();
-
 const app: Express = express();
 const port = 3000;
 
@@ -151,4 +149,22 @@ async function scrape(query?:any) {
     }
 }
 
-app.listen(port, () => console.log(`http://localhost:${port}`));
+dotenv.config();
+
+const mysql = require("mysql2");
+
+// create the connection to database
+const connection = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  database: "test",
+});
+
+app.use(express.json());
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
+
+app.listen(port, () => console.log(`app running on http://localhost:${port}`));
