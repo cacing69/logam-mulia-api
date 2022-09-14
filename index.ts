@@ -76,8 +76,6 @@ async function scrape(query?:any) {
         const page = await context.newPage();
 
         await page.route("**/*", (route: any) => {
-            // const blockReq = ['image', 'script', 'stylesheet', 'font', 'other'];
-            // if (blockReq.includes(route.request().resourceType())) {
             if (
               route
                 .request()
@@ -105,7 +103,8 @@ async function scrape(query?:any) {
 
       await page.goto(siteMap[query?.site].url);
 
-      body = await page.body();
+      await page.waitForLoadState("networkidle");
+      // body = await page.body();
 
         let rate: any = {
           sell: 0,
