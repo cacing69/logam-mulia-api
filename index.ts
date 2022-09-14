@@ -151,15 +151,6 @@ async function scrape(query?:any) {
 
 dotenv.config();
 
-const mysql = require("mysql2");
-
-// create the connection to database
-const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  database: "test",
-});
-
 app.use(express.json());
 app.use(
   express.urlencoded({
