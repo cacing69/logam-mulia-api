@@ -6,7 +6,7 @@
 1. [Aneka Logam](https://www.anekalogam.co.id/id)
 2. [Logam Mulia](https://www.logammulia.com/id)
 
-Jika ingin menambahkan beberapa website lain, mari kita berdiskusi, dipersilahkan untuk open issue dan berdiskusi disana.
+Jika ingin menambahkan beberapa website lain, dipersilahkan untuk open issue terkait kritik dan saran
 
 <p>Mengambil harga jual dan beli</p>
 GET https://logam-mulia-api.vercel.app/prices?site=siteName
@@ -31,5 +31,5 @@ contoh response
 `
 
 parameter site boleh diisi salah satu dari beberapa website yang tersedia
-1.anekalogam
-2.logammulia
+1.(anekalogam)[https://logam-mulia-api.vercel.app/prices?site=anekalogam]
+2.(logammulia)[https://logam-mulia-api.vercel.app/prices?site=logammulia]
