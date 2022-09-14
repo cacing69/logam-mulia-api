@@ -9,7 +9,7 @@
 Jika ingin menambahkan beberapa website lain, mari kita berdiskusi, dipersilahkan untuk open issue dan berdiskusi disana.
 
 <p>Mengambil harga jual dan beli</p>
-`https://logam-mulia-api.vercel.app/prices?site=siteName`
+GET https://logam-mulia-api.vercel.app/prices?site=siteName
 
 contoh response
 `
