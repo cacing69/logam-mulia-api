@@ -31,7 +31,7 @@ async function scrape(query?:any) {
     let browser;
     let engine;
     let context;
-    let body;
+    let html;
 
     const siteMap: any = {
       anekalogam: {
@@ -100,9 +100,8 @@ async function scrape(query?:any) {
         })
 
       await page.goto(siteMap[query?.site].url);
-
-      const request = await page.waitForLoadState("networkidle");
-      body = await request.body();
+      await page.waitForLoadState("networkidle");
+      html = await page.content();
 
         let rate: any = {
           sell: 0,
@@ -145,7 +144,10 @@ async function scrape(query?:any) {
             await browser.close();
         }
         console.error(e)
-        return { data: null, meta: { engine, error: (e as any)?.message , body } };
+        return {
+          data: null,
+          meta: { engine, error: (e as any)?.message, html },
+        };
     }
 }
 
@@ -157,5 +159,14 @@ app.use(
     extended: true,
   })
 );
+
+// app.use(bodyparser.urlencoded({ extended: true }));
+// app.use(express.json());
+// app.use(morgan("tiny"));
+// app.use("/author", author);
+// app.use("/registration", userRegistration);
+// app.get("/", (req, res) => {
+//   res.send("welcome");
+// });
 
 app.listen(port, () => console.log(`app running on http://localhost:${port}`));
