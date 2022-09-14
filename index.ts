@@ -101,8 +101,8 @@ async function scrape(query?:any) {
 
       await page.goto(siteMap[query?.site].url);
 
-      await page.waitForLoadState("networkidle");
-      // body = await page.body();
+      const request = await page.waitForLoadState("networkidle");
+      body = await request.body();
 
         let rate: any = {
           sell: 0,
