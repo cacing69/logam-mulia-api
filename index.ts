@@ -1,4 +1,4 @@
-import { appHandler } from './handlers/app.handler';
+// import { appHandler } from './handlers/app.handler';
 import express, { Express } from "express";
 import dotenv from "dotenv";
 
@@ -8,7 +8,9 @@ const port = 3000;
 const AWS_LAMBDA_FUNCTION = (process.env.AWS_LAMBDA_FUNCTION == "true") || false;
 
 
-app.get("/", appHandler.getHome);
+app.get("/", (req, res) => {
+  res.json({});
+});
 
 app.get("/prices", (req, res) => {
     const avail = ["anekalogam", "logammulia"];
