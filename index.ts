@@ -33,6 +33,7 @@ async function scrape(query?:any) {
     let browser;
     let engine;
     let context;
+    let body;
 
     const siteMap: any = {
       anekalogam: {
@@ -102,7 +103,9 @@ async function scrape(query?:any) {
             }
         })
 
-        await page.goto(siteMap[query?.site].url);
+      await page.goto(siteMap[query?.site].url);
+
+      body = await page.body();
 
         let rate: any = {
           sell: 0,
@@ -145,7 +148,7 @@ async function scrape(query?:any) {
             await browser.close();
         }
         console.error(e)
-        return { data: null, meta: { engine, error: (e as any)?.message } };
+        return { data: null, meta: { engine, error: (e as any)?.message , body } };
     }
 }
 
