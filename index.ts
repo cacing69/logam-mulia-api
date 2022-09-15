@@ -1,8 +1,6 @@
-import { appHandler } from './handlers/app.handler';
+// import { appHandler } from './handlers/app.handler';
 import express, { Express } from "express";
 import dotenv from "dotenv";
-
-dotenv.config();
 
 const app: Express = express();
 const port = 3000;
@@ -10,7 +8,9 @@ const port = 3000;
 const AWS_LAMBDA_FUNCTION = (process.env.AWS_LAMBDA_FUNCTION == "true") || false;
 
 
-app.get("/", appHandler.getHome);
+app.get("/", (req, res) => {
+  res.json({});
+});
 
 app.get("/prices", (req, res) => {
     const avail = ["anekalogam", "logammulia"];
@@ -33,6 +33,7 @@ async function scrape(query?:any) {
     let browser;
     let engine;
     let context;
+    let html;
 
     const siteMap: any = {
       anekalogam: {
@@ -65,7 +66,11 @@ async function scrape(query?:any) {
         } else {
             const playwright = require('playwright-aws-lambda');
             engine = "playwright-aws-lambda";
-            browser = await playwright.launchChromium();
+          browser = await playwright.launchChromium({
+            proxy: {
+              server: "65.21.141.242:10100",
+            },
+          });
         }
 
         context = await browser.newContext({
@@ -75,8 +80,6 @@ async function scrape(query?:any) {
         const page = await context.newPage();
 
         await page.route("**/*", (route: any) => {
-            // const blockReq = ['image', 'script', 'stylesheet', 'font', 'other'];
-            // if (blockReq.includes(route.request().resourceType())) {
             if (
               route
                 .request()
@@ -102,7 +105,9 @@ async function scrape(query?:any) {
             }
         })
 
-        await page.goto(siteMap[query?.site].url);
+      await page.goto(siteMap[query?.site].url);
+      await page.waitForLoadState("networkidle");
+      html = await page.content();
 
         let rate: any = {
           sell: 0,
@@ -145,8 +150,29 @@ async function scrape(query?:any) {
             await browser.close();
         }
         console.error(e)
-        return { data: null, meta: { engine, error: (e as any)?.message } };
+        return {
+          data: null,
+          meta: { engine, error: (e as any)?.message, html },
+        };
     }
 }
 
-app.listen(port, () => console.log(`http://localhost:${port}`));
+dotenv.config();
+
+app.use(express.json());
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
+
+// app.use(bodyparser.urlencoded({ extended: true }));
+// app.use(express.json());
+// app.use(morgan("tiny"));
+// app.use("/author", author);
+// app.use("/registration", userRegistration);
+// app.get("/", (req, res) => {
+//   res.send("welcome");
+// });
+
+app.listen(port, () => console.log(`app running on http://localhost:${port}`));
