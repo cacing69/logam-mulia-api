@@ -66,11 +66,7 @@ async function scrape(query?:any) {
         } else {
             const playwright = require('playwright-aws-lambda');
             engine = "playwright-aws-lambda";
-          browser = await playwright.launchChromium({
-            proxy: {
-              server: "65.21.141.242:10100",
-            },
-          });
+          browser = await playwright.launchChromium();
         }
 
         context = await browser.newContext({
