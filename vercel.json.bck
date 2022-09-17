@@ -1,10 +1,5 @@
 {
   "version": 2,
-  "buildCommand": "yarn build",
-  "devCommand": "yarn dev",
-  "installCommand": "yarn install",
-  "outputDirectory": "dist",
-  "name": "capeon-api",
   "builds": [
     {
       "src": "src/main.ts",
