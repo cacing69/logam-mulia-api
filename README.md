@@ -27,22 +27,19 @@ Jika ingin menambahkan beberapa website lain, dipersilahkan untuk open issue ter
 
 
 
-<p>Mengambil harga jual dan beli</p>
-
-GET https://logam-mulia-api.vercel.app/prices?site=siteName
-
-
-
 contoh response
 
 `
 
 {
-
-data: [],
-
-meta: {}
-
+  data: [
+    {
+      buy: 900000,
+      sel: 850000,
+      type: "antam",
+    }
+  ],
+  meta: {}
 }
 
 `
