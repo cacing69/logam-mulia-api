@@ -1,73 +1,66 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# Logam Mulia API
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+<p>Hobby only. Scraping beberapa website yang menyediakan informasi harga jual/beli logam mulia emas di Indonesia, dont worry to make pull request</p>
 
-## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Installation
+<pre>https://logam-mulia-api.vercel.app/</pre>
 
-```bash
-$ npm install
-```
+<h4>List website yang tersedia</h4>
 
-## Running the app
+- [Aneka Logam](https://www.anekalogam.co.id/id)
+- [Logam Mulia](https://www.logammulia.com/id)
+- [Harga Emas](https://harga-emas.org)
+- [Laku Emas](https://www.lakuemas.com/harga)
+- [Tokopedia](https://www.tokopedia.com/emas/harga-hari-ini/)
+- [Pegadaian](https://www.pegadaian.co.id/harga)
+- [Sakumas](https://sakumas.com/)
+- [Koin Works](https://koinworks.com/harga-emas-hari-ini/)
+- [Semar Nusantara](https://goldprice.semar.co.id/home/multi/smg_press/smg)
+- [Kurs Dolar](http://kurs.dollar.web.id/harga-emas-hari-ini.php)
+- [Cermati](https://www.cermati.com/artikel/harga-emas-hari-ini)
+- [Bank Syariah Indonesia](https://www.bankbsi.co.id/)
+- [Brankas](https://www.brankaslm.com/antam/index)
 
-```bash
-# development
-$ npm run start
+Jika ingin menambahkan beberapa website lain, dipersilahkan untuk open issue terkait kritik dan saran
 
-# watch mode
-$ npm run start:dev
 
-# production mode
-$ npm run start:prod
-```
 
-## Test
+<p>Mengambil harga jual dan beli</p>
 
-```bash
-# unit tests
-$ npm run test
+GET https://logam-mulia-api.vercel.app/prices?site=siteName
 
-# e2e tests
-$ npm run test:e2e
 
-# test coverage
-$ npm run test:cov
-```
 
-## Support
+contoh response
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+`
 
-## Stay in touch
+{
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+data: [],
 
-## License
+meta: {}
 
-Nest is [MIT licensed](LICENSE).
+}
+
+`
+
+
+
+parameter site boleh diisi salah satu dari beberapa website yang tersedia
+
+- [anekalogam](https://logam-mulia-api.vercel.app/prices/anekalogam)
+- [logammulia](https://logam-mulia-api.vercel.app/prices/logammulia)
+- [hargaemas](https://logam-mulia-api.vercel.app/prices/hargaemas)
+- [lakuemas](https://logam-mulia-api.vercel.app/prices/lakuemas)
+- [tokopedia](https://logam-mulia-api.vercel.app/prices/tokopedia)
+- [pegadaian](https://logam-mulia-api.vercel.app/prices/pegadaian)
+- [sakumas](https://logam-mulia-api.vercel.app/prices/sakumas)
+- [semar](https://logam-mulia-api.vercel.app/prices/semar)
+- [koinworks](https://logam-mulia-api.vercel.app/prices/koinworks)
+- [kursdolar](https://logam-mulia-api.vercel.app/prices/kursdolar)
+- [cermati](https://logam-mulia-api.vercel.app/prices/cermati)
+- [bsi](https://logam-mulia-api.vercel.app/prices/bsi)
+- [brankaslm](https://logam-mulia-api.vercel.app/prices/brankaslm)

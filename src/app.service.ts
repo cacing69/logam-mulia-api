@@ -25,7 +25,23 @@ export class AppService {
             method: 'get',
             path: 'prices/:site',
             params: {
-              site: '(anekalogam|logammulia|hargaemas)',
+              name: "site",
+              type: "string",
+              value: [
+                "anekalogam",
+                "logammulia",
+                "hargaemas",
+                "lakuemas",
+                "tokopedia",
+                "pegadaian",
+                "sakuemas",
+                "semar",
+                "koinwork",
+                "kursdolar",
+                "cermati",
+                "bsi",
+                "bankaslm",
+              ]
             },
           },
           {
