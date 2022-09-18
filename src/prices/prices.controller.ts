@@ -13,9 +13,7 @@ export class PricesController {
   @Get(':site')
   @Public()
   async getPrices(@Param() param: { site: string }) {
-    const data: any = await this.crawlerService.scrapeWithPlaywright(
-      param.site,
-    );
+    const data: any = await this.crawlerService.scrape(param.site);
     return data;
   }
 }

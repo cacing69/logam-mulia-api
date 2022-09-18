@@ -2,49 +2,59 @@ export const siteDefiner = {
   anekalogam: {
     url: "https://www.anekalogam.co.id/id",
     engine: "cheerio",
-    selector: {
-      sell: "body > div.grouped-section > section:nth-child(2) > div > div > div.grid-child.n-768-1per3.n-992-2per5 > div > div:nth-child(2) > div > p > span.tprice",
-      buy: "body > div.grouped-section > section:nth-child(2) > div > div > div.grid-child.n-768-1per3.n-992-2per5 > div > div:nth-child(1) > div > p > span.tprice",
-      type: "antam",
-    },
+    selector: [
+      {
+        sell: "body > div.grouped-section > section:nth-child(2) > div > div > div.grid-child.n-768-1per3.n-992-2per5 > div > div:nth-child(2) > div > p > span.tprice",
+        buy: "body > div.grouped-section > section:nth-child(2) > div > div > div.grid-child.n-768-1per3.n-992-2per5 > div > div:nth-child(1) > div > p > span.tprice",
+        type: "antam",
+      },
+    ],
   },
   logammulia: {
     url: "https://www.logammulia.com/id/harga-emas-hari-ini",
-    useProxy: true,
-    engine: "cheerio",
-    selector: {
-      type: "antam",
-      sell: "body > section.section-padding.n-no-padding-top > div > div:nth-child(3) > table:nth-child(3) > tbody > tr:nth-child(4) > td:nth-child(2)",
-      buy: null,
-    },
+    error: "blocked by cloudflare protection",
+    engine: "playwright",
+    selector: [
+      {
+        type: "antam",
+        sell: "body > section.section-padding.n-no-padding-top > div > div:nth-child(3) > table:nth-child(3) > tbody > tr:nth-child(4) > td:nth-child(2)",
+        buy: null,
+      },
+    ],
   },
   "hargaemas-org": {
     url: "https://harga-emas.org",
     engine: "cheerio",
-    selector: {
-      type: "antam",
-      sell: "#container > div:nth-child(2) > div > table > tbody > tr:nth-child(4) > td:nth-child(9)",
-      buy: "#container > div:nth-child(2) > div > table > tbody > tr:nth-child(4) > td:nth-child(10)",
-    },
+    selector: [
+      {
+        type: "antam",
+        sell: "#container > div:nth-child(2) > div > table > tbody > tr:nth-child(4) > td:nth-child(9)",
+        buy: "#container > div:nth-child(2) > div > table > tbody > tr:nth-child(4) > td:nth-child(10)",
+      },
+    ],
   },
   lakuemas: {
     url: "https://www.lakuemas.com/harga",
     engine: "cheerio",
-    selector: {
-      type: "antam",
-      sell: "#section1 > div > div > div > div > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div > h3 > strong",
-      buy: "#section1 > div > div > div > div > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div > h3 > strong",
-    },
+    selector: [
+      {
+        type: "antam",
+        sell: "#section1 > div > div > div > div > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div > h3 > strong",
+        buy: "#section1 > div > div > div > div > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div > h3 > strong",
+      },
+    ],
   },
   tokopedia: {
     url: "https://www.tokopedia.com/emas/harga-hari-ini/",
+    error: "request timeout",
     engine: "cheerio",
-    selector: {
-      type: "pegadaian",
-      //   sell: '#content > div > div > div.css-9tp5oi > div.todays-price__body > div.left > table > thead > tr > td:nth-child(1) > p:nth-child(2) > span',
-      sell: "#content > div > div > div.css-9tp5oi > div.todays-price__body > div.left > table > thead > tr > td:nth-child(1) > p:nth-child(2) > span",
-      buy: "#content > div > div > div.css-9tp5oi > div.todays-price__body > div.left > table > thead > tr > td:nth-child(2) > p:nth-child(2) > span",
-    },
+    selector: [
+      {
+        type: "pegadaian",
+        sell: "#content > div > div > div.css-9tp5oi > div.todays-price__body > div.left > table > thead > tr > td:nth-child(1) > p:nth-child(2) > span",
+        buy: "#content > div > div > div.css-9tp5oi > div.todays-price__body > div.left > table > thead > tr > td:nth-child(2) > p:nth-child(2) > span",
+      },
+    ],
   },
   pegadaian: {
     url: "https://www.pegadaian.co.id/harga",
@@ -75,11 +85,13 @@ export const siteDefiner = {
   sakumas: {
     url: "https://sakumas.com/",
     engine: "cheerio",
-    selector: {
-      type: "sakumas",
-      sell: "#hargaBeli",
-      buy: "#hargaJual",
-    },
+    selector: [
+      {
+        type: "sakumas",
+        sell: "#hargaBeli",
+        buy: "#hargaJual",
+      },
+    ],
   },
   semar: {
     engine: "axios",
@@ -141,7 +153,7 @@ export const siteDefiner = {
     ],
   },
   bsi: {
-    // engine: 'cheerio',
+    engine: "playwright",
     url: "https://www.bankbsi.co.id/",
     selector: [
       {
@@ -152,7 +164,7 @@ export const siteDefiner = {
     ],
   },
   brankaslm: {
-    // engine: 'cheerio',
+    engine: "playwright",
     url: "https://www.brankaslm.com/antam/index",
     selector: [
       {
@@ -193,10 +205,12 @@ export const siteDefiner = {
     url: "https://harga-emas.net/",
     formatter: {
       buy: (e: any) => {
-        return e ? parseInt(`${e}000`) : 0;
+        const params = e?.trim()?.replace(/\,0/, "");
+
+        return e ? parseInt(`${params}000`) : 0;
       },
       sell: (e: any) => {
-        const params = e.trim().replace(/\,0/, "");
+        const params = e?.trim()?.replace(/\,0/, "");
 
         return e ? parseInt(`${params}000`) : 0;
       },

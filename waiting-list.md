@@ -11,3 +11,4 @@
 - https://www.treasury.id/
 - https://www.bareksa.com/bareksaemas
 - https://www.logammulia.com/index.php/id/harga-emas-hari-ini
+- https://www.browserling.com/browse/win7/chrome105/https://logammulia.com

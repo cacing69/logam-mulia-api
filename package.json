@@ -43,6 +43,7 @@
     "mysql2": "^2.3.3",
     "nanoid": "^3.0.0",
     "playwright-aws-lambda": "^0.9.0",
+    "playwright-extra": "^4.3.5",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
