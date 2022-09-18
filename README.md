@@ -11,7 +11,7 @@
 
 - [Aneka Logam](https://www.anekalogam.co.id/id)
 - [Logam Mulia](https://www.logammulia.com/id)
-- [Harga Emas](https://harga-emas.org)
+- [Harga-Emas.org](https://harga-emas.org)
 - [Laku Emas](https://www.lakuemas.com/harga)
 - [Tokopedia](https://www.tokopedia.com/emas/harga-hari-ini/)
 - [Pegadaian](https://www.pegadaian.co.id/harga)
@@ -22,9 +22,12 @@
 - [Cermati](https://www.cermati.com/artikel/harga-emas-hari-ini)
 - [Bank Syariah Indonesia](https://www.bankbsi.co.id/)
 - [Brankas](https://www.brankaslm.com/antam/index)
+- [Indo Gold](https://www.brankaslm.com/antam/index)
+- [Harga-Emas.net](https://harga-emas.net/)
+- [inbizia](https://www.inbizia.com/harga-emas-hari-ini-287964)
+- [Harga-Emas.com](https://www.hargaemas.com/)
 
-Jika ingin menambahkan beberapa website lain, dipersilahkan untuk open issue terkait kritik dan saran
-
+Jika ingin menambahkan beberapa website lain, atau ada saran lain untuk bentuk response & requestnya, dipersilahkan untuk open issue terkait kritik dan saran
 
 
 contoh response
@@ -49,10 +52,10 @@ contoh response
 parameter site boleh diisi salah satu dari beberapa website yang tersedia
 
 - anekalogam : [https://logam-mulia-api.vercel.app/prices/anekalogam](https://logam-mulia-api.vercel.app/prices/anekalogam)
-- logammulia : [https://logam-mulia-api.vercel.app/prices/logammulia](https://logam-mulia-api.vercel.app/prices/logammulia)
-- hargaemas : [https://logam-mulia-api.vercel.app/prices/hargaemas](https://logam-mulia-api.vercel.app/prices/hargaemas)
+- logammulia : [https://logam-mulia-api.vercel.app/prices/logammulia](https://logam-mulia-api.vercel.app/prices/logammulia) (error : blocked by cloudflare)
+- hargaemas-org : [https://logam-mulia-api.vercel.app/prices/hargaemas-org](https://logam-mulia-api.vercel.app/prices/hargaemas-org)
 - lakuemas : [https://logam-mulia-api.vercel.app/prices/lakuemas](https://logam-mulia-api.vercel.app/prices/lakuemas)
-- tokopedia : [https://logam-mulia-api.vercel.app/prices/tokopedia](https://logam-mulia-api.vercel.app/prices/tokopedia)
+- tokopedia : [https://logam-mulia-api.vercel.app/prices/tokopedia](https://logam-mulia-api.vercel.app/prices/tokopedia) (error : gateway timeout)
 - pegadaian : [https://logam-mulia-api.vercel.app/prices/pegadaian](https://logam-mulia-api.vercel.app/prices/pegadaian)
 - sakumas : [https://logam-mulia-api.vercel.app/prices/sakumas](https://logam-mulia-api.vercel.app/prices/sakumas)
 - semar : [https://logam-mulia-api.vercel.app/prices/semar](https://logam-mulia-api.vercel.app/prices/semar)
@@ -61,3 +64,7 @@ parameter site boleh diisi salah satu dari beberapa website yang tersedia
 - cermati : [https://logam-mulia-api.vercel.app/prices/cermati](https://logam-mulia-api.vercel.app/prices/cermati)
 - bsi : [https://logam-mulia-api.vercel.app/prices/bsi](https://logam-mulia-api.vercel.app/prices/bsi)
 - brankaslm : [https://logam-mulia-api.vercel.app/prices/brankaslm](https://logam-mulia-api.vercel.app/prices/brankaslm)
+- indogold : [https://logam-mulia-api.vercel.app/prices/indogold](https://logam-mulia-api.vercel.app/prices/indogold)
+- hargaemas-net : [https://logam-mulia-api.vercel.app/prices/hargaemas-net](https://logam-mulia-api.vercel.app/prices/hargaemas-net)
+- inbizia : [https://logam-mulia-api.vercel.app/prices/inbizia](https://logam-mulia-api.vercel.app/prices/inbizia)
+- hargaemas-com : [https://logam-mulia-api.vercel.app/prices/hargaemas-com](https://logam-mulia-api.vercel.app/prices/hargaemas-com)

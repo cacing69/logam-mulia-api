@@ -88,51 +88,70 @@ export class CrawlerService {
           },
         };
       } else if (this.siteMap[site]?.engine == 'cheerio') {
-        const req = await this.httpService
+        try {
+          const req = await this.httpService
           .get(this.siteMap[site]?.url)
           .pipe(map((response) => response.data));
 
-        const requestData = await lastValueFrom(req);
+          const domElement = await lastValueFrom(req);
 
-        const $ = cheerio.load(requestData);
+          this.content = domElement;
 
-        const getFromElementDom = (dom: any, selector: any) => {
-          const rate: Rate = {
-            sell: '0',
-            buy: '0',
-            type: selector.type,
-          };
 
-          rate.buy =
-            $(selector.buy)
-              .text()
-              .trim()
-              .replace(/[,.]00$/, '')
-              .replace(/\(\-[0-9].*\)/g, '')
-              .replace(/([a-zA-Z\/\s\.\,])*/g, '') ?? null;
+          const getFromElementDom = (dom: any, selector: any, formatter?: any) => {
+            const $ = cheerio.load(dom);
 
-          rate.sell =
-            $(selector.sell)
-              .text()
-              .trim()
-              .replace(/[,.]00$/, '')
-              .replace(/\(\-[0-9].*\)/g, '')
-              .replace(/([a-zA-Z\/\s\.\,])*/g, '') ?? null;
+            console.log(selector);
 
-          rate.buy = parseInt(`${rate.buy}`) || 0;
-          rate.sell = parseInt(`${rate.sell}`) || 0;
+            const rate: Rate = {
+              sell: '0',
+              buy: '0',
+              type: selector.type,
+             };
+            if (formatter?.buy) {
+              const { buy } = formatter;
+              // console.log(`formater`, dom(selector.buy).text());
+              // rate.buy = formatter.buy($(selector.buy).text());
+              rate.buy = buy($(selector.buy).text()) || 0;
+            } else {
+              rate.buy =
+                $(selector.buy)
+                  .text()
+                  .trim()
+                  .replace(/[,.]00$/, "")
+                  .replace(/\(\-[0-9].*\)/g, "")
+                  .replace(/([a-zA-Z\/\s\.\,])*/g, "") ?? null;
+
+              rate.buy = parseInt(`${rate.buy}`) || 0;
+            }
+
+            if (formatter?.sell) {
+              const { sell } = formatter;
+              rate.sell = sell($(selector.sell).text()) || 0;
+            } else {
+              rate.sell =
+                $(selector.sell)
+                  .text()
+                  .trim()
+                  .replace(/[,.]00$/, "")
+                  .replace(/\(\-[0-9].*\)/g, "")
+                  .replace(/([a-zA-Z\/\s\.\,])*/g, "") ?? null;
+
+              rate.sell = parseInt(`${rate.sell}`) || 0;
+            }
+
+
 
           return rate;
         };
 
         if (!Array.isArray(this.siteMap[site]?.selector)) {
-          const rate = getFromElementDom($, this.siteMap[site]?.selector);
+          const rate = getFromElementDom(domElement, this.siteMap[site]?.selector);
 
           data.push(rate);
         } else {
           this.siteMap[site]?.selector.forEach((e) => {
-            const rate = getFromElementDom($, e);
-
+            const rate = getFromElementDom(domElement, e, this.siteMap[site]?.formatter);
             data.push(rate);
           });
         }
@@ -142,9 +161,19 @@ export class CrawlerService {
           meta: {
             engine: this.engine,
             // error: 'something wrong',
-            content: this.content,
+            // content: this.content,
           },
-        };
+        }
+        } catch (e) {
+          return {
+            data: null,
+            meta: {
+              engine: this.engine,
+              error: (e as any).message,
+              content: this.content,
+            },
+          };
+        }
       }
     } else {
       if (this.isModeAwsLambda) {
