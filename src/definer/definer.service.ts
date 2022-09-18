@@ -159,7 +159,7 @@ export class DefinerService {
     },
     bsi: {
       engine: "playwright",
-      error: "error playwright on deploy",
+      error: "blocked by incapsula protection",
       url: "https://www.bankbsi.co.id/",
       selector: [
         {
@@ -171,7 +171,7 @@ export class DefinerService {
     },
     brankaslm: {
       engine: "playwright",
-      error: "error playwright on deploy",
+      error: "blocked by cloudflare protection",
       url: "https://www.brankaslm.com/antam/index",
       selector: [
         {

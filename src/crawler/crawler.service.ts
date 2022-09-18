@@ -124,7 +124,7 @@ export class CrawlerService {
           route
             .request()
             .url()
-            .match(/https?:\/\/(.*youtube.*|.*widget\.php)/)
+            .match(/https?:\/\/(.*youtube.*|.*widget\.php|.*_Incapsula_Resource)/)
         ) {
           return route.abort();
         } else {
