@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { lastValueFrom, map } from 'rxjs';
 import { get } from 'lodash';
 import cheerio = require('cheerio');
+import { BadRequestException } from '../core/exceptions/bad-request.exception';
 
 interface Rate {
   buy: string | number;
@@ -22,288 +23,261 @@ export class CrawlerService {
   private page;
   private content;
   private closeAfterCrawl = true;
-
-  private siteMap;
+  private data;
+  private site;
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly httpService: HttpService,
+    private readonly httpService: HttpService
   ) {
-    this.isModeAwsLambda = this.configService.get('APP_AWS_LAMBDA_FUNCTION');
-    this.siteMap = siteDefiner;
+    this.isModeAwsLambda = this.configService.get("APP_AWS_LAMBDA_FUNCTION");
   }
 
-  async scrapeWithPlaywright(site: string) {
-    const data: Array<Rate> = [];
-    if (this.siteMap[site]?.engine) {
-      if (this.siteMap[site]?.engine == 'axios') {
-        const req = await this.httpService
-          .get(this.siteMap[site]?.url)
-          .pipe(map((response) => response.data));
+  private defaultFormatter(value: string) {
+    console.log(`defaultFormatter`, value);
+    const trimValue =
+      value
+        ?.trim()
+        ?.replace(/[,.]00$/, "")
+        ?.replace(/\(\-[0-9].*\)/g, "")
+        ?.replace(/([a-zA-Z\/\s\.\,])*/g, "") ?? null;
 
-        const requestData = await lastValueFrom(req);
+    return parseInt(trimValue);
+  }
 
-        const getFromElementObj = (data: any, selector: any) => {
-          const rate: Rate = {
-            sell: '0',
-            buy: '0',
-            type: selector.type,
-          };
+  async requestWithAxios(url: string) {
+    const req = await this.httpService
+      .get(url)
+      .pipe(map((response) => response.data));
 
-          rate.buy = get(data, selector?.buy)
-            .replace(/[,.]00$/, '')
-            .replace(/([a-zA-Z\/\s\.\,])*/g, '');
+    return await lastValueFrom(req);
+  }
 
-          rate.sell = get(data, selector?.sell)
-            .replace(/[,.]00$/, '')
-            .replace(/([a-zA-Z\/\s\.\,])*/g, '');
+  async scrapeWithCheerio() {
+    const requestData = await this.requestWithAxios(this.site.url);
 
-          rate.buy = parseInt(`${rate.buy}`) || 0;
-          rate.sell = parseInt(`${rate.sell}`) || 0;
+    this.content = requestData;
 
-          return rate;
-        };
-
-        if (!Array.isArray(this.siteMap[site]?.selector)) {
-          const rate = getFromElementObj(
-            requestData,
-            this.siteMap[site]?.selector,
-          );
-
-          data.push(rate);
-        } else {
-          this.siteMap[site]?.selector.forEach((e) => {
-            const rate = getFromElementObj(requestData, e);
-
-            data.push(rate);
-          });
-        }
-
-        return {
-          data,
-          meta: {
-            engine: this.engine,
-            // error: 'something wrong',
-            content: this.content,
-          },
-        };
-      } else if (this.siteMap[site]?.engine == 'cheerio') {
-        try {
-          const req = await this.httpService
-          .get(this.siteMap[site]?.url)
-          .pipe(map((response) => response.data));
-
-          const domElement = await lastValueFrom(req);
-
-          this.content = domElement;
-
-
-          const getFromElementDom = (dom: any, selector: any, formatter?: any) => {
-            const $ = cheerio.load(dom);
-
-            console.log(selector);
-
-            const rate: Rate = {
-              sell: '0',
-              buy: '0',
-              type: selector.type,
-             };
-            if (formatter?.buy) {
-              const { buy } = formatter;
-              // console.log(`formater`, dom(selector.buy).text());
-              // rate.buy = formatter.buy($(selector.buy).text());
-              rate.buy = buy($(selector.buy).text()) || 0;
-            } else {
-              rate.buy =
-                $(selector.buy)
-                  .text()
-                  .trim()
-                  .replace(/[,.]00$/, "")
-                  .replace(/\(\-[0-9].*\)/g, "")
-                  .replace(/([a-zA-Z\/\s\.\,])*/g, "") ?? null;
-
-              rate.buy = parseInt(`${rate.buy}`) || 0;
-            }
-
-            if (formatter?.sell) {
-              const { sell } = formatter;
-              rate.sell = sell($(selector.sell).text()) || 0;
-            } else {
-              rate.sell =
-                $(selector.sell)
-                  .text()
-                  .trim()
-                  .replace(/[,.]00$/, "")
-                  .replace(/\(\-[0-9].*\)/g, "")
-                  .replace(/([a-zA-Z\/\s\.\,])*/g, "") ?? null;
-
-              rate.sell = parseInt(`${rate.sell}`) || 0;
-            }
-
-
-
-          return rate;
-        };
-
-        if (!Array.isArray(this.siteMap[site]?.selector)) {
-          const rate = getFromElementDom(domElement, this.siteMap[site]?.selector);
-
-          data.push(rate);
-        } else {
-          this.siteMap[site]?.selector.forEach((e) => {
-            const rate = getFromElementDom(domElement, e, this.siteMap[site]?.formatter);
-            data.push(rate);
-          });
-        }
-
-        return {
-          data,
-          meta: {
-            engine: this.engine,
-            // error: 'something wrong',
-            // content: this.content,
-          },
-        }
-        } catch (e) {
-          return {
-            data: null,
-            meta: {
-              engine: this.engine,
-              error: (e as any).message,
-              content: this.content,
-            },
-          };
-        }
-      }
-    } else {
-      if (this.isModeAwsLambda) {
-        this.engine = 'playwright-aws-lambda';
-        this.playwright = require('playwright-aws-lambda');
-      } else {
-        this.engine = 'playwright';
-        this.playwright = require('playwright');
-      }
-
-      if (this.isModeAwsLambda) {
-        this.browser = await this.playwright.launchChromium();
-      } else {
-        this.browser = await this.playwright?.chromium.launch({
-          headless: false,
-        });
-      }
-
-      this.context = await this.browser.newContext({
-        bypassCSP: true,
+    if (this.checkIfSelectorIsArray()) {
+      this.site.selector.forEach((e: any) => {
+        const rate = this.getValueFromDom(requestData, e);
+        this.data.push(rate);
       });
 
-      this.page = await this.context.newPage();
+      return {
+        data: this.data,
+        meta: this.getMeta()
+      };
+    }
+  }
 
-      await this.page.route('**/*', (route: any) => {
+  async scrapeWithAxios() {
+    const requestData = await this.requestWithAxios(this.site?.site.url);
+
+    this.content = requestData;
+
+    if (this.checkIfSelectorIsArray()) {
+      this.site?.selector.forEach((e) => {
+        const rate = this.getValueFromObj(requestData, e);
+
+        this.data.push(rate);
+      });
+
+      return {
+        data: this.data,
+        meta: this.getMeta(),
+      };
+    }
+  }
+
+  async scrapeWithPlaywright() {
+    if (this.isModeAwsLambda) {
+      this.engine = "playwright-aws-lambda";
+      this.playwright = require("playwright-aws-lambda");
+      this.browser = await this.playwright.launchChromium();
+    } else {
+      this.engine = "playwright";
+      this.playwright = require("playwright");
+
+      this.browser = await this.playwright?.chromium.launch({
+        headless: false,
+      });
+    }
+
+    this.context = await this.browser.newContext({
+      bypassCSP: true,
+    });
+
+    this.page = await this.context.newPage();
+
+    await this.page.route("**/*", (route: any) => {
+      if (
+        route
+          .request()
+          .resourceType()
+          .match(/^(image|script|stylesheet|font|other)/)
+      ) {
+        return route.abort();
+      } else {
         if (
           route
             .request()
-            .resourceType()
-            .match(/^(image|script|stylesheet|font|other)/)
+            .url()
+            .match(/https?:\/\/(.*youtube.*|.*widget\.php)/)
         ) {
           return route.abort();
         } else {
-          if (
-            route
-              .request()
-              .url()
-              .match(/https?:\/\/(.*youtube.*|.*widget\.php)/)
-          ) {
-            return route.abort();
-          } else {
-            console.log(route.request().resourceType(), route.request().url());
-            return route.continue();
-          }
+          console.log(route.request().resourceType(), route.request().url());
+          return route.continue();
         }
-      });
+      }
+    });
 
-      try {
-        await this.page.goto(this.siteMap[site].url);
+    try {
+      await this.page.goto(this.site.url);
 
-        this.content = await this.page.content();
+      this.content = await this.page.content();
 
-        const getFromElement = async (e) => {
-          console.log(e);
-          const rate: Rate = {
-            sell: '0',
-            buy: '0',
-            type: e.type,
-          };
+      if (this.checkIfSelectorIsArray()) {
+        await this.site.selector.forEach(async (el: any) => {
+          const rate: Rate = await this.getFromElement(el);
+          this.data.push(rate);
+        });
 
-          if (e?.sell) {
-            rate.sell = await this.page.$eval(e.sell, (e: any) =>
-              e.innerText
-                .trim()
-                .replace(/\s+\d+[,]0+$/, '')
-                .replace(/[,.]00$/, '')
-                .replace(/([a-zA-Z\/\s\.\,])*/g, ''),
-            );
-            // .replace(/[,.]00$/, '')
-            // .replace(/([a-zA-Z\/\s\.\,])*/g, ''),
-            // );
-
-            // console.log(rate.sell);
-          }
-
-          if (e?.buy) {
-            rate.buy = await this.page.$eval(e.buy, (e: any) =>
-              e.innerText
-                .trim()
-                .replace(/\s+\d+[,]0+$/, '')
-                .replace(/[,.]00$/, '')
-                .replace(/([a-zA-Z\/\s\.\,])*/g, ''),
-            );
-          }
-
-          rate.buy = parseInt(`${rate.buy}`) || 0;
-          rate.sell = parseInt(`${rate.sell}`) || 0;
-
-          return rate;
-        };
-
-        if (!Array.isArray(this.siteMap[site]?.selector)) {
-          const rate: Rate = await getFromElement(this.siteMap[site].selector);
-          data.push(rate);
-        } else {
-          await this.siteMap[site]?.selector.forEach(async (el) => {
-            const rate: Rate = await getFromElement(el);
-            data.push(rate);
-          });
-        }
-
-        await this.page.waitForLoadState('networkidle'); // This resolves after 'networkidle'
+        await this.page.waitForLoadState("networkidle"); // This resolves after 'networkidle'
 
         if (this.closeAfterCrawl) {
-          await this.browser.close();
+          if (this.context != null) {
+            await this.context.close();
+          }
+
+          if (this.browser != null) {
+            await this.browser.close();
+          }
         }
 
-        const { url, name } = await this.siteMap[site];
-
-        const scrape = { url, name };
-        // console.log(data)
-
         return {
-          data,
-          meta: { scrape },
-        };
-      } catch (e) {
-        if (this.browser != null) {
-          await this.browser.close();
-        }
-        console.error(e);
-        return {
-          data: null,
-          meta: {
-            engine: this.engine,
-            error: (e as any)?.message,
-            content: this.content,
-          },
+          data: this.data,
+          meta: this.getMeta(),
         };
       }
+    } catch (e) {
+      await this.context?.close();
+      await this.browser?.close();
+
+      return {
+        data: null,
+        meta: {
+          engine: this.engine,
+          error: (e as any)?.message,
+          content: this.content,
+        },
+      };
+    }
+  }
+
+  private getMeta(){
+    return {
+      url: this.site.url,
+      engine: this.site.engine,
+    }
+  }
+
+  private getValueFromObj(objectValue: any, selector: any) {
+    const rate: Rate = this.createRateFromSelector(selector);
+
+    rate.buy = get(objectValue, selector?.buy);
+    rate.sell = get(objectValue, selector?.sell);
+
+    return this.checkWithFormatter(rate);
+  }
+
+  private async getFromElement(selector: any) {
+    const rate: Rate = this.createRateFromSelector(selector);
+
+    if (this.checkBuyAndSellSelector(selector)) {
+      rate.sell = await this.page.$eval(selector.sell, (e: any) =>
+        e.innerText?.trim()
+      );
+      rate.buy = await this.page.$eval(selector.buy, (e: any) =>
+        e.innerText?.trim()
+      );
+    }
+
+    return this.checkWithFormatter(rate);
+  }
+
+  private getValueFromDom(dom: any, selector: any) {
+    if (this.checkBuyAndSellSelector(selector)) {
+      const $ = cheerio.load(dom);
+
+      const rate: Rate = this.createRateFromSelector(selector);
+      rate.buy = $(selector.buy).text();
+      rate.sell = $(selector.sell).text();
+
+      return this.checkWithFormatter(rate);
+    }
+  }
+
+  private checkWithFormatter(rate: Rate) {
+    if ('formatter' in this.site) {
+      const { buy, sell } = this.site.formatter;
+
+      rate.buy = buy(rate.buy);
+      rate.sell = sell(rate.sell);
+    } else {
+      rate.buy = this.defaultFormatter(`${rate.buy}`);
+      rate.sell = this.defaultFormatter(`${rate.sell}`);
+    }
+
+    return rate;
+  }
+
+  private checkBuyAndSellSelector(selector) {
+    if ("sell" in selector && "buy" in selector) return true;
+
+    throw new BadRequestException(
+      "element selector must be contains buy and sell key"
+    );
+  }
+
+  private checkIfSelectorIsArray() {
+    if (Array.isArray(this.site.selector)) return true;
+
+    throw new BadRequestException(
+      "selector on crawler definer must be an array!"
+    );
+  }
+
+  private createRateFromSelector(selector): Rate {
+    return {
+      sell: "0",
+      buy: "0",
+      type: selector.type,
+    };
+  }
+
+  async scrape(site: string) {
+    if (!(site in siteDefiner)) {
+      throw new BadRequestException(
+        `there is no ${site} registered on definer`
+      );
+    }
+
+    this.site = siteDefiner[site];
+
+    this.data = [];
+
+    if (this.site?.engine) {
+      if (this.site.engine == "axios") {
+        return await this.scrapeWithAxios();
+      } else if (this.site.engine == "cheerio") {
+        return await this.scrapeWithCheerio();
+      } else if (this.site.engine == "playwright") {
+        return await this.scrapeWithPlaywright();
+      }
+    } else {
+      throw new BadRequestException('there is no engine provided on definer')
     }
   }
 }
