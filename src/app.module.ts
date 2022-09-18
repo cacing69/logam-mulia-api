@@ -7,7 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PricesModule } from './prices/prices.module';
 import { CrawlerModule } from './crawler/crawler.module';
 // import { DatabaseModule } from './database/database.module';
-import { SitesModule } from './sites/sites.module';
+import { DefinerModule } from './definer/definer.module';
 import Joi = require('@hapi/joi');
 
 @Module({
@@ -28,7 +28,7 @@ import Joi = require('@hapi/joi');
     // DatabaseModule,
     PricesModule,
     CrawlerModule,
-    SitesModule,
+    DefinerModule,
   ],
   controllers: [AppController],
   providers: [

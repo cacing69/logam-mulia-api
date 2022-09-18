@@ -1,4 +1,3 @@
-import { siteDefiner } from './crawler.definer';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -6,6 +5,7 @@ import { lastValueFrom, map } from 'rxjs';
 import { get } from 'lodash';
 import cheerio = require('cheerio');
 import { BadRequestException } from '../core/exceptions/bad-request.exception';
+import { DefinerService } from '../definer/definer.service';
 
 interface Rate {
   buy: string | number;
@@ -28,7 +28,8 @@ export class CrawlerService {
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly httpService: HttpService
+    private readonly httpService: HttpService,
+    private readonly definerService: DefinerService
   ) {
     this.isModeAwsLambda = this.configService.get("APP_AWS_LAMBDA_FUNCTION");
   }
@@ -72,7 +73,7 @@ export class CrawlerService {
   }
 
   async scrapeWithAxios() {
-    const requestData = await this.requestWithAxios(this.site?.site.url);
+    const requestData = await this.requestWithAxios(this.site?.url);
 
     this.content = requestData;
 
@@ -138,6 +139,8 @@ export class CrawlerService {
 
       this.content = await this.page.content();
 
+      console.log(this.content);
+
       if (this.checkIfSelectorIsArray()) {
         await this.site.selector.forEach(async (el: any) => {
           const rate: Rate = await this.getFromElement(el);
@@ -147,13 +150,8 @@ export class CrawlerService {
         await this.page.waitForLoadState("networkidle"); // This resolves after 'networkidle'
 
         if (this.closeAfterCrawl) {
-          if (this.context != null) {
-            await this.context.close();
-          }
-
-          if (this.browser != null) {
-            await this.browser.close();
-          }
+          await this.context?.close();
+          await this.browser?.close();
         }
 
         return {
@@ -258,13 +256,9 @@ export class CrawlerService {
   }
 
   async scrape(site: string) {
-    if (!(site in siteDefiner)) {
-      throw new BadRequestException(
-        `there is no ${site} registered on definer`
-      );
-    }
+    this.site = this.definerService.get(site);
 
-    this.site = siteDefiner[site];
+    console.log(this.site);
 
     this.data = [];
 

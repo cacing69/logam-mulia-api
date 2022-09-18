@@ -1,10 +1,11 @@
+import { DefinerService } from './definer/definer.service';
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
 import { nanoid } from 'nanoid';
 
 @Injectable()
 export class AppService {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(private readonly configService: ConfigService, private definerService: DefinerService) {}
   getResponse(): object {
     return {
       message: 'Logam Mulia API',
@@ -27,21 +28,7 @@ export class AppService {
             params: {
               name: "site",
               type: "string",
-              value: [
-                "anekalogam",
-                "logammulia",
-                "hargaemas",
-                "lakuemas",
-                "tokopedia",
-                "pegadaian",
-                "sakuemas",
-                "semar",
-                "koinwork",
-                "kursdolar",
-                "cermati",
-                "bsi",
-                "bankaslm",
-              ]
+              value: this.definerService.getKey()
             },
           },
           {
