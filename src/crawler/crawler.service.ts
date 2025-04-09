@@ -1,3 +1,4 @@
+import { format } from 'path';
 import { siteDefiner } from './crawler.definer';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
@@ -6,11 +7,17 @@ import { lastValueFrom, map } from 'rxjs';
 import { get } from 'lodash';
 import cheerio = require('cheerio');
 import { BadRequestException } from '../core/exceptions/bad-request.exception';
+import UserAgent from 'user-agents';
+import axios from 'axios';
+
 
 interface Rate {
   buy: string | number;
   sell: string | number;
   type: string;
+  info: string;
+  weight: string;
+  unit: string;
 }
 
 @Injectable()
@@ -91,6 +98,40 @@ export class CrawlerService {
   }
 
   async scrapeWithPlaywright() {
+
+    // const urlProxy = "https://proxylist.geonode.com/api/proxy-list?speed=fast&google=false&limit=500&page=1&sort_by=lastChecked&sort_type=asc"
+
+    // const reqProxy = await axios.get(urlProxy);
+
+    // const proxyId = reqProxy.data?.data?.filter((e: any) => e.country === "ID");
+
+    // // console.log(proxyId);
+
+    // // return;
+
+    // const length = parseInt(proxyId.length);
+
+    // const proxyRandomize = proxyId[Math.floor(Math.random() * length)];
+
+    // // console.log(proxyRandomize)
+
+    // // return;
+    // // return;
+
+    // // const proxyData = reqProxy.data;
+
+    // // let setProxy = false;
+    // let proxySelected = `${proxyRandomize?.protocols[0]}://${proxyRandomize?.ip}:${proxyRandomize?.port}`;
+
+    // console.log(proxySelected, proxyRandomize)
+
+    // return;
+
+    // if (proxyData?.data && proxyData?.data?.length > 0) {
+    //   proxySelected = proxyData.data[0];
+    //   setProxy = true;
+    // }
+
     if (this.isModeAwsLambda) {
       this.engine = "playwright-aws-lambda";
       this.playwright = require("playwright-aws-lambda");
@@ -104,9 +145,28 @@ export class CrawlerService {
       });
     }
 
-    this.context = await this.browser.newContext({
-      bypassCSP: true,
-    });
+    const userAgent = new UserAgent();
+
+    // if (setProxy) {
+      this.context = await this.browser.newContext({
+        bypassCSP: true,
+        userAgent: userAgent.toString(),
+        viewport: { width: 1920, height: 1080 },
+        ignoreHTTPSErrors: true,
+        javaScriptEnabled: true,
+        // proxy: {
+        //   server: proxySelected
+        // }
+      });
+    // } else {
+    //   this.context = await this.browser.newContext({
+    //     bypassCSP: true,
+    //     userAgent: userAgent.toString(),
+    //     viewport: { width: 1920, height: 1080 },
+    //     ignoreHTTPSErrors: true,
+    //     javaScriptEnabled: true
+    //   });
+    // }
 
     this.page = await this.context.newPage();
 
@@ -115,7 +175,8 @@ export class CrawlerService {
         route
           .request()
           .resourceType()
-          .match(/^(image|script|stylesheet|font|other)/)
+          // .match(/^(image|script|stylesheet|font|other)/)
+          .match(/^(image|font|other)/)
       ) {
         return route.abort();
       } else {
@@ -127,7 +188,7 @@ export class CrawlerService {
         ) {
           return route.abort();
         } else {
-          console.log(route.request().resourceType(), route.request().url());
+          // console.log(route.request().resourceType(), route.request().url());
           return route.continue();
         }
       }
@@ -138,13 +199,22 @@ export class CrawlerService {
 
       this.content = await this.page.content();
 
+      await this.page.evaluate(() => {
+        window.scrollBy(0, window.innerHeight);
+      });
+
       if (this.checkIfSelectorIsArray()) {
-        await this.site.selector.forEach(async (el: any) => {
+
+        // await this.site.selector.forEach(async (el: any) => {
+        //   const rate: Rate = await this.getFromElement(el);
+        //   this.data.push(rate);
+        // });
+        for (const el of this.site.selector) {
           const rate: Rate = await this.getFromElement(el);
           this.data.push(rate);
-        });
+        }
 
-        await this.page.waitForLoadState("networkidle"); // This resolves after 'networkidle'
+        // await this.page.waitForLoadState("networkidle"); // This resolves after 'networkidle'
 
         if (this.closeAfterCrawl) {
           if (this.context != null) {
@@ -187,7 +257,13 @@ export class CrawlerService {
     const rate: Rate = this.createRateFromSelector(selector);
 
     rate.buy = get(objectValue, selector?.buy);
-    rate.sell = get(objectValue, selector?.sell);
+
+    if (selector?.sell != null) {
+      rate.sell = get(objectValue, selector?.sell);
+    } else {
+      rate.sell = null;
+    }
+
 
     return this.checkWithFormatter(rate);
   }
@@ -196,12 +272,51 @@ export class CrawlerService {
     const rate: Rate = this.createRateFromSelector(selector);
 
     if (this.checkBuyAndSellSelector(selector)) {
-      rate.sell = await this.page.$eval(selector.sell, (e: any) =>
-        e.innerText?.trim()
-      );
-      rate.buy = await this.page.$eval(selector.buy, (e: any) =>
-        e.innerText?.trim()
-      );
+      if (selector?.sell != null) {
+        await this.page.waitForSelector(selector.sell, { timeout: 10000 }); // Menunggu maksimal 10 detik
+        rate.sell = await this.page.$eval(selector.sell, (e: any) =>
+          e.innerText?.trim()
+        );
+      }
+
+
+      if (selector?.buy != null) {
+        await this.page.waitForSelector(selector.buy, { timeout: 10000 }); // Menunggu maksimal 10 detik
+        rate.buy = await this.page.$eval(selector.buy, (e: any) => {
+
+            // console.log(e)
+            return e.innerText?.trim()
+          }
+        );
+      }
+
+      if (selector?.info != null) {
+        await this.page.waitForSelector(selector.info, { timeout: 10000 }); // Menunggu maksimal 10 detik
+        rate.info = await this.page.$eval(selector.info, (e: any) => {
+
+          // console.log(e)
+          return e.innerText?.trim()
+        }
+        );
+      }
+
+      if (selector?.weight) {
+        await this.page.waitForSelector(selector.weight, { timeout: 10000 }); // Menunggu maksimal 10 detik
+
+        rate.weight = await this.page.$eval(selector.weight, (e: any) => {
+            // console.log(e)
+            return e.innerText?.trim()
+          }
+        );
+
+
+        if (selector?.formatter) {
+          if ("weight" in selector.formatter) {
+            rate.weight = selector.formatter.weight(rate.weight);
+          }
+        }
+      }
+
     }
 
     return this.checkWithFormatter(rate);
@@ -214,6 +329,10 @@ export class CrawlerService {
       const rate: Rate = this.createRateFromSelector(selector);
       rate.buy = $(selector.buy).text();
       rate.sell = $(selector.sell).text();
+
+      if ("info" in selector) {
+        rate.info = $(selector.info).text();
+      }
 
       return this.checkWithFormatter(rate);
     }
@@ -254,6 +373,9 @@ export class CrawlerService {
       sell: "0",
       buy: "0",
       type: selector.type,
+      info: null,
+      weight: null,
+      unit: "gram",
     };
   }
 

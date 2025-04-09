@@ -1,24 +1,48 @@
+import { format } from 'path';
+
 export const siteDefiner = {
   anekalogam: {
     url: "https://www.anekalogam.co.id/id",
     engine: "cheerio",
     selector: [
       {
-        sell: "body > div.grouped-section > section:nth-child(2) > div > div > div.grid-child.n-768-1per3.n-992-2per5 > div > div:nth-child(2) > div > p > span.tprice",
-        buy: "body > div.grouped-section > section:nth-child(2) > div > div > div.grid-child.n-768-1per3.n-992-2per5 > div > div:nth-child(1) > div > p > span.tprice",
+        // sell: "body > div.grouped-section > section:nth-child(2) > div > div > div.grid-child.n-768-1per3.n-992-2per5 > div > div:nth-child(2) > div > p > span.tprice",
+        sell: "#today-price > div.section-intro > div.buy-sell-rate > div:nth-child(1) > div > p > span",
+        // buy: "body > div.grouped-section > section:nth-child(2) > div > div > div.grid-child.n-768-1per3.n-992-2per5 > div > div:nth-child(1) > div > p > span.tprice",
+        buy: "#today-price > div.section-intro > div.buy-sell-rate > div:nth-child(2) > div > p > span",
         type: "antam",
+        info: "#today-price > div.section-intro > p:nth-child(3)"
       },
     ],
   },
   logammulia: {
     url: "https://www.logammulia.com/id/harga-emas-hari-ini",
-    error: "blocked by cloudflare protection",
+    // error: "blocked by cloudflare protection",
     engine: "playwright",
     selector: [
       {
-        type: "antam",
-        sell: "body > section.section-padding.n-no-padding-top > div > div:nth-child(3) > table:nth-child(3) > tbody > tr:nth-child(4) > td:nth-child(2)",
+        type: "emas_batangan",
+        sell: "body > section.section-padding.n-no-padding-top > div > div:nth-child(3) > div > div.grid-child.n-768-1per3.n-768-no-margin-bottom > table:nth-child(4) > tbody > tr:nth-child(3) > td:nth-child(2)",
         buy: null,
+        info: "body > section.section-padding.n-no-padding-top > div > div:nth-child(3) > div > div.grid-child.n-768-1per3.n-768-no-margin-bottom > table:nth-child(4) > tbody > tr:nth-child(2) > th",
+        weight: "body > section.section-padding.n-no-padding-top > div > div:nth-child(3) > div > div.grid-child.n-768-1per3.n-768-no-margin-bottom > table:nth-child(4) > tbody > tr:nth-child(3) > td:nth-child(1)",
+        formatter: {
+          weight: (e: string) => {
+            return e.replace(/[^0-9.]/g, '');
+          }
+        }
+      },
+      {
+        type: "emas_batangan",
+        sell: "body > section.section-padding.n-no-padding-top > div > div:nth-child(3) > div > div.grid-child.n-768-1per3.n-768-no-margin-bottom > table:nth-child(4) > tbody > tr:nth-child(4) > td:nth-child(2)",
+        buy: null,
+        info: "body > section.section-padding.n-no-padding-top > div > div:nth-child(3) > div > div.grid-child.n-768-1per3.n-768-no-margin-bottom > table:nth-child(4) > tbody > tr:nth-child(2) > th",
+        weight: "body > section.section-padding.n-no-padding-top > div > div:nth-child(3) > div > div.grid-child.n-768-1per3.n-768-no-margin-bottom > table:nth-child(4) > tbody > tr:nth-child(4) > td:nth-child(1)",
+        formatter: {
+          weight: (e: string) => {
+            return e.replace(/[^0-9.]/g, '');
+          }
+        }
       },
     ],
   },
@@ -56,31 +80,45 @@ export const siteDefiner = {
       },
     ],
   },
+  // pegadaian: {
+  //   url: "https://www.pegadaian.co.id/harga",
+  //   engine: "cheerio",
+  //   selector: [
+  //     {
+  //       sell: "#nav-harga-emas > div > table > tbody > tr:nth-child(7) > td:nth-child(2)",
+  //       buy: "#nav-harga-buyback > div > table > tbody > tr:nth-child(7) > td:nth-child(2)",
+  //       type: "antam",
+  //     },
+  //     {
+  //       sell: "#nav-harga-emas > div > table > tbody > tr:nth-child(7) > td:nth-child(3)",
+  //       buy: "#nav-harga-buyback > div > table > tbody > tr:nth-child(7) > td:nth-child(3)",
+  //       type: "antam-retro",
+  //     },
+  //     {
+  //       sell: "#nav-harga-emas > div > table > tbody > tr:nth-child(7) > td:nth-child(4)",
+  //       buy: "#nav-harga-buyback > div > table > tbody > tr:nth-child(7) > td:nth-child(4)",
+  //       type: "antam-batik",
+  //     },
+  //     {
+  //       sell: "#nav-harga-emas > div > table > tbody > tr:nth-child(7) > td:nth-child(5)",
+  //       buy: "#nav-harga-buyback > div > table > tbody > tr:nth-child(7) > td:nth-child(5)",
+  //       type: "ubs",
+  //     },
+  //   ],
+  // },
   pegadaian: {
-    url: "https://www.pegadaian.co.id/harga",
-    engine: "cheerio",
+    url: "https://www.pegadaian.co.id/",
+    engine: "playwright",
     selector: [
       {
-        sell: "#nav-harga-emas > div > table > tbody > tr:nth-child(7) > td:nth-child(2)",
-        buy: "#nav-harga-buyback > div > table > tbody > tr:nth-child(7) > td:nth-child(2)",
-        type: "antam",
-      },
-      {
-        sell: "#nav-harga-emas > div > table > tbody > tr:nth-child(7) > td:nth-child(3)",
-        buy: "#nav-harga-buyback > div > table > tbody > tr:nth-child(7) > td:nth-child(3)",
-        type: "antam-retro",
-      },
-      {
-        sell: "#nav-harga-emas > div > table > tbody > tr:nth-child(7) > td:nth-child(4)",
-        buy: "#nav-harga-buyback > div > table > tbody > tr:nth-child(7) > td:nth-child(4)",
-        type: "antam-batik",
-      },
-      {
-        sell: "#nav-harga-emas > div > table > tbody > tr:nth-child(7) > td:nth-child(5)",
-        buy: "#nav-harga-buyback > div > table > tbody > tr:nth-child(7) > td:nth-child(5)",
         type: "ubs",
-      },
-    ],
+        // buy: "#root > div.landing-page > div.landing-page-menu-promo > div > div > div.gold-section-box__left > div > h1",
+        // buy: "#root > div.landing-page > div.landing-page-gold-section > div.body > div.gold-section-box > div.gold-section-box__left > div.gold-section-box__left-top > div.box-jual-beli > div.box-jual-beli__left > p",
+        buy: "#ubs > div > div > table > tbody > tr:nth-child(2) > td.text-left.black-zero",
+        // sell: "#root > div.landing-page > div.landing-page-gold-section > div.body > div.gold-section-box > div.gold-section-box__left > div.gold-section-box__left-top > div.box-jual-beli > div.box-jual-beli__right > div > div:nth-child(1) > p",
+        sell: null
+      }
+    ]
   },
   sakumas: {
     url: "https://sakumas.com/",
