@@ -2,7 +2,7 @@
 FROM node:18 AS builder
 
 # Set working directory
-WORKDIR /app
+WORKDIR /
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
@@ -23,9 +23,9 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Copy only the necessary files from the builder stage
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package*.json ./
+COPY --from=builder /dist ./dist
+COPY --from=builder /node_modules ./node_modules
+COPY --from=builder /package*.json ./
 
 # Expose the port the app runs on
 EXPOSE 3000
