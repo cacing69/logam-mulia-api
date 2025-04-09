@@ -16,7 +16,7 @@ interface Rate {
   sell: string | number;
   type: string;
   info: string;
-  weight: string;
+  weight: string| number;
   unit: string;
 }
 
@@ -41,7 +41,6 @@ export class CrawlerService {
   }
 
   private defaultFormatter(value: string) {
-    console.log(`defaultFormatter`, value);
     const trimValue =
       value
         ?.trim()
@@ -66,10 +65,11 @@ export class CrawlerService {
     this.content = requestData;
 
     if (this.checkIfSelectorIsArray()) {
-      this.site.selector.forEach((e: any) => {
-        const rate = this.getValueFromDom(requestData, e);
+      for (const e of this.site.selector) {
+        // Tunggu hasil dari getValueFromDom
+        const rate = await this.getValueFromDom(requestData, e);
         this.data.push(rate);
-      });
+      }
 
       return {
         data: this.data,
@@ -271,6 +271,28 @@ export class CrawlerService {
   private async getFromElement(selector: any) {
     const rate: Rate = this.createRateFromSelector(selector);
 
+    if ("before" in selector) {
+      if ("click" in selector.before) {
+
+        // console.log(`"click" in selector.before`)
+
+
+        if ("ignoreWhenVisible" in selector.before.click) {
+          const element = await this.page.$(selector.before.click.ignoreWhenVisible);
+
+          // console.log("element", element);
+
+          if (!element) {
+            this.page.click(selector.before.click.on);
+          }
+        } else {
+          // console.log("click")
+          this.page.click(selector.before.click.on);
+        }
+
+      }
+    }
+
     if (this.checkBuyAndSellSelector(selector)) {
       if (selector?.sell != null) {
         await this.page.waitForSelector(selector.sell, { timeout: 10000 }); // Menunggu maksimal 10 detik
@@ -315,6 +337,8 @@ export class CrawlerService {
             rate.weight = selector.formatter.weight(rate.weight);
           }
         }
+
+        rate.weight = parseFloat(rate.weight as any);
       }
 
     }
