@@ -42,10 +42,12 @@
     "lodash": "^4.17.21",
     "nanoid": "^3.0.0",
     "playwright-aws-lambda": "^0.9.0",
+    "playwright-core": "^1.51.1",
     "playwright-extra": "^4.3.5",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
+    "typeorm": "^0.3.7",
     "user-agents": "^1.1.503"
   },
   "devDependencies": {
