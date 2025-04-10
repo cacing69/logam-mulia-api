@@ -143,7 +143,7 @@ export class CrawlerService {
       this.playwright = require("playwright");
 
       this.browser = await this.playwright?.chromium.launch({
-        headless: this.isHeadless,
+        headless: true,
       });
     }
 
