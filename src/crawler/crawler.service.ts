@@ -26,6 +26,8 @@ export class CrawlerService {
   private context;
   private isModeAwsLambda: boolean;
   private isHeadless: boolean;
+  private useMirror: boolean;
+  private urlMirror: string;
   private browser;
   private engine;
   private page;
@@ -33,6 +35,7 @@ export class CrawlerService {
   private closeAfterCrawl = true;
   private data;
   private site;
+  private siteName;
 
   constructor(
     private readonly configService: ConfigService,
@@ -40,6 +43,8 @@ export class CrawlerService {
   ) {
     this.isModeAwsLambda = this.configService.get("APP_AWS_LAMBDA_FUNCTION");
     this.isHeadless = Boolean(this.configService.get("APP_HEADLESS") || false);
+    this.useMirror = Boolean(this.configService.get("APP_USE_MIRROR") || false);
+    this.urlMirror = this.configService.get("APP_MIRROR_URL") || "";
   }
 
   private defaultFormatter(value: string) {
@@ -97,6 +102,12 @@ export class CrawlerService {
         meta: this.getMeta(),
       };
     }
+  }
+
+  async scrapeOnMirror() {
+    const requestData = await axios.get(`${this.urlMirror}/prices/${this.siteName}`);
+
+    return requestData.data;
   }
 
   async scrapeWithPlaywright() {
@@ -197,39 +208,68 @@ export class CrawlerService {
     });
 
     try {
-      await this.page.goto(this.site.url);
 
-      this.content = await this.page.content();
+      const networkPromise = new Promise((resolve) => {
+        this.page.on('response', async (response) => {
+          const checkUrl = response.url();
+          if (checkUrl.includes("api/egold/v2/gold/price")) {
+            const promiseNetworkData = await response.json();
 
-      await this.page.evaluate(() => {
-        window.scrollBy(0, window.innerHeight);
+            resolve(promiseNetworkData);
+          }
+        });
       });
 
-      if (this.checkIfSelectorIsArray()) {
+      await this.page.goto(this.site.url);
 
-        // await this.site.selector.forEach(async (el: any) => {
-        //   const rate: Rate = await this.getFromElement(el);
-        //   this.data.push(rate);
-        // });
-        for (const el of this.site.selector) {
-          const rate: Rate = await this.getFromElement(el);
-          this.data.push(rate);
-        }
+      if (!("onNetwork" in this.site)) {
+        this.content = await this.page.content();
 
-        // await this.page.waitForLoadState("networkidle"); // This resolves after 'networkidle'
+        await this.page.evaluate(() => {
+          window.scrollBy(0, window.innerHeight);
+        });
 
-        if (this.closeAfterCrawl) {
-          if (this.context != null) {
-            await this.context.close();
+        if (this.checkIfSelectorIsArray()) {
+
+          // await this.site.selector.forEach(async (el: any) => {
+          //   const rate: Rate = await this.getFromElement(el);
+          //   this.data.push(rate);
+          // });
+          for (const el of this.site.selector) {
+            const rate: Rate = await this.getFromElement(el);
+            this.data.push(rate);
           }
 
-          if (this.browser != null) {
-            await this.browser.close();
-          }
-        }
+          // await this.page.waitForLoadState("networkidle"); // This resolves after 'networkidle'
 
+          if (this.closeAfterCrawl) {
+            if (this.context != null) {
+              await this.context.close();
+            }
+
+            if (this.browser != null) {
+              await this.browser.close();
+            }
+          }
+
+          return {
+            data: this.data,
+            meta: this.getMeta(),
+          };
+        }
+      } else {
+        const scrapedData = await networkPromise;
         return {
-          data: this.data,
+          data: [
+            {
+              type: this.site.selector[0].type,
+              buy: get(scrapedData, this.site.selector[0].buy),
+              sell: get(scrapedData, this.site.selector[0].sell),
+              weight: 1,
+              unit: "gram",
+              info: get(scrapedData, this.site.selector[0].info),
+            }
+          ],
           meta: this.getMeta(),
         };
       }
@@ -413,19 +453,24 @@ export class CrawlerService {
     }
 
     this.site = siteDefiner[site];
+    this.siteName = site;
 
     this.data = [];
 
-    if (this.site?.engine) {
-      if (this.site.engine == "axios") {
-        return await this.scrapeWithAxios();
-      } else if (this.site.engine == "cheerio") {
-        return await this.scrapeWithCheerio();
-      } else if (this.site.engine == "playwright") {
-        return await this.scrapeWithPlaywright();
-      }
+    if ("mirror" in this.site && this.useMirror) {
+      return await this.scrapeOnMirror();
     } else {
-      throw new BadRequestException('there is no engine provided on definer')
+      if (this.site?.engine) {
+        if (this.site.engine == "axios") {
+          return await this.scrapeWithAxios();
+        } else if (this.site.engine == "cheerio") {
+          return await this.scrapeWithCheerio();
+        } else if (this.site.engine == "playwright") {
+          return await this.scrapeWithPlaywright();
+        }
+      } else {
+        throw new BadRequestException('there is no engine provided on definer')
+      }
     }
   }
 }
