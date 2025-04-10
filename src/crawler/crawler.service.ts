@@ -42,9 +42,9 @@ export class CrawlerService {
     private readonly httpService: HttpService
   ) {
     this.isModeAwsLambda = this.configService.get("APP_AWS_LAMBDA_FUNCTION");
-    this.isHeadless = Boolean(this.configService.get("APP_HEADLESS") || false);
-    this.useMirror = Boolean(this.configService.get("APP_USE_MIRROR") || false);
-    this.urlMirror = this.configService.get("APP_MIRROR_URL") || "";
+    this.isHeadless = this.configService.get("APP_HEADLESS");
+    this.useMirror = this.configService.get("APP_USE_MIRROR");
+    this.urlMirror = this.configService.get("APP_MIRROR_URL");
   }
 
   private defaultFormatter(value: string) {
@@ -457,7 +457,21 @@ export class CrawlerService {
 
     this.data = [];
 
-    if ("mirror" in this.site && this.useMirror) {
+    const isOnMirror = "mirror" in this.site;
+
+    const parseBoolean = (value) => {
+      if (typeof value === "boolean") {
+        return value;
+      }
+      if (typeof value === "string") {
+        value = value.toLowerCase();
+        return value === "true" || value === "yes" || value === "1";
+      }
+      return !!value; // Default fallback
+    }
+
+    // if (isOnMirror && this.useMirror) {
+    if (isOnMirror && parseBoolean(this.useMirror)) {
       return await this.scrapeOnMirror();
     } else {
       if (this.site?.engine) {
