@@ -25,6 +25,7 @@ export class CrawlerService {
   private playwright: any;
   private context;
   private isModeAwsLambda: boolean;
+  private isHeadless: boolean;
   private browser;
   private engine;
   private page;
@@ -38,6 +39,7 @@ export class CrawlerService {
     private readonly httpService: HttpService
   ) {
     this.isModeAwsLambda = this.configService.get("APP_AWS_LAMBDA_FUNCTION");
+    this.isHeadless = this.configService.get("APP_HEADLESS");
   }
 
   private defaultFormatter(value: string) {
@@ -141,7 +143,7 @@ export class CrawlerService {
       this.playwright = require("playwright");
 
       this.browser = await this.playwright?.chromium.launch({
-        headless: false,
+        headless: this.isHeadless || false,
       });
     }
 

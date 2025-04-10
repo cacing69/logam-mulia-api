@@ -1,20 +1,16 @@
 import { format } from 'path';
+import anekalogamDefiner from './definer/anekalogam.definer';
+import lakuemasDefiner from './definer/lakuemas.definer';
+import hargaemasorgDefiner from './definer/hargaemasorg.definer';
+import hargaemascomDefiner from './definer/hargaemascom.definer';
+import inbiziaDefiner from './definer/inbizia.definer';
 
 export const siteDefiner = {
-  anekalogam: {
-    url: "https://www.anekalogam.co.id/id",
-    engine: "cheerio",
-    selector: [
-      {
-        // sell: "body > div.grouped-section > section:nth-child(2) > div > div > div.grid-child.n-768-1per3.n-992-2per5 > div > div:nth-child(2) > div > p > span.tprice",
-        sell: "#today-price > div.section-intro > div.buy-sell-rate > div:nth-child(1) > div > p > span",
-        // buy: "body > div.grouped-section > section:nth-child(2) > div > div > div.grid-child.n-768-1per3.n-992-2per5 > div > div:nth-child(1) > div > p > span.tprice",
-        buy: "#today-price > div.section-intro > div.buy-sell-rate > div:nth-child(2) > div > p > span",
-        type: "antam",
-        info: "#today-price > div.section-intro > p:nth-child(3)"
-      },
-    ],
-  },
+  ...anekalogamDefiner,
+  ...lakuemasDefiner,
+  ...hargaemasorgDefiner,
+  ...hargaemascomDefiner,
+  ...inbiziaDefiner,
   logammulia: {
     url: "https://www.logammulia.com/id/harga-emas-hari-ini",
     // error: "blocked by cloudflare protection",
@@ -43,28 +39,6 @@ export const siteDefiner = {
             return e.replace(/[^0-9.]/g, '');
           }
         }
-      },
-    ],
-  },
-  "hargaemas-org": {
-    url: "https://harga-emas.org",
-    engine: "cheerio",
-    selector: [
-      {
-        type: "antam",
-        sell: "#container > div:nth-child(2) > div > table > tbody > tr:nth-child(4) > td:nth-child(9)",
-        buy: "#container > div:nth-child(2) > div > table > tbody > tr:nth-child(4) > td:nth-child(10)",
-      },
-    ],
-  },
-  lakuemas: {
-    url: "https://www.lakuemas.com/harga",
-    engine: "cheerio",
-    selector: [
-      {
-        type: "antam",
-        sell: "#section1 > div > div > div > div > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div > h3 > strong",
-        buy: "#section1 > div > div > div > div > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div > h3 > strong",
       },
     ],
   },
@@ -142,12 +116,12 @@ export const siteDefiner = {
           }
         },
         type: "ubs",
-        info: "#root > div.landing-page > div.landing-page-gold-section > div.body > div.gold-section-box > div.gold-section-box__right > h5 > span.date-desc",
         // buy: "#root > div.landing-page > div.landing-page-menu-promo > div > div > div.gold-section-box__left > div > h1",
         // buy: "#root > div.landing-page > div.landing-page-gold-section > div.body > div.gold-section-box > div.gold-section-box__left > div.gold-section-box__left-top > div.box-jual-beli > div.box-jual-beli__left > p",
         buy: "#ubs > div > div > table > tbody > tr:nth-child(2) > td.text-left.black-zero",
         // sell: "#root > div.landing-page > div.landing-page-gold-section > div.body > div.gold-section-box > div.gold-section-box__left > div.gold-section-box__left-top > div.box-jual-beli > div.box-jual-beli__right > div > div:nth-child(1) > p",
         sell: null,
+        info: "#root > div.landing-page > div.landing-page-gold-section > div.body > div.gold-section-box > div.gold-section-box__right > h5 > span.date-desc",
         weight: "#ubs > div > div > table > tbody > tr:nth-child(2) > td:nth-child(1)",
         unit: "gram",
         formatter: {
@@ -224,12 +198,7 @@ export const siteDefiner = {
     selector: [
       {
         type: "emas",
-        sell: "#parent-node > div:nth-child(4) > table > tbody > tr > td:nth-child(2) > h5 > span",
-        buy: null,
-      },
-      {
-        type: "antam",
-        sell: "#parent-node > div:nth-child(4) > table > tbody > tr > td:nth-child(3) > h5",
+        sell: "#__next > main > div > div.PriceChart_price-chart__latest-price__aFraD",
         buy: null,
       },
     ],
@@ -263,12 +232,13 @@ export const siteDefiner = {
   },
   indogold: {
     engine: "cheerio",
-    url: "https://www.indogold.id/harga-emas-hari-ini",
+    url: "https://www.indogold.id/detail-emas-batangan",
     selector: [
       {
         type: "antam",
-        sell: "#tab3 > table > tbody > tr:nth-child(3) > td:nth-child(2) > strong",
-        buy: "#tab3 > table > tbody > tr:nth-child(3) > td:nth-child(3) > strong",
+        sell: "#content > div > div:nth-child(1) > div > div:nth-child(3) > p:nth-child(2)",
+        buy: "#content > div > div:nth-child(2) > div > div:nth-child(2) > p:nth-child(2)",
+        info: "#content > div > div:nth-child(1) > div > div.tw-items-start > p:nth-child(2)"
       },
       {
         type: "lotus-archi-merah-putih",
@@ -285,50 +255,23 @@ export const siteDefiner = {
   "hargaemas-net": {
     engine: "cheerio",
     url: "https://harga-emas.net/",
-    formatter: {
-      buy: (e: any) => {
-        const params = e?.trim()?.replace(/\,0/, "");
+    // formatter: {
+    //   buy: (e: any) => {
+    //     const params = e?.trim()?.replace(/\,0/, "");
 
-        return e ? parseInt(`${params}000`) : 0;
-      },
-      sell: (e: any) => {
-        const params = e?.trim()?.replace(/\,0/, "");
+    //     return e ? parseInt(`${params}000`) : 0;
+    //   },
+    //   sell: (e: any) => {
+    //     const params = e?.trim()?.replace(/\,0/, "");
 
-        return e ? parseInt(`${params}000`) : 0;
-      },
-    },
+    //     return e ? parseInt(`${params}000`) : 0;
+    //   },
+    // },
     selector: [
       {
         type: "antam",
-        sell: "body > div.container > div:nth-child(2) > div.eight.columns > table:nth-child(2) > tbody > tr:nth-child(1) > td:nth-child(3)",
+        sell: "body > div > div.row > main > div:nth-child(12) > table > tbody > tr:nth-child(2) > td:nth-child(2)",
         buy: null,
-      },
-      {
-        type: "pegadaian",
-        sell: "body > div.container > div:nth-child(2) > div.eight.columns > table:nth-child(2) > tbody > tr:nth-child(1) > td:nth-child(5)",
-        buy: null,
-      },
-    ],
-  },
-  inbizia: {
-    engine: "cheerio",
-    url: "https://www.inbizia.com/harga-emas-hari-ini-287964",
-    selector: [
-      {
-        type: "logam-mulia",
-        sell: "#content > table.table.table-data.hide-mob > tbody > tr:nth-child(3) > td:nth-child(2)",
-        buy: null,
-      },
-    ],
-  },
-  "hargaemas-com": {
-    engine: "cheerio",
-    url: "https://www.hargaemas.com/",
-    selector: [
-      {
-        type: "antam",
-        sell: "body > div.container > section.featured-posts > div.row > div:nth-child(1) > table.table.table-bordered.table-dark > tbody > tr:nth-child(2) > td:nth-child(2) > div.price-current",
-        buy: "body > div.container > section.featured-posts > div.row > div:nth-child(1) > table.table.table-bordered.table-dark > tbody > tr:nth-child(2) > td:nth-child(1) > div.price-current",
       },
     ],
   },
