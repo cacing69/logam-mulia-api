@@ -3,6 +3,7 @@ export default {
         url: "https://www.tokopedia.com/emas/harga-hari-ini/",
         error: "request timeout",
         engine: "playwright",
+        mirror: true,
         onNetwork: true,
         selector: [
             {

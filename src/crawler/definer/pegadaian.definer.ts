@@ -2,7 +2,7 @@ export default {
     pegadaian: {
         url: "https://www.pegadaian.co.id/",
         engine: "playwright",
-
+        mirror: true,
         selector: [
             {
                 before: {
