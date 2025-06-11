@@ -1,4 +1,4 @@
-
+<!-- GitAds-Verify: 3FGPSI1T41Y2U29T9YLW1HH2VAPRXK9I -->
 # Logam Mulia API
 
 <p>Hobby only. Scraping beberapa website yang menyediakan informasi harga jual/beli logam mulia emas di Indonesia, dont worry to make pull request</p>
