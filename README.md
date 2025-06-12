@@ -1,9 +1,8 @@
+<!-- GitAds-Verify: 3FGPSI1T41Y2U29T9YLW1HH2VAPRXK9I -->
 
 # Logam Mulia API
 
 <p>Hobby only. Scraping beberapa website yang menyediakan informasi harga jual/beli logam mulia emas di Indonesia, dont worry to make pull request</p>
-
-
 
 <pre>https://logam-mulia-api.vercel.app/</pre>
 
@@ -26,6 +25,9 @@
 - [Harga-Emas.net](https://harga-emas.net/)
 - [inbizia](https://www.inbizia.com/harga-emas-hari-ini-287964)
 - [Harga-Emas.com](https://www.hargaemas.com/)
+
+## GitAds Sponsored
+[![Sponsored by GitAds](https://gitads.dev/v1/ad-serve?source=cacing69/logam-mulia-api@github)](https://gitads.dev/v1/ad-track?source=cacing69/logam-mulia-api@github)
 
 Jika ingin menambahkan beberapa website lain, atau ada saran lain untuk bentuk response & requestnya, dipersilahkan untuk open issue terkait kritik dan saran
 
