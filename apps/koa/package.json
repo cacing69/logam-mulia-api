@@ -1,0 +1,72 @@
+{
+  "name": "@logam-mulia-api/logam-mulia-api/koa",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "name": "logam-mulia-api/koa",
+    "targets": {
+      "build": {
+        "executor": "@nx/esbuild:esbuild",
+        "outputs": [
+          "{options.outputPath}"
+        ],
+        "defaultConfiguration": "production",
+        "options": {
+          "platform": "node",
+          "outputPath": "apps/koa/dist",
+          "format": [
+            "cjs"
+          ],
+          "bundle": false,
+          "main": "apps/koa/src/main.ts",
+          "tsConfig": "apps/koa/tsconfig.app.json",
+          "assets": [
+            "apps/koa/src/assets"
+          ],
+          "esbuildOptions": {
+            "sourcemap": true,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        },
+        "configurations": {
+          "development": {},
+          "production": {
+            "esbuildOptions": {
+              "sourcemap": false,
+              "outExtension": {
+                ".js": ".js"
+              }
+            }
+          }
+        }
+      },
+      "serve": {
+        "continuous": true,
+        "executor": "@nx/js:node",
+        "defaultConfiguration": "development",
+        "dependsOn": [
+          "build"
+        ],
+        "options": {
+          "buildTarget": "logam-mulia-api/koa:build",
+          "runBuildTargetDependencies": false
+        },
+        "configurations": {
+          "development": {
+            "buildTarget": "logam-mulia-api/koa:build:development"
+          },
+          "production": {
+            "buildTarget": "logam-mulia-api/koa:build:production"
+          }
+        }
+      },
+      "test": {
+        "options": {
+          "passWithNoTests": true
+        }
+      }
+    }
+  }
+}

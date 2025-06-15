@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "target": "es2019",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": ".",
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "resolveJsonModule": true,
+    "paths": {
+      "@/*": ["./*"],
+    },
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
+    "typeRoots": ["node_modules/@types", "types"],
+  },
+  "exclude": ["node_modules", "dist"],
+  "include": ["**/*.ts"]
+}
