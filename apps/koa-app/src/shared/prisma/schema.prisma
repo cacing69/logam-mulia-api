@@ -1,0 +1,78 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/shared/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String           @id @default(ulid())
+  firstName      String
+  lastName       String?
+  email          String           @unique
+  password       String
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime?
+  deletedAt      DateTime?
+  Test           Test[]
+  UserPermission UserPermission[]
+}
+
+model Test {
+  id        String    @id @default(ulid())
+  key       String
+  value     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
+  deletedAt DateTime?
+  userId    String?
+  user      User?     @relation(fields: [userId], references: [id]) // Foreign key
+}
+
+model Role {
+  id             String           @id @default(ulid())
+  name           String
+  displayName    String?
+  description    String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime?
+  deletedAt      DateTime?
+  RolePermission RolePermission[]
+}
+
+model Permission {
+  id             String           @id @default(ulid())
+  name           String
+  displayName    String?
+  description    String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime?
+  deletedAt      DateTime?
+  RolePermission RolePermission[]
+  UserPermission UserPermission[]
+}
+
+model RolePermission {
+  id           String      @id @default(ulid())
+  roleId       String
+  permissionId String
+  role         Role?       @relation(fields: [roleId], references: [id]) // Foreign key
+  permission   Permission? @relation(fields: [permissionId], references: [id]) // Foreign key
+}
+
+model UserPermission {
+  id           String      @id @default(ulid())
+  userId       String
+  permissionId String
+  user         User?       @relation(fields: [userId], references: [id]) // Foreign key
+  permission   Permission? @relation(fields: [permissionId], references: [id]) // Foreign key
+}

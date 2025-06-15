@@ -1,0 +1,115 @@
+{
+  "name": "@logam-mulia-api/koa-app",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "name": "koa-app",
+    "targets": {
+      "build": {
+        "executor": "@nx/esbuild:esbuild",
+        "outputs": [
+          "{options.outputPath}"
+        ],
+        "defaultConfiguration": "production",
+        "options": {
+          "platform": "node",
+          "outputPath": "apps/koa-app/dist",
+          "format": [
+            "cjs"
+          ],
+          "bundle": false,
+          "main": "apps/koa-app/src/main.ts",
+          "tsConfig": "apps/koa-app/tsconfig.app.json",
+          "assets": [
+            "apps/koa-app/src/assets"
+          ],
+          "esbuildOptions": {
+            "sourcemap": true,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        },
+        "configurations": {
+          "development": {},
+          "production": {
+            "esbuildOptions": {
+              "sourcemap": false,
+              "outExtension": {
+                ".js": ".js"
+              }
+            }
+          }
+        }
+      },
+      "serve": {
+        "continuous": true,
+        "executor": "@nx/js:node",
+        "defaultConfiguration": "development",
+        "dependsOn": [
+          "build"
+        ],
+        "options": {
+          "buildTarget": "koa-app:build",
+          "runBuildTargetDependencies": false
+        },
+        "configurations": {
+          "development": {
+            "buildTarget": "koa-app:build:development"
+          },
+          "production": {
+            "buildTarget": "koa-app:build:production"
+          }
+        }
+      },
+      "test": {
+        "options": {
+          "passWithNoTests": true
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^16.5.0",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "koa": "^3.0.0",
+    "koa-bodyparser": "^4.4.1",
+    "koa-helmet": "^8.0.1",
+    "koa-multer": "^1.0.2",
+    "koa-router": "^13.0.1",
+    "koa-static": "^5.0.0",
+    "koa2-cors": "^2.0.6",
+    "koa2-swagger-ui": "^5.11.0",
+    "swagger-jsdoc": "^6.2.8",
+    "ulid": "^3.0.1",
+    "yamljs": "^0.3.0",
+    "zod": "^3.25.64",
+    "zod-to-json-schema": "^3.24.5",
+    "zod-validation-error": "^3.5.0"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^9.8.0",
+    "@types/bcryptjs": "^3.0.0",
+    "@types/helmet": "^4.0.0",
+    "@types/jest": "^29.5.14",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/koa": "^2.15.0",
+    "@types/koa-bodyparser": "^4.3.12",
+    "@types/koa-router": "^7.4.8",
+    "@types/koa-static": "^4.0.4",
+    "@types/koa2-cors": "^2.0.5",
+    "@types/node": "^24.0.1",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/yamljs": "^0.2.34",
+    "ajv": "^8.17.1",
+    "jest": "^30.0.0",
+    "nodemon": "^3.1.10",
+    "supertest": "^7.1.1",
+    "swagger-cli": "^4.0.4",
+    "ts-jest": "^29.4.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}

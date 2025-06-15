@@ -1,9 +1,10 @@
 packages:
-  - 'libs/*'
-  - 'apps/*'
+  - "libs/*"
+  - "apps/*"
+  - "koa-app"
 onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - '@swc/core'
-  - 'core-js'
-  - 'esbuild'
-  - 'nx'
+  - "@parcel/watcher"
+  - "@swc/core"
+  - "core-js"
+  - "esbuild"
+  - "nx"

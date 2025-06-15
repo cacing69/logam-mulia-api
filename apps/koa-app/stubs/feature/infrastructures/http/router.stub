@@ -1,0 +1,118 @@
+import Router from 'koa-router';
+import { auth } from '@shared/middlewares/auth.middleware';
+import {
+    handlePaginate{PASCAL_NAME},
+    handleGet{PASCAL_NAME}ById,
+    handleUpdate{PASCAL_NAME}ById,
+    handleDelete{PASCAL_NAME}ById
+} from '@features/{FEATURE_NAME}/infrastructures/http/controllers/{FEATURE_NAME}.controller';
+
+const {CAMEL_NAME}Router = new Router({ prefix: '/{FEATURE_NAME}' });
+
+/**
+ * @openapi
+ * /{FEATURE_NAME}:
+ *   get:
+ *     summary: Get All {NORMAL_NAME}
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - {NORMAL_NAME}
+ *     responses:
+ *      200:
+ *        $ref: '#/components/responses/SuccessResponse'
+ *      401:
+ *        $ref: '#/components/responses/Unauthorized'
+ *      403:
+ *        $ref: '#/components/responses/Forbidden'
+ *      405:
+ *        $ref: '#/components/responses/MethodNotAllowed'
+ *      500:
+ *        $ref: '#/components/responses/InternalError'
+ */
+{CAMEL_NAME}Router.get('/{FEATURE_NAME}', auth, handlePaginate{PASCAL_NAME});
+
+/**
+ * @openapi
+ * /{FEATURE_NAME}/{id}:
+ *   get:
+ *     summary: Get {NORMAL_NAME} By ID
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - {NORMAL_NAME}
+ *     parameters:
+ *       - $ref: '#/components/parameters/IdPathParam'
+ *     responses:
+ *      200:
+ *        $ref: '#/components/responses/SuccessResponse'
+ *      401:
+ *        $ref: '#/components/responses/Unauthorized'
+ *      403:
+ *        $ref: '#/components/responses/Forbidden'
+ *      404:
+ *        $ref: '#/components/responses/NotFound'
+ *      405:
+ *        $ref: '#/components/responses/MethodNotAllowed'
+ *      422:
+ *        $ref: '#/components/responses/UnprocessableContent'
+ *      500:
+ *        $ref: '#/components/responses/InternalError'
+ */
+{CAMEL_NAME}Router.get('/{FEATURE_NAME}/:id', auth, handleGet{PASCAL_NAME}ById);
+
+/**
+ * @openapi
+ * /{FEATURE_NAME}/{id}:
+ *   patch:
+ *     summary: Update {NORMAL_NAME} By ID
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - {NORMAL_NAME}
+ *     parameters:
+ *       - $ref: '#/components/parameters/IdPathParam'
+ *     responses:
+ *      204:
+ *          description: No Content
+ *      401:
+ *        $ref: '#/components/responses/Unauthorized'
+ *      403:
+ *        $ref: '#/components/responses/Forbidden'
+ *      404:
+ *        $ref: '#/components/responses/NotFound'
+ *      405:
+ *        $ref: '#/components/responses/MethodNotAllowed'
+ *      422:
+ *        $ref: '#/components/responses/UnprocessableContent'
+ *      500:
+ *        $ref: '#/components/responses/InternalError'
+ */
+{CAMEL_NAME}Router.patch('/{FEATURE_NAME}/:id', auth, handleUpdate{PASCAL_NAME}ById);
+
+/**
+ * @openapi
+ * /{FEATURE_NAME}/{id}:
+ *   delete:
+ *     summary: Delete {NORMAL_NAME} By ID
+ *     security:
+ *       - bearerAuth: []
+ *     tags:
+ *       - {NORMAL_NAME}
+ *     parameters:
+ *       - $ref: '#/components/parameters/IdPathParam'
+ *     responses:
+ *      204:
+ *          description: No Content
+ *      401:
+ *        $ref: '#/components/responses/Unauthorized'
+ *      403:
+ *        $ref: '#/components/responses/Forbidden'
+ *      404:
+ *        $ref: '#/components/responses/NotFound'
+ *      405:
+ *        $ref: '#/components/responses/MethodNotAllowed'
+ *      500:
+ *        $ref: '#/components/responses/InternalError'
+ */
+{CAMEL_NAME}Router.delete('/{FEATURE_NAME}/:id', auth, handleDelete{PASCAL_NAME}ById);

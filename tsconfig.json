@@ -4,10 +4,10 @@
   "files": [],
   "references": [
     {
-      "path": "./apps/koa"
+      "path": "./apps/koa-app"
     },
     {
-      "path": "./apps/nest"
+      "path": "./apps/nest-app"
     }
   ]
 }
