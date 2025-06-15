@@ -8,6 +8,9 @@
     },
     {
       "path": "./apps/nest-app"
+    },
+    {
+      "path": "./libs/types"
     }
   ]
 }

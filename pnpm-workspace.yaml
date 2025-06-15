@@ -1,7 +1,6 @@
 packages:
-  - "libs/*"
   - "apps/*"
-  - "koa-app"
+  - "libs/*"
 onlyBuiltDependencies:
   - "@parcel/watcher"
   - "@swc/core"
