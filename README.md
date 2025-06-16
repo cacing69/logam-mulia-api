@@ -4,9 +4,6 @@
 
 # Logam Mulia API
 
-## This Repository is Part of SRC Tool
-
-
 <p>Hobby only. Scraping beberapa website yang menyediakan informasi harga jual/beli logam mulia emas di Indonesia, dont worry to make pull request</p>
 
 <pre>https://logam-mulia-api.vercel.app/</pre>
@@ -75,3 +72,9 @@ parameter site boleh diisi salah satu dari beberapa website yang tersedia
 - hargaemas-net : [https://logam-mulia-api.vercel.app/prices/hargaemas-net](https://logam-mulia-api.vercel.app/prices/hargaemas-net)
 - inbizia : [https://logam-mulia-api.vercel.app/prices/inbizia](https://logam-mulia-api.vercel.app/prices/inbizia)
 - hargaemas-com : [https://logam-mulia-api.vercel.app/prices/hargaemas-com](https://logam-mulia-api.vercel.app/prices/hargaemas-com)
+
+## This Repository is Part of SRC Tool
+
+<div align="center">
+  <a href="https://github.com/srctool"><img src="https://raw.githubusercontent.com/srctool/.github/refs/heads/main/banner.svg" alt="SRC Tool logo"></a>
+</div>
