@@ -25,6 +25,7 @@
 - [Harga-Emas.net](https://harga-emas.net/)
 - [inbizia](https://www.inbizia.com/harga-emas-hari-ini-287964)
 - [Harga-Emas.com](https://www.hargaemas.com/)
+- [Treasury](https://treasury.id/)
 
 ## GitAds Sponsored
 [![Sponsored by GitAds](https://gitads.dev/v1/ad-serve?source=cacing69/logam-mulia-api@github)](https://gitads.dev/v1/ad-track?source=cacing69/logam-mulia-api@github)
@@ -70,3 +71,4 @@ parameter site boleh diisi salah satu dari beberapa website yang tersedia
 - hargaemas-net : [https://logam-mulia-api.vercel.app/prices/hargaemas-net](https://logam-mulia-api.vercel.app/prices/hargaemas-net)
 - inbizia : [https://logam-mulia-api.vercel.app/prices/inbizia](https://logam-mulia-api.vercel.app/prices/inbizia)
 - hargaemas-com : [https://logam-mulia-api.vercel.app/prices/hargaemas-com](https://logam-mulia-api.vercel.app/prices/hargaemas-com)
+- treasury : [https://logam-mulia-api.vercel.app/prices/treasury](https://logam-mulia-api.vercel.app/prices/treasury)

@@ -7,6 +7,7 @@ import inbiziaDefiner from './definer/inbizia.definer';
 import logammuliaDefiner from './definer/logammulia.definer';
 import tokopediaDefiner from './definer/tokopedia.definer';
 import pegadaianDefiner from './definer/pegadaian.definer';
+import treasuryDefiner from './definer/treasury.definer';
 
 export const siteDefiner = {
   ...anekalogamDefiner,
@@ -43,6 +44,7 @@ export const siteDefiner = {
   //   ],
   // },
   ...pegadaianDefiner,
+  ...treasuryDefiner,
   sakumas: {
     url: "https://sakumas.com/",
     engine: "cheerio",

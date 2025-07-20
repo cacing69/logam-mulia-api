@@ -58,12 +58,18 @@ export class CrawlerService {
     return parseInt(trimValue);
   }
 
-  async requestWithAxios(url: string) {
-    const req = await this.httpService
-      .get(url)
-      .pipe(map((response) => response.data));
-
-    return await lastValueFrom(req);
+  async requestWithAxios(url: string, method: string = "GET") {
+    if (method === "POST") {
+      const req = await this.httpService
+        .post(url, {}) // jika butuh body, sesuaikan
+        .pipe(map((response) => response.data));
+      return await lastValueFrom(req);
+    } else {
+      const req = await this.httpService
+        .get(url)
+        .pipe(map((response) => response.data));
+      return await lastValueFrom(req);
+    }
   }
 
   async scrapeWithCheerio() {
@@ -86,7 +92,8 @@ export class CrawlerService {
   }
 
   async scrapeWithAxios() {
-    const requestData = await this.requestWithAxios(this.site?.site.url);
+    const method = this.site.method || "GET";
+    const requestData = await this.requestWithAxios(this.site?.url, method);
 
     this.content = requestData;
 
