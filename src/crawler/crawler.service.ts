@@ -8,8 +8,8 @@ import { get } from 'lodash';
 import cheerio = require('cheerio');
 import { BadRequestException } from '../core/exceptions/bad-request.exception';
 import UserAgent from 'user-agents';
-import axios from 'axios';
-
+import axios, { AxiosError } from 'axios';
+import * as https from 'https';
 
 interface Rate {
   buy: string | number;
@@ -58,17 +58,53 @@ export class CrawlerService {
     return parseInt(trimValue);
   }
 
-  async requestWithAxios(url: string, method: string = "GET") {
-    if (method === "POST") {
-      const req = await this.httpService
-        .post(url, {}) // jika butuh body, sesuaikan
-        .pipe(map((response) => response.data));
-      return await lastValueFrom(req);
-    } else {
-      const req = await this.httpService
-        .get(url)
-        .pipe(map((response) => response.data));
-      return await lastValueFrom(req);
+
+  async requestWithAxios(url: string, method: string = 'GET') {
+    const headers = {
+      'User-Agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
+      Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      'Accept-Encoding': 'gzip, deflate, br',
+    };
+
+    const config = {
+      headers,
+      timeout: 10000,
+      maxRedirects: 5,
+      decompress: true,
+      responseType: 'text' as const,
+    };
+
+    try {
+      const res =
+        method === 'POST'
+          ? await axios.post(url, {}, config)
+          : await axios.get(url, config);
+
+      return res.data;
+    } catch (err: any) {
+      const axiosErr = err as AxiosError;
+      const message = axiosErr.message || '';
+
+      // Tangani error khusus "unexpected end of file"
+      if (message.includes('unexpected end of file')) {
+        console.warn(`Detected EOF error on URL: ${url}`);
+        // Retry 1x sebagai percobaan terakhir
+        try {
+          console.log('🔁 Retrying request...');
+          const retryRes =
+            method === 'POST'
+              ? await axios.post(url, {}, config)
+              : await axios.get(url, config);
+          return retryRes.data;
+        } catch (retryErr: any) {
+          console.error('Retry also failed:', retryErr.message);
+          throw new Error('Request failed twice due to EOF issue');
+        }
+      }
+
+      console.error('Axios general error:', axiosErr.message);
+      throw new Error(`Request failed: ${axiosErr.message}`);
     }
   }
 
@@ -477,7 +513,6 @@ export class CrawlerService {
       return !!value; // Default fallback
     }
 
-    // if (isOnMirror && this.useMirror) {
     if (isOnMirror && parseBoolean(this.useMirror)) {
       return await this.scrapeOnMirror();
     } else {
