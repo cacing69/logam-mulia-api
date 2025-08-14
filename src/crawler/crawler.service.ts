@@ -8,8 +8,10 @@ import { get } from 'lodash';
 import cheerio = require('cheerio');
 import { BadRequestException } from '../core/exceptions/bad-request.exception';
 import UserAgent from 'user-agents';
-import axios, { AxiosError } from 'axios';
-import * as https from 'https';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+
+import http from 'http';
+import https from 'https';
 
 interface Rate {
   buy: string | number;
@@ -108,8 +110,143 @@ export class CrawlerService {
     }
   }
 
+  // async requestWithAxiosSafe(
+  //   url: string,
+  //   config: AxiosRequestConfig
+  //    = {}
+  //   ) {
+  //     // Default browser-like headers
+  //   const defaultHeaders = {
+  //     'User-Agent':
+  //       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
+  //     'Accept-Encoding': 'gzip, deflate, br',
+  //     Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  //     Connection: 'keep-alive',
+  //   };
+
+  //   // Keep-alive agents
+  //   const httpAgent = new http.Agent({ keepAlive: true, maxSockets: 10 });
+  //   const httpsAgent = new https.Agent({ keepAlive: true, maxSockets: 10 });
+
+  //   // Delay helper
+  //   const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  //   const mergedConfig: AxiosRequestConfig = {
+  //     method: 'GET',
+  //     responseType: 'text',
+  //     timeout: 10000,
+  //     maxRedirects: 5,
+  //     decompress: true,
+  //     headers: {
+  //       ...defaultHeaders,
+  //       ...(config.headers || {}),
+  //     },
+  //     httpAgent,
+  //     httpsAgent,
+  //     ...config,
+  //   };
+
+  //   try {
+  //     const response = await axios(url, mergedConfig);
+  //     return response.data;
+  //   } catch (err: any) {
+  //     if (
+  //       err.message.includes('unexpected end of file') ||
+  //       err.code === 'ECONNRESET'
+  //     ) {
+  //       console.warn(`[WARN] EOF/Connection reset: retrying ${url} after delay...`);
+  //       await wait(1000);
+  //       const retryResponse = await axios(url, mergedConfig);
+  //       return retryResponse.data;
+  //     }
+
+  //     console.error(`[ERROR] Failed to fetch: ${url}`);
+  //     throw err;
+  //   }
+  // }
+
+  async requestWithAxiosSafe(
+  url: string,
+  config: AxiosRequestConfig = {}
+) {
+  const defaultHeaders = {
+    'User-Agent':
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
+    'Accept-Encoding': 'gzip, deflate, br',
+    Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    Connection: 'keep-alive',
+  };
+
+  const httpAgent = new http.Agent({ keepAlive: true, maxSockets: 10 });
+  const httpsAgent = new https.Agent({ keepAlive: true, maxSockets: 10 });
+
+  const wait = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
+
+  const mergedConfig: AxiosRequestConfig = {
+    method: 'GET',
+    responseType: 'text',
+    timeout: 15000, // sedikit lebih lama
+    maxRedirects: 5,
+    decompress: true,
+    headers: {
+      ...defaultHeaders,
+      ...(config.headers || {}),
+    },
+    httpAgent,
+    httpsAgent,
+    ...config,
+  };
+
+  let attempt = 0;
+  const maxAttempts = 5;
+
+  while (attempt < maxAttempts) {
+    try {
+      const response = await axios(url, mergedConfig);
+      return response.data;
+    } catch (err: any) {
+      attempt++;
+      const isEOF =
+        err.message?.includes('unexpected end of file') ||
+        err.code === 'ECONNRESET';
+
+      if (isEOF && attempt < maxAttempts) {
+        const delay = 1000 * Math.pow(2, attempt); // exponential backoff
+        console.warn(
+          `[WARN] Attempt ${attempt} failed with EOF/RESET. Retrying in ${delay}ms...`
+        );
+        await wait(delay);
+        continue;
+      }
+
+      console.error(`[ERROR] Failed after ${attempt} attempts: ${url}`);
+      throw err;
+    }
+  }
+}
+
   async scrapeWithCheerio() {
     const requestData = await this.requestWithAxios(this.site.url);
+
+    this.content = requestData;
+
+    if (this.checkIfSelectorIsArray()) {
+      for (const e of this.site.selector) {
+        // Tunggu hasil dari getValueFromDom
+        const rate = await this.getValueFromDom(requestData, e);
+        this.data.push(rate);
+      }
+
+      return {
+        data: this.data,
+        meta: this.getMeta()
+      };
+    }
+  }
+
+  async scrapeWithCheerioSafe() {
+    const requestData = await this.requestWithAxiosSafe(this.site.url);
 
     this.content = requestData;
 
@@ -521,6 +658,8 @@ export class CrawlerService {
           return await this.scrapeWithAxios();
         } else if (this.site.engine == "cheerio") {
           return await this.scrapeWithCheerio();
+        } else if (this.site.engine == "cheerio-safe") {
+          return await this.scrapeWithCheerioSafe();
         } else if (this.site.engine == "playwright") {
           return await this.scrapeWithPlaywright();
         }

@@ -1,6 +1,6 @@
 export default {
     "hargaemas-com": {
-        engine: "cheerio",
+        engine: "cheerio-safe",
         url: "https://www.hargaemas.com/",
         selector: [
             {
