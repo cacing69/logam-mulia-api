@@ -2,6 +2,7 @@ export default {
   treasury: {
     url: "https://api.treasury.id/api/v1/antigrvty/gold/rate",
     engine: "axios",
+    responseType: "json",
     method: "POST",
     selector: [
       {

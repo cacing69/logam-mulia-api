@@ -22,6 +22,19 @@ interface Rate {
   unit: string;
 }
 
+interface CircuitBreakerState {
+  failures: number;
+  lastFailure: Date | null;
+  state: 'CLOSED' | 'OPEN' | 'HALF_OPEN';
+}
+
+interface RetryConfig {
+  maxAttempts: number;
+  baseDelay: number;
+  maxDelay: number;
+  backoffFactor: number;
+}
+
 @Injectable()
 export class CrawlerService {
   private playwright: any;
@@ -38,6 +51,9 @@ export class CrawlerService {
   private data;
   private site;
   private siteName;
+  
+  // Circuit breaker state for each URL
+  private circuitBreakers: Map<string, CircuitBreakerState> = new Map();
 
   constructor(
     private readonly configService: ConfigService,
@@ -47,6 +63,128 @@ export class CrawlerService {
     this.isHeadless = this.configService.get("APP_HEADLESS");
     this.useMirror = this.configService.get("APP_USE_MIRROR");
     this.urlMirror = this.configService.get("APP_MIRROR_URL");
+  }
+
+  private sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  private getRandomUserAgent(): string {
+    try {
+      // Generate a random, realistic User-Agent string
+      // Use broader filter or no filter to ensure we get a user agent
+      const userAgent = new UserAgent();
+      return userAgent.toString();
+    } catch (error: any) {
+      // Fallback to a default user agent if generation fails
+      console.warn('Failed to generate random user agent, using fallback:', error?.message || error);
+      return 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36';
+    }
+  }
+
+  private getBrowserSpecificHeaders(userAgent: string): Record<string, string> {
+    // Use simpler, more universal headers that work with most APIs
+    return {
+      'User-Agent': userAgent,
+      'Accept': 'application/json, text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8',
+      'Accept-Language': 'en-US,en;q=0.9',
+      'Accept-Encoding': 'gzip, deflate, br',
+      'Connection': 'keep-alive',
+      'Cache-Control': 'no-cache'
+    };
+  }
+
+  private getRandomDelay(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  private getHumanLikeDelay(): number {
+    // Generate more human-like delays between requests
+    // Most humans take 1-3 seconds between actions, with occasional longer pauses
+    const patterns = [
+      { min: 1000, max: 2000, weight: 60 }, // 60% chance: 1-2 seconds
+      { min: 2000, max: 3000, weight: 25 }, // 25% chance: 2-3 seconds  
+      { min: 3000, max: 5000, weight: 10 }, // 10% chance: 3-5 seconds
+      { min: 5000, max: 8000, weight: 5 }   // 5% chance: 5-8 seconds
+    ];
+    
+    const random = Math.random() * 100;
+    let cumulative = 0;
+    
+    for (const pattern of patterns) {
+      cumulative += pattern.weight;
+      if (random <= cumulative) {
+        return this.getRandomDelay(pattern.min, pattern.max);
+      }
+    }
+    
+    // Fallback
+    return this.getRandomDelay(1000, 2000);
+  }
+
+  private getCircuitBreakerState(url: string): CircuitBreakerState {
+    if (!this.circuitBreakers.has(url)) {
+      this.circuitBreakers.set(url, {
+        failures: 0,
+        lastFailure: null,
+        state: 'CLOSED'
+      });
+    }
+    return this.circuitBreakers.get(url)!;
+  }
+
+  private updateCircuitBreakerOnSuccess(url: string): void {
+    const state = this.getCircuitBreakerState(url);
+    state.failures = 0;
+    state.lastFailure = null;
+    state.state = 'CLOSED';
+  }
+
+  private updateCircuitBreakerOnFailure(url: string): void {
+    const state = this.getCircuitBreakerState(url);
+    state.failures++;
+    state.lastFailure = new Date();
+    
+    if (state.failures >= 3) {
+      state.state = 'OPEN';
+    }
+  }
+
+  private isCircuitBreakerOpen(url: string): boolean {
+    const state = this.getCircuitBreakerState(url);
+    
+    if (state.state === 'CLOSED') {
+      return false;
+    }
+    
+    if (state.state === 'OPEN') {
+      // Check if enough time has passed to try again (5 minutes)
+      const timeSinceLastFailure = Date.now() - (state.lastFailure?.getTime() || 0);
+      if (timeSinceLastFailure > 5 * 60 * 1000) {
+        state.state = 'HALF_OPEN';
+        return false;
+      }
+      return true;
+    }
+    
+    // HALF_OPEN state allows one attempt
+    return false;
+  }
+
+  // Public method to get circuit breaker status for monitoring
+  getCircuitBreakerStatus(): Map<string, CircuitBreakerState> {
+    return new Map(this.circuitBreakers);
+  }
+
+  // Public method to reset circuit breaker for a specific URL
+  resetCircuitBreaker(url: string): void {
+    if (this.circuitBreakers.has(url)) {
+      const state = this.circuitBreakers.get(url)!;
+      state.failures = 0;
+      state.lastFailure = null;
+      state.state = 'CLOSED';
+      console.log(`Circuit breaker reset for ${url}`);
+    }
   }
 
   private defaultFormatter(value: string) {
@@ -61,53 +199,140 @@ export class CrawlerService {
   }
 
 
-  async requestWithAxios(url: string, method: string = 'GET') {
-    const headers = {
-      'User-Agent':
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
-      Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-      'Accept-Encoding': 'gzip, deflate, br',
-    };
-
-    const config = {
-      headers,
-      timeout: 10000,
-      maxRedirects: 5,
-      decompress: true,
-      responseType: 'text' as const,
-    };
-
-    try {
-      const res =
-        method === 'POST'
-          ? await axios.post(url, {}, config)
-          : await axios.get(url, config);
-
-      return res.data;
-    } catch (err: any) {
-      const axiosErr = err as AxiosError;
-      const message = axiosErr.message || '';
-
-      // Tangani error khusus "unexpected end of file"
-      if (message.includes('unexpected end of file')) {
-        console.warn(`Detected EOF error on URL: ${url}`);
-        // Retry 1x sebagai percobaan terakhir
-        try {
-          console.log('🔁 Retrying request...');
-          const retryRes =
-            method === 'POST'
-              ? await axios.post(url, {}, config)
-              : await axios.get(url, config);
-          return retryRes.data;
-        } catch (retryErr: any) {
-          console.error('Retry also failed:', retryErr.message);
-          throw new Error('Request failed twice due to EOF issue');
-        }
-      }
-
-      console.error('Axios general error:', axiosErr.message);
-      throw new Error(`Request failed: ${axiosErr.message}`);
+  async requestWithAxios(url: string, method: string = 'GET', retryConfig?: Partial<RetryConfig>) {
+    // Check circuit breaker first
+    if (this.isCircuitBreakerOpen(url)) {
+      throw new Error(`Circuit breaker is OPEN for ${url}. Service temporarily unavailable.`);
     }
+
+    // Add human-like delay before making request to appear more natural
+    const preRequestDelay = this.getHumanLikeDelay();
+    console.log(`Adding human-like delay of ${preRequestDelay}ms before request`);
+    await this.sleep(preRequestDelay);
+
+    const config: RetryConfig = {
+      maxAttempts: 3,
+      baseDelay: 1000,
+      maxDelay: 10000,
+      backoffFactor: 2,
+      ...retryConfig
+    };
+
+    let lastError: Error;
+
+    for (let attempt = 1; attempt <= config.maxAttempts; attempt++) {
+      try {
+        const userAgent = this.getRandomUserAgent();
+        console.log(`Using User-Agent: ${userAgent.substring(0, 50)}...`);
+        const headers = this.getBrowserSpecificHeaders(userAgent);
+
+        const axiosConfig = {
+          headers,
+          timeout: 15000, // Increased timeout to 15 seconds
+          maxRedirects: 5,
+          decompress: true,
+          responseType: 'text' as const, // Keep as text to handle both JSON and HTML
+          validateStatus: (status: number) => status < 500 // Accept 4xx errors but retry on 5xx
+        };
+
+        console.log(`Attempt ${attempt}/${config.maxAttempts} for ${url}`);
+        
+        const res = method === 'POST'
+          ? await axios.post(url, {}, axiosConfig)
+          : await axios.get(url, axiosConfig);
+
+        // Success - update circuit breaker
+        this.updateCircuitBreakerOnSuccess(url);
+        console.log(`Request successful for ${url}`);
+        return res.data;
+
+      } catch (err: any) {
+        lastError = err;
+        const axiosErr = err as AxiosError;
+        const message = axiosErr.message || '';
+        
+        console.warn(`Attempt ${attempt} failed for ${url}: ${message}`);
+
+        // Check if this is a retryable error
+        const isRetryable = this.isRetryableError(axiosErr);
+        
+        if (!isRetryable || attempt === config.maxAttempts) {
+          // Final failure - update circuit breaker
+          this.updateCircuitBreakerOnFailure(url);
+          break;
+        }
+
+        // Calculate delay with exponential backoff and jitter
+        const baseDelay = Math.min(
+          config.baseDelay * Math.pow(config.backoffFactor, attempt - 1),
+          config.maxDelay
+        );
+        const jitter = this.getRandomDelay(0, Math.floor(baseDelay * 0.1));
+        const delay = baseDelay + jitter;
+
+        console.log(`Waiting ${delay}ms before retry...`);
+        await this.sleep(delay);
+      }
+    }
+
+    // All retries failed
+    const errorMessage = this.getDetailedErrorMessage(lastError as AxiosError, url, config.maxAttempts);
+    throw new Error(errorMessage);
+  }
+
+  private isRetryableError(error: AxiosError): boolean {
+    // Network errors that are worth retrying
+    const retryableNetworkErrors = [
+      'ECONNRESET',
+      'ECONNREFUSED', 
+      'ENOTFOUND',
+      'ECONNABORTED',
+      'ETIMEDOUT',
+      'unexpected end of file'
+    ];
+
+    const message = error.message?.toLowerCase() || '';
+    const code = error.code || '';
+
+    // Check for specific error patterns
+    if (retryableNetworkErrors.some(errType => 
+      message.includes(errType.toLowerCase()) || code === errType
+    )) {
+      return true;
+    }
+
+    // Check HTTP status codes
+    if (error.response?.status) {
+      const status = error.response.status;
+      // Retry on 5xx errors and some 4xx errors
+      return status >= 500 || status === 408 || status === 429;
+    }
+
+    return false;
+  }
+
+  private getDetailedErrorMessage(error: AxiosError, url: string, maxAttempts: number): string {
+    const message = error.message || '';
+    const status = error.response?.status;
+    const statusText = error.response?.statusText;
+
+    if (message.includes('unexpected end of file')) {
+      return `Request failed ${maxAttempts} times due to EOF (End of File) issues for ${url}. This usually indicates network connectivity problems or server-side issues.`;
+    }
+
+    if (error.code === 'ECONNRESET') {
+      return `Connection was reset by the server ${maxAttempts} times for ${url}. The target server may be overloaded or blocking requests.`;
+    }
+
+    if (error.code === 'ETIMEDOUT') {
+      return `Request timed out ${maxAttempts} times for ${url}. The server is taking too long to respond.`;
+    }
+
+    if (status) {
+      return `HTTP ${status} ${statusText} error persisted after ${maxAttempts} attempts for ${url}`;
+    }
+
+    return `Request failed ${maxAttempts} times for ${url}: ${message}`;
   }
 
   // async requestWithAxiosSafe(
@@ -246,7 +471,8 @@ export class CrawlerService {
   }
 
   async scrapeWithCheerioSafe() {
-    const requestData = await this.requestWithAxiosSafe(this.site.url);
+    // Use the improved requestWithAxios instead of requestWithAxiosSafe
+    const requestData = await this.requestWithAxios(this.site.url);
 
     this.content = requestData;
 
@@ -268,12 +494,38 @@ export class CrawlerService {
     const method = this.site.method || "GET";
     const requestData = await this.requestWithAxios(this.site?.url, method);
 
-    this.content = requestData;
+    console.log('Debug scrapeWithAxios:');
+    console.log('- Site config:', { 
+      url: this.site?.url, 
+      method: method,
+      responseType: this.site?.responseType 
+    });
+    console.log('- Raw requestData type:', typeof requestData);
+    console.log('- Raw requestData:', typeof requestData === 'string' ? requestData.substring(0, 500) + '...' : requestData);
+
+    // Parse JSON if the response is a string and expected to be JSON
+    let parsedData = requestData;
+    
+    // Check if this should be parsed as JSON based on definer
+    const isJsonResponse = this.site?.responseType === 'json' || 
+                          (typeof requestData === 'string' && requestData.trim().startsWith('{'));
+    
+    if (typeof requestData === 'string' && isJsonResponse) {
+      try {
+        parsedData = JSON.parse(requestData);
+        console.log('- Parsed JSON successfully');
+        console.log('- Parsed data structure:', Object.keys(parsedData || {}));
+      } catch (e: any) {
+        console.log('- Failed to parse JSON:', e?.message || e);
+        console.log('- Using raw string data');
+      }
+    }
+
+    this.content = parsedData;
 
     if (this.checkIfSelectorIsArray()) {
       this.site?.selector.forEach((e) => {
-        const rate = this.getValueFromObj(requestData, e);
-
+        const rate = this.getValueFromObj(parsedData, e);
         this.data.push(rate);
       });
 
@@ -476,16 +728,32 @@ export class CrawlerService {
   }
 
   private getValueFromObj(objectValue: any, selector: any) {
+    console.log('Debug getValueFromObj:');
+    console.log('- objectValue type:', typeof objectValue);
+    console.log('- objectValue:', JSON.stringify(objectValue, null, 2));
+    console.log('- selector:', JSON.stringify(selector, null, 2));
+    
     const rate: Rate = this.createRateFromSelector(selector);
 
     rate.buy = get(objectValue, selector?.buy);
+    rate.sell = get(objectValue, selector?.sell);
+    
+    console.log('- Extracted buy:', rate.buy);
+    console.log('- Extracted sell:', rate.sell);
 
-    if (selector?.sell != null) {
-      rate.sell = get(objectValue, selector?.sell);
-    } else {
-      rate.sell = null;
+    if (selector?.info != null) {
+      rate.info = get(objectValue, selector?.info);
+      console.log('- Extracted info:', rate.info);
     }
 
+    if (selector?.weight != null) {
+      if (typeof selector.weight === 'string') {
+        rate.weight = get(objectValue, selector.weight);
+      } else {
+        rate.weight = selector.weight;
+      }
+      console.log('- Extracted weight:', rate.weight);
+    }
 
     return this.checkWithFormatter(rate);
   }
@@ -626,7 +894,10 @@ export class CrawlerService {
   }
 
   async scrape(site: string) {
+    console.log(`Starting scrape for site: ${site}`);
+    
     if (!(site in siteDefiner)) {
+      console.error(`Site ${site} not found in definer`);
       throw new BadRequestException(
         `there is no ${site} registered on definer`
       );
@@ -634,8 +905,13 @@ export class CrawlerService {
 
     this.site = siteDefiner[site];
     this.siteName = site;
-
     this.data = [];
+
+    console.log(`Site configuration loaded:`, {
+      engine: this.site?.engine,
+      url: this.site?.url,
+      hasMirror: "mirror" in this.site
+    });
 
     const isOnMirror = "mirror" in this.site;
 
@@ -650,22 +926,38 @@ export class CrawlerService {
       return !!value; // Default fallback
     }
 
-    if (isOnMirror && parseBoolean(this.useMirror)) {
-      return await this.scrapeOnMirror();
-    } else {
-      if (this.site?.engine) {
-        if (this.site.engine == "axios") {
-          return await this.scrapeWithAxios();
-        } else if (this.site.engine == "cheerio") {
-          return await this.scrapeWithCheerio();
-        } else if (this.site.engine == "cheerio-safe") {
-          return await this.scrapeWithCheerioSafe();
-        } else if (this.site.engine == "playwright") {
-          return await this.scrapeWithPlaywright();
-        }
+    try {
+      if (isOnMirror && parseBoolean(this.useMirror)) {
+        console.log(`Using mirror for ${site}`);
+        return await this.scrapeOnMirror();
       } else {
-        throw new BadRequestException('there is no engine provided on definer')
+        if (this.site?.engine) {
+          console.log(`Using engine: ${this.site.engine} for ${site}`);
+          
+          if (this.site.engine == "axios") {
+            return await this.scrapeWithAxios();
+          } else if (this.site.engine == "cheerio") {
+            return await this.scrapeWithCheerio();
+          } else if (this.site.engine == "cheerio-safe") {
+            return await this.scrapeWithCheerioSafe();
+          } else if (this.site.engine == "playwright") {
+            return await this.scrapeWithPlaywright();
+          }
+        } else {
+          console.error(`No engine provided for ${site}`);
+          throw new BadRequestException('there is no engine provided on definer')
+        }
       }
+    } catch (error: any) {
+      console.error(`Scraping failed for ${site}:`, error?.message || error);
+      
+      // Check if this is a circuit breaker error
+      if (error?.message?.includes('Circuit breaker is OPEN')) {
+        throw new BadRequestException(`Service temporarily unavailable for ${site}. Please try again later.`);
+      }
+      
+      // Re-throw the original error for proper handling by error filter
+      throw error;
     }
   }
 }
