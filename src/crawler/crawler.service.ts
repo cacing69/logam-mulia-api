@@ -211,10 +211,10 @@ export class CrawlerService {
     await this.sleep(preRequestDelay);
 
     const config: RetryConfig = {
-      maxAttempts: 3,
-      baseDelay: 1000,
-      maxDelay: 10000,
-      backoffFactor: 2,
+      maxAttempts: 5, // Increase attempts for problematic sites
+      baseDelay: 2000, // Increase base delay to 2 seconds
+      maxDelay: 15000, // Increase max delay to 15 seconds
+      backoffFactor: 1.5, // Reduce backoff factor for more frequent retries
       ...retryConfig
     };
 
@@ -226,13 +226,32 @@ export class CrawlerService {
         console.log(`Using User-Agent: ${userAgent.substring(0, 50)}...`);
         const headers = this.getBrowserSpecificHeaders(userAgent);
 
+        // Create HTTP/HTTPS agents with keep-alive for better connection stability
+        const httpAgent = new http.Agent({ 
+          keepAlive: true, 
+          maxSockets: 5,
+          timeout: 20000
+        });
+        const httpsAgent = new https.Agent({ 
+          keepAlive: true, 
+          maxSockets: 5,
+          timeout: 20000,
+          // Add SSL configuration for problematic sites
+          rejectUnauthorized: false // Be more lenient with SSL certificates
+        });
+
         const axiosConfig = {
           headers,
-          timeout: 15000, // Increased timeout to 15 seconds
-          maxRedirects: 5,
+          timeout: 25000, // Increase timeout to 25 seconds for slow sites
+          maxRedirects: 10, // Increase max redirects
           decompress: true,
           responseType: 'text' as const, // Keep as text to handle both JSON and HTML
-          validateStatus: (status: number) => status < 500 // Accept 4xx errors but retry on 5xx
+          validateStatus: (status: number) => status < 500, // Accept 4xx errors but retry on 5xx
+          httpAgent,
+          httpsAgent,
+          // Add more tolerance for problematic connections
+          maxContentLength: 50 * 1024 * 1024, // 50MB max content
+          maxBodyLength: 50 * 1024 * 1024, // 50MB max body
         };
 
         console.log(`Attempt ${attempt}/${config.maxAttempts} for ${url}`);
@@ -288,7 +307,14 @@ export class CrawlerService {
       'ENOTFOUND',
       'ECONNABORTED',
       'ETIMEDOUT',
-      'unexpected end of file'
+      'unexpected end of file',
+      'socket hang up',
+      'read ECONNRESET',
+      'write ECONNRESET',
+      'EPIPE',
+      'EHOSTUNREACH',
+      'ENETDOWN',
+      'ENETUNREACH'
     ];
 
     const message = error.message?.toLowerCase() || '';
@@ -301,11 +327,19 @@ export class CrawlerService {
       return true;
     }
 
+    // Also retry on specific EOF-related patterns
+    if (message.includes('end of file') || 
+        message.includes('premature close') ||
+        message.includes('connection terminated') ||
+        message.includes('socket disconnected')) {
+      return true;
+    }
+
     // Check HTTP status codes
     if (error.response?.status) {
       const status = error.response.status;
       // Retry on 5xx errors and some 4xx errors
-      return status >= 500 || status === 408 || status === 429;
+      return status >= 500 || status === 408 || status === 429 || status === 502 || status === 503 || status === 504;
     }
 
     return false;
@@ -333,6 +367,18 @@ export class CrawlerService {
     }
 
     return `Request failed ${maxAttempts} times for ${url}: ${message}`;
+  }
+
+  // Special method for problematic websites with extra robust configuration
+  async requestWithAxiosRobust(url: string, method: string = 'GET'): Promise<string> {
+    console.log(`Using robust request configuration for potentially problematic site: ${url}`);
+    
+    return this.requestWithAxios(url, method, {
+      maxAttempts: 7, // More attempts for problematic sites
+      baseDelay: 3000, // Longer base delay
+      maxDelay: 20000, // Much longer max delay
+      backoffFactor: 1.3 // Gentler backoff
+    });
   }
 
   // async requestWithAxiosSafe(
@@ -471,8 +517,8 @@ export class CrawlerService {
   }
 
   async scrapeWithCheerioSafe() {
-    // Use the improved requestWithAxios instead of requestWithAxiosSafe
-    const requestData = await this.requestWithAxios(this.site.url);
+    // Use the robust request method for safer scraping
+    const requestData = await this.requestWithAxiosRobust(this.site.url);
 
     this.content = requestData;
 
