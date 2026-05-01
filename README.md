@@ -15,7 +15,7 @@ https://logam-mulia-api.iamutaki.workers.dev/
 
 ## GitAds Sponsored
 
-[Sponsored by GitAds](https://gitads.dev/v1/ad-track?source=cacing69/logam-mulia-api@github)
+[![Sponsored by GitAds](https://gitads.dev/v1/ad-serve?source=cacing69/logam-mulia-api@github)](https://gitads.dev/v1/ad-track?source=cacing69/logam-mulia-api@github)
 
 ## Endpoint Available Saat Ini (Cloudflare Worker)
 
