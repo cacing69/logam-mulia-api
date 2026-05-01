@@ -71,14 +71,13 @@ contoh response
 ```json
 
 {
-  data: [
+  "data": [
     {
-      buy: 900000,
-      sel: 850000,
-      type: "antam",
+      "buy": 900000,
+      "sell": 850000,
+      "type": "antam"
     }
-  ],
-  meta: {}
+  ]
 }
 
 ```
