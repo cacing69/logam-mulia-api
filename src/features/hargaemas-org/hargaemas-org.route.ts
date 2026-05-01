@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { CheerioScraper, parseCurrency } from '../../lib';
+import { CheerioScraper, defaultScrapingOptions, parseCurrency } from '../../lib';
 import { hargaemasOrgConfig } from './hargaemas-org.config';
 
 const app = new Hono();
@@ -16,15 +16,7 @@ app.get('/', async (c) => {
 			sellRaw: raw.sell,
 			buyRaw: raw.buy,
 		}),
-		{
-			headers: {
-				'User-Agent':
-					'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-				Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-				'Accept-Language': 'en-US,en;q=0.9,id;q=0.8',
-			},
-			timeout: 15000,
-		}
+		defaultScrapingOptions
 	);
 
 	if (!result.success) {

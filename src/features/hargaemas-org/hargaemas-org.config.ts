@@ -4,10 +4,10 @@ import { raw } from '../../lib/types/scraper.types';
 export const hargaemasOrgConfig: ScrapingConfig<'price' | 'type' | 'info'> = {
 	engine: 'cheerio',
 	currency: 'IDR',
+	url: 'https://harga-emas.org/1-gram',
 	active: true,
 	items: [
 		{
-			url: 'https://harga-emas.org/1-gram',
 			selector: {
 				price:
 					'body > main > div.layout_footer-buy-sell-wrapper__8es4r > div > div.layout_content__49Kn9 > div.layout_light-text__rQYRl',

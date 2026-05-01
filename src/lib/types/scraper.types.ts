@@ -2,19 +2,19 @@ export interface RawValue {
 	__raw: string;
 }
 
-export function raw(value: string): RawValue {
-	return { __raw: value };
+export function raw(value: string | null): RawValue {
+	return { __raw: value ?? '' };
 }
 
 export type ScrapingPostProcess = (data: Record<string, string>) => Record<string, string>;
 
 export interface ItemDefinition<T extends string = string> {
-	url: string; // Setiap item punya URL sendiri
+	url?: string; // Optional: fallback ke config.url jika tidak diisi
 	selector: Record<T, string | RawValue>;
 	postProcess?: ScrapingPostProcess;
 }
 
-export interface ScrapingConfig<T extends string = string> {
+export interface CheerioScrapingConfig<T extends string = string> {
 	url?: string; // Default/base URL (deprecated, use items with url)
 	engine: 'cheerio';
 	currency?: string;
@@ -25,6 +25,35 @@ export interface ScrapingConfig<T extends string = string> {
 	// Multiple items dengan URL masing-masing
 	items?: ItemDefinition<T>[];
 }
+
+export type AxiosMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+
+export interface AxiosSelectorDefinition {
+	type: string;
+	buy?: string;
+	sell?: string;
+	info?: string;
+	weight?: number;
+	unit?: string;
+	[key: string]: string | number | undefined;
+}
+
+export interface AxiosScrapingConfig {
+	url: string;
+	engine: 'axios';
+	responseType?: 'json';
+	method?: AxiosMethod;
+	currency?: string;
+	active?: boolean;
+	selector: AxiosSelectorDefinition[];
+	body?: unknown;
+	headers?: Record<string, string>;
+}
+
+export type ScrapingConfig<T extends string = string> = CheerioScrapingConfig<T>;
+export type AnyScrapingConfig<T extends string = string> =
+	| CheerioScrapingConfig<T>
+	| AxiosScrapingConfig;
 
 export interface ScrapingResult<T = unknown> {
 	success: boolean;

@@ -1,7 +1,11 @@
 export { CheerioScraper } from './scrapers/cheerio-scraper';
+export { AxiosScraper } from './scrapers/axios-scraper';
+export { defaultScrapingOptions } from './constants/scraper-options';
 export { parseCurrency } from './utils/currency';
 export type {
 	ScrapingConfig,
+	CheerioScrapingConfig,
+	AxiosScrapingConfig,
 	ScrapingResult,
 	ScrapingOptions,
 	RawValue,

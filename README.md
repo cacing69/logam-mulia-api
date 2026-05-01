@@ -1,11 +1,7 @@
 
-
 # Logam Mulia API
 
-
 Hobby only. Scraping beberapa website yang menyediakan informasi harga jual/beli logam mulia emas di Indonesia, dont worry to make pull request
-
-
 
 ```bash
 # inactive
@@ -23,8 +19,14 @@ https://logam-mulia-api.iamutaki.workers.dev/
 
 ## Endpoint Available Saat Ini (Cloudflare Worker)
 
-1. anekalogam: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam](https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam)
-2. hargaemas-org: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-org](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-org)
+- anekalogam: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam](https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam)
+- hargaemas-org: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-org](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-org)
+- lakuemas: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/lakuemas](https://logam-mulia-api.iamutaki.workers.dev/api/prices/lakuemas)
+- sakumas: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/sakumas](https://logam-mulia-api.iamutaki.workers.dev/api/prices/sakumas)
+- kursdolar: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/kursdolar](https://logam-mulia-api.iamutaki.workers.dev/api/prices/kursdolar)
+- cermati: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/cermati](https://logam-mulia-api.iamutaki.workers.dev/api/prices/cermati)
+- indogold: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/indogold](https://logam-mulia-api.iamutaki.workers.dev/api/prices/indogold)
+- hargaemas-net: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-net](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-net)
 
 ## Progress Migration (On Progress)
 
@@ -47,17 +49,17 @@ Deployment project ini di Vercel berstatus **paused** (tidak lagi melayani reque
 - [Harga-Emas.org](https://harga-emas.org) `migrated`
 - [Laku Emas](https://www.lakuemas.com/harga) `migrated`
 - [Tokopedia](https://www.tokopedia.com/emas/harga-hari-ini/) `deprecated`
-- [Pegadaian](https://www.pegadaian.co.id/harga)
-- [Sakumas](https://sakumas.com/)
-- [Koin Works](https://koinworks.com/harga-emas-hari-ini/)
-- [Semar Nusantara](https://goldprice.semar.co.id/home/multi/smg_press/smg)
-- [Kurs Dolar](http://kurs.dollar.web.id/harga-emas-hari-ini.php)
-- [Cermati](https://www.cermati.com/artikel/harga-emas-hari-ini)
-- [Bank Syariah Indonesia](https://www.bankbsi.co.id/)
-- [Brankas](https://www.brankaslm.com/antam/index)
-- [Indo Gold](https://www.brankaslm.com/antam/index)
-- [Harga-Emas.net](https://harga-emas.net/)
-- [inbizia](https://www.inbizia.com/harga-emas-hari-ini-287964)
+- [Pegadaian](https://www.pegadaian.co.id/harga) `paused: looking for solution`
+- [Sakumas](https://sakumas.asastapayment.com/) `migrated`
+- [Koin Works](https://koinworks.com/harga-emas-hari-ini/) `deprecated`
+- [Semar Nusantara](https://goldprice.semar.co.id/home/multi/smg_press/smg) `paused: mapping response`
+- [Kurs Dolar](http://kurs.dollar.web.id/harga-emas-hari-ini.php) `migrated`
+- [Cermati](https://www.cermati.com/artikel/harga-emas-hari-ini) `migrated`
+- [Bank Syariah Indonesia](https://www.bankbsi.co.id/) `paused: looking for solution`
+- [Brankas](https://www.brankaslm.com/antam/index) `paused: looking for solution`
+- [Indo Gold](https://www.indogold.id/) `migrated`
+- [Harga-Emas.net](https://harga-emas.net/) `migrated`
+- [inbizia](https://www.inbizia.com/harga-emas-hari-ini-287964) `deprecated`
 - [Harga-Emas.com](https://www.hargaemas.com/)
 - [Treasury](https://treasury.id/)
 

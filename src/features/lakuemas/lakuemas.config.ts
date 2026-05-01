@@ -4,10 +4,10 @@ import { raw } from '../../lib/types/scraper.types';
 export const lakuemasConfig: ScrapingConfig<'sell' | 'buy' | 'type' | 'info'> = {
 	engine: 'cheerio',
 	currency: 'IDR',
+	url: 'https://r.jina.ai/http://lakuemas.com/harga',
 	active: true,
 	items: [
 		{
-			url: 'https://r.jina.ai/http://lakuemas.com/harga',
 			selector: {
 				sell: 'body',
 				buy: 'body',

@@ -1,20 +1,22 @@
 import { Hono } from 'hono';
-import { CheerioScraper, defaultScrapingOptions, parseCurrency } from '../../lib';
-import { lakuemasConfig } from './lakuemas.config';
+import { AxiosScraper, defaultScrapingOptions, parseCurrency } from '../../lib';
+import { treasuryConfig } from './treasury.config';
 
 const app = new Hono();
 
-const scraper = new CheerioScraper('lakuemas', lakuemasConfig);
+const scraper = new AxiosScraper('treasury', treasuryConfig);
 
 app.get('/', async (c) => {
 	const result = await scraper.scrape(
 		(raw) => ({
 			type: raw.type || 'unknown',
-			sell: parseCurrency(raw.sell),
 			buy: parseCurrency(raw.buy),
+			sell: parseCurrency(raw.sell),
 			info: raw.info,
-			sellRaw: raw.sell,
+			weight: raw.weight ? Number(raw.weight) : 1,
+			unit: raw.unit || 'gram',
 			buyRaw: raw.buy,
+			sellRaw: raw.sell,
 		}),
 		defaultScrapingOptions
 	);

@@ -1,10 +1,10 @@
 import { Hono } from 'hono';
 import { CheerioScraper, defaultScrapingOptions, parseCurrency } from '../../lib';
-import { lakuemasConfig } from './lakuemas.config';
+import { kursdolarConfig } from './kursdolar.config';
 
 const app = new Hono();
 
-const scraper = new CheerioScraper('lakuemas', lakuemasConfig);
+const scraper = new CheerioScraper('kursdolar', kursdolarConfig);
 
 app.get('/', async (c) => {
 	const result = await scraper.scrape(

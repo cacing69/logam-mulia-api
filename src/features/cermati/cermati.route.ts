@@ -1,20 +1,20 @@
 import { Hono } from 'hono';
 import { CheerioScraper, defaultScrapingOptions, parseCurrency } from '../../lib';
-import { lakuemasConfig } from './lakuemas.config';
+import { cermatiConfig } from './cermati.config';
 
 const app = new Hono();
 
-const scraper = new CheerioScraper('lakuemas', lakuemasConfig);
+const scraper = new CheerioScraper('cermati', cermatiConfig);
 
 app.get('/', async (c) => {
 	const result = await scraper.scrape(
 		(raw) => ({
 			type: raw.type || 'unknown',
 			sell: parseCurrency(raw.sell),
-			buy: parseCurrency(raw.buy),
+			buy: null,
 			info: raw.info,
 			sellRaw: raw.sell,
-			buyRaw: raw.buy,
+			buyRaw: null,
 		}),
 		defaultScrapingOptions
 	);

@@ -1,6 +1,6 @@
 import * as cheerio from 'cheerio';
 import type {
-	ScrapingConfig,
+	CheerioScrapingConfig,
 	ScrapingResult,
 	ScrapingOptions,
 	RawValue,
@@ -8,10 +8,10 @@ import type {
 } from '../types/scraper.types';
 
 export class CheerioScraper<T extends Record<string, string> = Record<string, string>> {
-	private config: ScrapingConfig<string>;
+	private config: CheerioScrapingConfig<string>;
 	private source: string;
 
-	constructor(source: string, config: ScrapingConfig<string>) {
+	constructor(source: string, config: CheerioScrapingConfig<string>) {
 		this.source = source;
 		this.config = config;
 	}
@@ -80,6 +80,9 @@ export class CheerioScraper<T extends Record<string, string> = Record<string, st
 			for (const [key, selValue] of Object.entries(selector)) {
 				if (this.isRawValue(selValue)) {
 					rawData[key] = selValue.__raw;
+				} else if (typeof selValue === 'string' && selValue.startsWith('html:')) {
+					const sel = selValue.slice('html:'.length);
+					rawData[key] = ($(sel).html() ?? '').trim();
 				} else {
 					rawData[key] = $(selValue).text().trim();
 				}
@@ -149,9 +152,15 @@ export class CheerioScraper<T extends Record<string, string> = Record<string, st
 			const errors: string[] = [];
 
 			for (const itemDef of this.config.items) {
+				const targetUrl = itemDef.url ?? this.config.url;
+				if (!targetUrl) {
+					errors.push('missing item url and config.url');
+					continue;
+				}
+
 				try {
 					const result = await this.scrapeItem(
-						itemDef.url,
+						targetUrl,
 						itemDef.selector,
 						itemDef.postProcess,
 						transformer as (data: Record<string, string>) => Record<string, string>,
@@ -163,7 +172,7 @@ export class CheerioScraper<T extends Record<string, string> = Record<string, st
 					}
 				} catch (error) {
 					const errMsg = error instanceof Error ? error.message : 'Unknown error';
-					errors.push(`${itemDef.url}: ${errMsg}`);
+					errors.push(`${targetUrl}: ${errMsg}`);
 				}
 			}
 
