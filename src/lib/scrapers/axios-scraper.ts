@@ -130,7 +130,10 @@ export class AxiosScraper<T extends Record<string, string> = Record<string, stri
 		}
 
 		try {
-			const payload = await this.fetchJson(this.config.url, options);
+			let payload = await this.fetchJson(this.config.url, options);
+			if (this.config.postProcess) {
+				payload = this.config.postProcess(payload as Record<string, string>);
+			}
 			const selectorItems: AxiosItemDefinition[] =
 				this.config.items ??
 				(this.config.selector ?? []).map((itemSelector) => ({

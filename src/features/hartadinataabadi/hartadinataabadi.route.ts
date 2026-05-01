@@ -1,19 +1,16 @@
 import { Hono } from 'hono';
-import { AxiosScraper, defaultScrapingOptions, parseCurrency } from '../../lib';
-import { pegadaianConfig } from './pegadaian.config';
+import { CheerioScraper, defaultScrapingOptions, parseCurrency } from '../../lib';
+import { hartadinataabadiConfig } from './hartadinataabadi.config';
 
 const app = new Hono();
 
-const scraper = new AxiosScraper('pegadaian', pegadaianConfig);
+const scraper = new CheerioScraper('hartadinataabadi', hartadinataabadiConfig);
 
 app.get('/', async (c) => {
 	const result = await scraper.scrape(
 		(raw) => ({
 			type: raw.type || 'unknown',
-			sell: parseCurrency(raw.sell),
 			buy: parseCurrency(raw.buy),
-			info: raw.info,
-			sellRaw: raw.sell,
 			buyRaw: raw.buy,
 		}),
 		defaultScrapingOptions

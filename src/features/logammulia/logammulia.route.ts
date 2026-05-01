@@ -1,20 +1,20 @@
 import { Hono } from 'hono';
-import { AxiosScraper, defaultScrapingOptions, parseCurrency } from '../../lib';
-import { pegadaianConfig } from './pegadaian.config';
+import { CheerioScraper, defaultScrapingOptions, parseCurrency } from '../../lib';
+import { logammuliaConfig } from './logammulia.config';
 
 const app = new Hono();
 
-const scraper = new AxiosScraper('pegadaian', pegadaianConfig);
+const scraper = new CheerioScraper('logammulia', logammuliaConfig);
 
 app.get('/', async (c) => {
 	const result = await scraper.scrape(
 		(raw) => ({
 			type: raw.type || 'unknown',
 			sell: parseCurrency(raw.sell),
-			buy: parseCurrency(raw.buy),
+			buy: raw.buy ? parseCurrency(raw.buy) : null,
 			info: raw.info,
 			sellRaw: raw.sell,
-			buyRaw: raw.buy,
+			buyRaw: raw.buy || null,
 		}),
 		defaultScrapingOptions
 	);

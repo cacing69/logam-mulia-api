@@ -1,19 +1,33 @@
-import type { ScrapingConfig } from '../../lib/types/scraper.types';
-import { raw } from '../../lib/types/scraper.types';
+import type { AxiosScrapingConfig } from '../../lib';
 
-export const pegadaianConfig: ScrapingConfig<'sell' | 'buy' | 'type' | 'info'> = {
-	engine: 'cheerio',
+export const pegadaianConfig: AxiosScrapingConfig = {
+	url: 'https://sahabat.pegadaian.co.id/gold/prices/chart?interval=7&isRequest=true',
+	engine: 'axios',
+	responseType: 'json',
+	method: 'GET',
 	currency: 'IDR',
-	url: 'https://pegadaian.co.id/produk/harga-emas-batangan-dan-tabungan-tabungan-emas',
-	active: false,
-	items: [
+	active: true,
+	postProcess: (raw) => {
+		const data = raw as Record<string, unknown>;
+		const inner = (data?.data as Record<string, unknown>) ?? {};
+		const priceList = inner.priceList;
+		const lastItem = Array.isArray(priceList) && priceList.length > 0
+			? priceList[priceList.length - 1] as Record<string, unknown>
+			: {};
+		return {
+			hargaJual: String(lastItem.hargaJual ?? ''),
+			hargaBeli: String(lastItem.hargaBeli ?? ''),
+			message: String(inner.message ?? ''),
+		};
+	},
+	selector: [
 		{
-			selector: {
-				sell: 'body',
-				buy: 'body',
-				type: raw('pegadaian'),
-				info: 'title',
-			},
+			type: 'pegadaian',
+			buy: 'hargaJual',
+			sell: 'hargaBeli',
+			info: 'message',
+			weight: 0.01,
+			unit: 'gram',
 		},
 	],
 };
