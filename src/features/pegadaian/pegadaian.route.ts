@@ -1,10 +1,10 @@
 import { Hono } from 'hono';
-import { CheerioScraper, defaultScrapingOptions, parseCurrency } from '../../lib';
+import { AxiosScraper, defaultScrapingOptions, parseCurrency } from '../../lib';
 import { pegadaianConfig } from './pegadaian.config';
 
 const app = new Hono();
 
-const scraper = new CheerioScraper('pegadaian', pegadaianConfig);
+const scraper = new AxiosScraper('pegadaian', pegadaianConfig);
 
 app.get('/', async (c) => {
 	const result = await scraper.scrape(

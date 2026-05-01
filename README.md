@@ -55,7 +55,7 @@ Deployment project ini di Vercel berstatus **paused** (tidak lagi melayani reque
 - [Harga-Emas.org](https://harga-emas.org) `migrated`
 - [Laku Emas](https://www.lakuemas.com/harga) `migrated`
 - [Tokopedia](https://www.tokopedia.com/emas/harga-hari-ini/) `deprecated`
-- [Pegadaian](https://www.pegadaian.co.id/harga) `paused: looking for solution`
+- [Pegadaian](https://sahabat.pegadaian.co.id/harga-emas) `migrated`
 - [Sakumas](https://sakumas.asastapayment.com/) `migrated`
 - [Koin Works](https://koinworks.com/harga-emas-hari-ini/) `deprecated`
 - [Semar Nusantara](https://goldprice.semar.co.id/home/multi/smg_press/smg) `paused: mapping response`
