@@ -20,7 +20,7 @@ https://logam-mulia-api.iamutaki.workers.dev/
 ## Endpoint Available Saat Ini (Cloudflare Worker)
 
 | Source | Endpoint | History Endpoint | Cached | History |
-|--------|----------|------------------|--------|---------|
+| ------ | -------- | ---------------- | ------ | ------- |
 | anekalogam | [`/api/prices/anekalogam`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam) | [`/api/prices/anekalogam/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam/history) | ✅ | ✅ |
 | hargaemas-org | [`/api/prices/hargaemas-org`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-org) | - | ❌ | ❌ |
 | lakuemas | [`/api/prices/lakuemas`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/lakuemas) | - | ❌ | ❌ |
@@ -40,7 +40,16 @@ https://logam-mulia-api.iamutaki.workers.dev/
 | brankaslm | [`/api/prices/brankaslm`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/brankaslm) | - | ❌ | ❌ |
 | pegadaian | [`/api/prices/pegadaian`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/pegadaian) | - | ❌ | ❌ |
 
+## Available params on history
+
+| Param | Type | Notes |
+| ----- | ---- | ----- |
+| page | int | Pagination page number |
+| length | int | Pagination length (max 1000) |
+| weight | int | Filter by weight |
+
 Keterangan:
+
 - `Daily Cached` menggunakan Cloudflare D1
 - `History` menggunakan Turso
 - Akses D1: [Cloudflare Dashboard - D1](https://developers.cloudflare.com/d1/get-started/)
@@ -60,32 +69,32 @@ Deployment project ini di Vercel berstatus **paused** (tidak lagi melayani reque
 
 ![Vercel deployment paused — alasan migrasi ke Cloudflare Worker](images/vercel_paused.png)
 
-#### List website yang tersedia
+### List website yang tersedia
 
 | No | Nama | URL | Status |
-|----|------|-----|--------|
-| 1 | Aneka Logam | [link](https://www.anekalogam.co.id/id) | migrated |
-| 2 | Logam Mulia | [link](https://www.logammulia.com/id) | migrated |
-| 3 | Harga-Emas.org | [link](https://harga-emas.org) | migrated |
-| 4 | Laku Emas | [link](https://www.lakuemas.com/harga) | migrated |
-| 5 | Tokopedia | [link](https://www.tokopedia.com/emas/harga-hari-ini/) | deprecated |
-| 6 | Pegadaian | [link](https://sahabat.pegadaian.co.id/harga-emas) | migrated |
-| 7 | Sakumas | [link](https://sakumas.asastapayment.com/) | migrated |
-| 8 | Koin Works | [link](https://koinworks.com/harga-emas-hari-ini/) | deprecated |
-| 9 | Semar Nusantara | [link](https://goldprice.semar.co.id/home/multi/smg_press/smg) | paused: mapping response |
-| 10 | Kurs Dolar | [link](http://kurs.dollar.web.id/harga-emas-hari-ini.php) | migrated |
-| 11 | Cermati | [link](https://www.cermati.com/artikel/harga-emas-hari-ini) | migrated |
-| 12 | Bank Syariah Indonesia | [link](https://www.bankbsi.co.id/) | migrated |
-| 13 | Brankas Logam Mulia | [link](https://www.brankaslm.com/dashboard) | migrated |
-| 14 | Indo Gold | [link](https://www.indogold.id/) | migrated |
-| 15 | Harga-Emas.net | [link](https://harga-emas.net/) | migrated |
-| 16 | inbizia | [link](https://www.inbizia.com/harga-emas-hari-ini-287964) | deprecated |
-| 17 | Harga-Emas.com | [link](https://www.hargaemas.com/) | migrated |
-| 18 | Treasury | [link](https://treasury.id/) | migrated |
-| 19 | EmasKu | [link](https://www.emasku.co.id/id) | new |
-| 20 | Hartadinata Abadi | [link](https://hartadinataabadi.co.id/) | new |
-| 21 | Galeri 24 | [link](https://galeri24.co.id/harga-emas) | new |
-| 22 | Sampoerna Gold | [link](https://sampoernagold.com/) | new |
+| -- | ---- | --- | ------ |
+| 1 | Aneka Logam | [Aneka Logam](https://www.anekalogam.co.id/id) | migrated |
+| 2 | Logam Mulia | [Logam Mulia](https://www.logammulia.com/id) | migrated |
+| 3 | Harga-Emas.org | [Harga-Emas.org](https://harga-emas.org) | migrated |
+| 4 | Laku Emas | [Laku Emas](https://www.lakuemas.com/harga) | migrated |
+| 5 | Tokopedia | [Tokopedia Emas](https://www.tokopedia.com/emas/harga-hari-ini/) | deprecated |
+| 6 | Pegadaian | [Pegadaian](https://sahabat.pegadaian.co.id/harga-emas) | migrated |
+| 7 | Sakumas | [Sakumas](https://sakumas.asastapayment.com/) | migrated |
+| 8 | Koin Works | [Koin Works](https://koinworks.com/harga-emas-hari-ini/) | deprecated |
+| 9 | Semar Nusantara | [Semar Nusantara](https://goldprice.semar.co.id/home/multi/smg_press/smg) | paused: mapping response |
+| 10 | Kurs Dolar | [Kurs Dolar](http://kurs.dollar.web.id/harga-emas-hari-ini.php) | migrated |
+| 11 | Cermati | [Cermati](https://www.cermati.com/artikel/harga-emas-hari-ini) | migrated |
+| 12 | Bank Syariah Indonesia | [Bank Syariah Indonesia](https://www.bankbsi.co.id/) | migrated |
+| 13 | Brankas Logam Mulia | [Brankas Logam Mulia](https://www.brankaslm.com/dashboard) | migrated |
+| 14 | Indo Gold | [Indo Gold](https://www.indogold.id/) | migrated |
+| 15 | Harga-Emas.net | [Harga-Emas.net](https://harga-emas.net/) | migrated |
+| 16 | inbizia | [inbizia](https://www.inbizia.com/harga-emas-hari-ini-287964) | deprecated |
+| 17 | Harga-Emas.com | [Harga-Emas.com](https://www.hargaemas.com/) | migrated |
+| 18 | Treasury | [Treasury](https://treasury.id/) | migrated |
+| 19 | EmasKu | [EmasKu](https://www.emasku.co.id/id) | new |
+| 20 | Hartadinata Abadi | [Hartadinata Abadi](https://hartadinataabadi.co.id/) | new |
+| 21 | Galeri 24 | [Galeri 24](https://galeri24.co.id/harga-emas) | new |
+| 22 | Sampoerna Gold | [Sampoerna Gold](https://sampoernagold.com/) | new |
 
 Jika ingin menambahkan beberapa website lain, atau ada saran lain untuk bentuk response & requestnya, dipersilahkan untuk open issue terkait kritik dan saran
 
@@ -96,9 +105,11 @@ contoh response
 {
   "data": [
     {
-      "price": 900000,
+      "sellPrice": 900000,
       "buybackPrice": 850000,
-      "type": "antam"
+      "materialType": "antam",
+      "weight": 1,
+      "weightUnit": "gr"
     }
   ]
 }
