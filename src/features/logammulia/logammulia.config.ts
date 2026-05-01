@@ -1,7 +1,7 @@
 import type { ScrapingConfig } from '../../lib/types/scraper.types';
 import { raw } from '../../lib/types/scraper.types';
 
-export const logammuliaConfig: ScrapingConfig<'price' | 'type' | 'info'> = {
+export const logammuliaConfig: ScrapingConfig<'sellPrice' | 'type' | 'info'> = {
 	engine: 'cheerio',
 	currency: 'IDR',
 	url: 'https://www.logammulia.com/harga-emas-hari-ini',
@@ -9,12 +9,12 @@ export const logammuliaConfig: ScrapingConfig<'price' | 'type' | 'info'> = {
 	items: [
 		{
 			selector: {
-				price: 'html:.table-bordered',
+				sellPrice: 'html:.table-bordered',
 				type: raw('antam'),
 				info: 'h2.ngc-title',
 			},
 			postProcess: (rawData) => {
-				const html = rawData.price ?? '';
+				const html = rawData.sellPrice ?? '';
 				const rows = html.split('</tr>');
 
 				let buybackPrice = '';
@@ -32,7 +32,7 @@ export const logammuliaConfig: ScrapingConfig<'price' | 'type' | 'info'> = {
 				return {
 					type: rawData.type ?? 'emas batangan antam',
 					buybackPrice,
-					price: '',
+					sellPrice: '',
 					info: rawData.info ?? '',
 				};
 			},

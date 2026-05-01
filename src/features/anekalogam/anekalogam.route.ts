@@ -1,44 +1,42 @@
 import { Hono } from 'hono';
+import type { Bindings } from '../../types';
 import { CheerioScraper, defaultScrapingOptions, parseCurrency } from '../../lib';
+import { fetchOrCache } from '../../lib/price-service';
 import { anekalogamConfig } from './anekalogam.config';
 
-const app = new Hono();
+const app = new Hono<{ Bindings: Bindings }>();
 
 const scraper = new CheerioScraper('anekalogam', anekalogamConfig);
 
 app.get('/', async (c) => {
-	const result = await scraper.scrape(
-		(raw) => ({
-			type: raw.type || 'unknown',
-			buybackPrice: parseCurrency(raw.buybackPrice),
-			price: parseCurrency(raw.price),
-			info: raw.info,
-		}),
-		defaultScrapingOptions
+	const refresh = c.req.query('refresh') === 'true';
+	const result = await fetchOrCache(c.env, 'anekalogam', { refresh }, () =>
+		scraper.scrape(
+			(raw) => ({
+				material: raw.material || 'gold',
+				materialType: raw.materialType || 'unknown',
+				buybackPrice: parseCurrency(raw.buybackPrice),
+				sellPrice: parseCurrency(raw.sellPrice),
+				weight: raw.weight ? Number(raw.weight) : 1,
+				weightUnit: raw.weightUnit || 'gr',
+			}),
+			defaultScrapingOptions,
+		),
 	);
 
 	if (!result.success) {
-		const statusCode = result.inactive ? 400 : 500;
 		return c.json(
 			{
 				success: false,
 				error: result.error,
 				timestamp: result.timestamp,
-				source: result.source,
+				source: 'anekalogam',
 			},
-			statusCode
+			500,
 		);
 	}
 
-	// Ensure data is always array
-	return c.json({
-		success: true,
-		data: Array.isArray(result.data) ? result.data : [result.data],
-		count: result.count ?? (Array.isArray(result.data) ? result.data.length : 1),
-		timestamp: result.timestamp,
-		source: result.source,
-		currency: result.currency,
-	});
+	return c.json(result);
 });
 
 export default app;

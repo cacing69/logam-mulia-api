@@ -1,8 +1,8 @@
 export interface RawValue {
-	__raw: string;
+	__raw: string | number;
 }
 
-export function raw(value: string | null): RawValue {
+export function raw(value: string | number | null): RawValue {
 	return { __raw: value ?? '' };
 }
 
@@ -38,7 +38,7 @@ export interface AxiosSelectorDefinition {
 	buybackPrice?: string;
 	info?: string;
 	weight?: number;
-	unit?: string;
+	weightUnit?: string;
 	[key: string]: string | number | undefined;
 }
 

@@ -23,11 +23,11 @@ export const pegadaianConfig: AxiosScrapingConfig = {
 	selector: [
 		{
 			type: 'pegadaian',
-			price: 'hargaJual',
+			sellPrice: 'hargaJual',
 			buybackPrice: 'hargaBeli',
 			info: 'message',
 			weight: 0.01,
-			unit: 'gram',
+			weightUnit: 'gram',
 		},
 	],
 };

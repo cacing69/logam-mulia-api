@@ -3,8 +3,8 @@ export { AxiosScraper } from './scrapers/axios-scraper';
 export { JinaScraper } from './scrapers/jina-scraper';
 export { defaultScrapingOptions } from './constants/scraper-options';
 export { parseCurrency } from './utils/currency';
-export { normalizeGoldPriceRows } from './utils/price-response';
-export type { GoldPriceRow } from './utils/price-response';
+export { normalizePriceRows } from './utils/price-response';
+export type { PriceRow } from './utils/price-response';
 export type {
 	ScrapingConfig,
 	CheerioScrapingConfig,

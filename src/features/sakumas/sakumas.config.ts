@@ -1,7 +1,7 @@
 import type { ScrapingConfig } from '../../lib/types/scraper.types';
 import { raw } from '../../lib/types/scraper.types';
 
-export const sakumasConfig: ScrapingConfig<'buybackPrice' | 'price' | 'type' | 'info'> = {
+export const sakumasConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'type' | 'info'> = {
 	engine: 'cheerio',
 	currency: 'IDR',
 	url: 'https://sakumas.asastapayment.com/',
@@ -10,7 +10,7 @@ export const sakumasConfig: ScrapingConfig<'buybackPrice' | 'price' | 'type' | '
 		{
 			selector: {
 				buybackPrice: '#hargaJual',
-				price: '#hargaBeli',
+				sellPrice: '#hargaBeli',
 				type: raw('sakumas'),
 				info: '.hargaEmasContainer .hargaTitle',
 			},

@@ -1,7 +1,7 @@
 import type { ScrapingConfig } from '../../lib/types/scraper.types';
 import { raw } from '../../lib/types/scraper.types';
 
-export const hargaemasOrgConfig: ScrapingConfig<'price' | 'type' | 'info'> = {
+export const hargaemasOrgConfig: ScrapingConfig<'sellPrice' | 'type' | 'info'> = {
 	engine: 'cheerio',
 	currency: 'IDR',
 	url: 'https://harga-emas.org/1-gram',
@@ -9,17 +9,17 @@ export const hargaemasOrgConfig: ScrapingConfig<'price' | 'type' | 'info'> = {
 	items: [
 		{
 			selector: {
-				price:
+				sellPrice:
 					'body > main > div.layout_footer-buy-sell-wrapper__8es4r > div > div.layout_content__49Kn9 > div.layout_light-text__rQYRl',
 				type: raw('pluang'),
 				info: 'title',
 			},
 			postProcess: (rawData) => {
-				const [buybackPrice = '', price = ''] = (rawData.price ?? '').split('|').map((v) => v.trim());
+				const [buybackPrice = '', sellPrice = ''] = (rawData.sellPrice ?? '').split('|').map((v) => v.trim());
 
 				return {
 					buybackPrice,
-					price,
+					sellPrice,
 					type: rawData.type ?? '',
 					info: rawData.info ?? '',
 				};

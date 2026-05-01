@@ -11,7 +11,7 @@ app.get('/', async (c) => {
 		(raw) => ({
 			type: raw.type || 'unknown',
 			buybackPrice: parseCurrency(raw.buybackPrice),
-			price: parseCurrency(raw.price),
+			price: parseCurrency(raw.sellPrice),
 			info: raw.info,
 		}),
 		defaultScrapingOptions

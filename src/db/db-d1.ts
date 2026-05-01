@@ -1,88 +1,59 @@
-import type { DailyCacheStore, HistoryStore, HistoryRecord } from './types';
-import type { GoldPriceRow } from '../lib/utils/price-response';
+import { drizzle } from 'drizzle-orm/d1';
+import { sql } from 'drizzle-orm';
+import { priceHistory } from './schema/d1';
+import type { PriceStore } from './types';
+import type { PriceRow } from '../lib/utils/price-response';
 
-function toRecord(row: GoldPriceRow, now: number): HistoryRecord {
-	return {
-		source: row.source,
-		goldType: row.gold_type,
-		weight: row.weight,
-		weightUnit: row.weight_unit,
-		sellPrice: row.price,
-		buybackPrice: row.buyback_price ?? null,
-		currency: row.currency,
-		recordedAt: row.recorded_at,
-		createdAt: now,
-	};
-}
+export class DbD1 implements PriceStore {
+	private db: ReturnType<typeof drizzle>;
 
-export class DbD1 implements DailyCacheStore, HistoryStore {
-	constructor(private db: D1Database) {}
+	constructor(d1: D1Database) {
+		this.db = drizzle(d1);
+	}
 
-	// --- DailyCacheStore ---
+	async getToday(source: string, date: string): Promise<PriceRow[]> {
+		const results = await this.db
+			.select()
+			.from(priceHistory)
+			.where(
+				sql`${priceHistory.source} = ${source} AND date(${priceHistory.createdAt}) = ${date}`,
+			);
 
-	async getDaily(source: string, date: string): Promise<HistoryRecord[]> {
-		const result = await this.db
-			.prepare(
-				'SELECT source, gold_type, weight, weight_unit, sell_price, buyback_price, currency, recorded_at, created_at FROM price_daily WHERE source = ?1 AND date(created_at, "unixepoch") = ?2',
-			)
-			.bind(source, date)
-			.all<Record<string, unknown>>();
-
-		if (!result.results?.length) return [];
-
-		return result.results.map((row) => ({
-			source: row.source as string,
-			goldType: row.gold_type as string,
-			weight: row.weight as number,
-			weightUnit: row.weight_unit as string,
-			sellPrice: row.sell_price as number,
-			buybackPrice: (row.buyback_price as number) ?? null,
-			currency: row.currency as string,
-			recordedAt: row.recorded_at as number,
-			createdAt: row.created_at as number,
+		return results.map((r) => ({
+			source: r.source,
+			material: r.material,
+			materialType: r.materialType,
+			weight: r.weight,
+			weightUnit: r.weightUnit,
+			sellPrice: r.sellPrice,
+			buybackPrice: r.buybackPrice,
+			currency: r.currency,
+			createdAt: r.createdAt,
+			meta: null,
 		}));
 	}
 
-	async setDaily(source: string, date: string, rows: GoldPriceRow[]): Promise<void> {
-		if (rows.length === 0) return;
-
-		const now = Math.trunc(Date.now() / 1000);
-
-		// Delete existing daily records for this source+date, then insert fresh
-		const deleteStmt = this.db
-			.prepare('DELETE FROM price_daily WHERE source = ?1 AND date(created_at, "unixepoch") = ?2')
-			.bind(source, date);
-
-		const insertStmts = rows.map((row) => {
-			const r = toRecord(row, now);
-			return this.db
-				.prepare(
-					`INSERT INTO price_daily (source, gold_type, weight, weight_unit, sell_price, buyback_price, currency, recorded_at, created_at)
-					 VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)`,
-				)
-				.bind(r.source, r.goldType, r.weight, r.weightUnit, r.sellPrice, r.buybackPrice, r.currency, r.recordedAt, r.createdAt);
-		});
-
-		await this.db.batch([deleteStmt, ...insertStmts]);
+	async deleteToday(source: string, date: string): Promise<void> {
+		await this.db
+			.delete(priceHistory)
+			.where(sql`${priceHistory.source} = ${source} AND date(${priceHistory.createdAt}) = ${date}`);
 	}
 
-	// --- HistoryStore ---
-
-	async insertHistory(rows: GoldPriceRow[]): Promise<void> {
+	async insert(rows: PriceRow[]): Promise<void> {
 		if (rows.length === 0) return;
 
-		const now = Math.trunc(Date.now() / 1000);
-
-		const stmts = rows.map((row) => {
-			const r = toRecord(row, now);
-			return this.db
-				.prepare(
-					`INSERT INTO price_history (source, gold_type, weight, weight_unit, sell_price, buyback_price, currency, recorded_at, created_at)
-					 VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)`,
-				)
-				.bind(r.source, r.goldType, r.weight, r.weightUnit, r.sellPrice, r.buybackPrice, r.currency, r.recordedAt, r.createdAt);
-		});
-
-		await this.db.batch(stmts);
+		await this.db.insert(priceHistory).values(
+			rows.map((row) => ({
+				source: row.source,
+				material: row.material,
+				materialType: row.materialType,
+				weight: row.weight,
+				weightUnit: row.weightUnit,
+				sellPrice: row.sellPrice,
+				buybackPrice: row.buybackPrice ?? null,
+				currency: row.currency,
+				createdAt: row.createdAt,
+			})),
+		);
 	}
 }

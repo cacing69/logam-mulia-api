@@ -67,33 +67,24 @@ export class CheerioScraper<T extends Record<string, string> = Record<string, st
 		throw lastError ?? new Error('Unknown fetch error');
 	}
 
-	private async scrapeItem(
-		url: string,
-		selector: Record<string, string | RawValue>,
-		postProcess?: ScrapingPostProcess,
-		transformer?: (data: Record<string, string>) => Record<string, string>,
-		options?: ScrapingOptions
-	): Promise<Record<string, string> | null> {
-		try {
-			const $ = await this.fetchHtml(url, options);
-			const rawData: Record<string, string> = {};
+	private extractFromDom(
+		$: cheerio.CheerioAPI,
+		selector: Record<string, string | RawValue>
+	): Record<string, string> {
+		const rawData: Record<string, string> = {};
 
-			for (const [key, selValue] of Object.entries(selector)) {
-				if (this.isRawValue(selValue)) {
-					rawData[key] = selValue.__raw;
-				} else if (typeof selValue === 'string' && selValue.startsWith('html:')) {
-					const sel = selValue.slice('html:'.length);
-					rawData[key] = ($(sel).html() ?? '').trim();
-				} else {
-					rawData[key] = $(selValue).text().trim();
-				}
+		for (const [key, selValue] of Object.entries(selector)) {
+			if (this.isRawValue(selValue)) {
+				rawData[key] = String(selValue.__raw);
+			} else if (typeof selValue === 'string' && selValue.startsWith('html:')) {
+				const sel = selValue.slice('html:'.length);
+				rawData[key] = ($(sel).html() ?? '').trim();
+			} else {
+				rawData[key] = $(selValue).text().trim();
 			}
-
-			const processedData = postProcess ? postProcess(rawData) : rawData;
-			return transformer ? transformer(processedData) : processedData;
-		} catch (error) {
-			throw error; // Re-throw to handle at higher level
 		}
+
+		return rawData;
 	}
 
 	async scrape<TOutput = T>(
@@ -132,24 +123,28 @@ export class CheerioScraper<T extends Record<string, string> = Record<string, st
 		const items: TOutput[] = [];
 		const errors: string[] = [];
 
+		const itemsByUrl = new Map<string, typeof selectorItems>();
 		for (const itemDef of selectorItems) {
 			const targetUrl = itemDef.url ?? this.config.url;
 			if (!targetUrl) {
 				errors.push('missing item url and config.url');
 				continue;
 			}
+			const existing = itemsByUrl.get(targetUrl) ?? [];
+			existing.push(itemDef);
+			itemsByUrl.set(targetUrl, existing);
+		}
 
+		for (const [targetUrl, defs] of itemsByUrl.entries()) {
 			try {
-				const result = await this.scrapeItem(
-					targetUrl,
-					itemDef.selector,
-					itemDef.postProcess,
-					transformer as (data: Record<string, string>) => Record<string, string>,
-					options
-				);
-
-				if (result) {
-					items.push((result as unknown) as TOutput);
+				const $ = await this.fetchHtml(targetUrl, options);
+				for (const def of defs) {
+					const rawData = this.extractFromDom($, def.selector);
+					const processedData = def.postProcess ? def.postProcess(rawData) : rawData;
+					const transformed = transformer
+						? transformer(processedData)
+						: ((processedData as unknown) as TOutput);
+					items.push(transformed);
 				}
 			} catch (error) {
 				const errMsg = error instanceof Error ? error.message : 'Unknown error';

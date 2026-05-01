@@ -1,8 +1,8 @@
 import { Hono } from 'hono';
+import type { Bindings } from '../../types';
 import { JinaScraper, parseCurrency } from '../../lib';
 import { emaskuConfig } from './emasku.config';
 
-type Bindings = { JINA_API_KEY?: string };
 const app = new Hono<{ Bindings: Bindings }>();
 
 app.get('/', async (c) => {

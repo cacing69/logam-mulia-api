@@ -8,11 +8,11 @@ export const treasuryConfig: AxiosScrapingConfig = {
 	selector: [
 		{
 			type: 'treasury',
-			price: 'data.buying_rate',
+			sellPrice: 'data.buying_rate',
 			buybackPrice: 'data.selling_rate',
 			info: 'data.updated_at',
 			weight: 1,
-			unit: 'gram',
+			weightUnit: 'gram',
 		},
 	],
 };

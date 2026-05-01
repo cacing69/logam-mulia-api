@@ -95,7 +95,7 @@ export class AxiosScraper<T extends Record<string, string> = Record<string, stri
 
 		for (const [key, value] of Object.entries(selector)) {
 			if (typeof value === 'string') {
-				if (key === 'type' || key === 'unit') {
+				if (key === 'type' || key === 'weightUnit') {
 					rawData[key] = value;
 					continue;
 				}

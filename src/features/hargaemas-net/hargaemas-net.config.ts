@@ -1,7 +1,7 @@
 import type { ScrapingConfig } from '../../lib/types/scraper.types';
 import { raw } from '../../lib/types/scraper.types';
 
-export const hargaemasNetConfig: ScrapingConfig<'buybackPrice' | 'price' | 'type' | 'info'> = {
+export const hargaemasNetConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'type' | 'info'> = {
 	engine: 'cheerio',
 	currency: 'IDR',
 	url: 'https://harga-emas.net/',
@@ -10,7 +10,7 @@ export const hargaemasNetConfig: ScrapingConfig<'buybackPrice' | 'price' | 'type
 		{
 			selector: {
 				buybackPrice: 'html:body',
-				price: 'html:body',
+				sellPrice: 'html:body',
 				type: raw('antam-1gr'),
 				info: 'h1',
 			},
@@ -25,7 +25,7 @@ export const hargaemasNetConfig: ScrapingConfig<'buybackPrice' | 'price' | 'type
 
 				return {
 					buybackPrice: buybackPriceMatch?.[1] ?? '',
-					price: priceMatch?.[1] ?? '',
+					sellPrice: priceMatch?.[1] ?? '',
 					type: rawData.type ?? 'antam-1gr',
 					info: rawData.info ?? 'Harga Emas Hari Ini',
 				};

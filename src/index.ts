@@ -1,6 +1,5 @@
 import { Hono } from 'hono';
-import { normalizeGoldPriceRows } from './lib';
-import { DbTurso, DbD1 } from './db';
+import type { Bindings } from './types';
 import rootFeature from './features/root';
 import healthFeature from './features/health';
 import anekalogamFeature from './features/anekalogam';
@@ -22,95 +21,7 @@ import hartadinataabadiFeature from './features/hartadinataabadi';
 import galeri24Feature from './features/galeri24';
 import sampoernagoldFeature from './features/sampoernagold';
 
-type Bindings = {
-	JINA_API_KEY?: string;
-	TURSO_DATABASE_URL?: string;
-	TURSO_AUTH_TOKEN?: string;
-	DB_D1?: D1Database;
-};
-
 const app = new Hono<{ Bindings: Bindings }>();
-
-app.use('/api/prices/*', async (c, next) => {
-	const source = c.req.path.replace('/api/prices/', '');
-	const today = new Date().toISOString().slice(0, 10);
-
-	// Try D1 daily cache first
-	if (c.env.DB_D1) {
-		try {
-			const dbD1 = new DbD1(c.env.DB_D1);
-			const cached = await dbD1.getDaily(source, today);
-			if (cached.length > 0) {
-				return c.json({
-					success: true,
-					data: cached,
-					count: cached.length,
-					source,
-					currency: 'IDR',
-					timestamp: cached[0].recordedAt,
-					cached: true,
-				});
-			}
-		} catch (err) {
-			console.error(`[db_d1] Cache miss error for ${source}:`, err);
-		}
-	}
-
-	await next();
-
-	const contentType = c.res.headers.get('content-type') ?? '';
-	if (!contentType.includes('application/json')) {
-		return;
-	}
-
-	const body = await c.res.clone().json().catch(() => null) as Record<string, unknown> | null;
-	if (!body || body.success !== true || !('data' in body)) {
-		return;
-	}
-
-	const currency = typeof body.currency === 'string' ? body.currency : 'IDR';
-	const timestamp = body.timestamp as string | number | undefined;
-
-	const normalizedRows = normalizeGoldPriceRows(body.data, {
-		source,
-		currency,
-		recordedAt: timestamp,
-		sourceSite: null,
-	});
-
-	const responseBody = {
-		...body,
-		data: normalizedRows,
-		count: normalizedRows.length,
-		currency,
-		source,
-	};
-
-	// Save to D1 (daily cache + history)
-	if (c.env.DB_D1) {
-		try {
-			const dbD1 = new DbD1(c.env.DB_D1);
-			await dbD1.setDaily(source, today, normalizedRows);
-			await dbD1.insertHistory(normalizedRows);
-		} catch (err) {
-			console.error(`[db_d1] Failed to save for ${source}:`, err);
-		}
-	}
-
-	// Save to Turso history
-	const tursoUrl = c.env.TURSO_DATABASE_URL;
-	const tursoToken = c.env.TURSO_AUTH_TOKEN;
-	if (tursoUrl && tursoToken) {
-		try {
-			const dbTurso = new DbTurso(tursoUrl, tursoToken);
-			await dbTurso.insertHistory(normalizedRows);
-		} catch (err) {
-			console.error(`[db_turso] Failed to save history for ${source}:`, err);
-		}
-	}
-
-	c.res = c.json(responseBody);
-});
 
 app.route('/', rootFeature);
 app.route('/health', healthFeature);

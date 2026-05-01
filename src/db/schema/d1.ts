@@ -5,35 +5,16 @@ export const priceHistory = sqliteTable(
 	{
 		id: integer('id').primaryKey({ autoIncrement: true }),
 		source: text('source').notNull(),
-		goldType: text('gold_type').notNull().default('unknown'),
+		material: text('material').notNull().default('gold'),
+		materialType: text('material_type').notNull().default('unknown'),
 		weight: real('weight').notNull().default(1),
 		weightUnit: text('weight_unit').notNull().default('gram'),
 		sellPrice: integer('sell_price').notNull().default(0),
 		buybackPrice: integer('buyback_price'),
 		currency: text('currency').notNull().default('IDR'),
-		recordedAt: integer('recorded_at').notNull(),
-		createdAt: integer('created_at').notNull().default(0),
+		createdAt: text('created_at').notNull(),
 	},
 	(table) => [
-		index('idx_history_source_recorded').on(table.source, table.recordedAt),
-	],
-);
-
-export const priceDaily = sqliteTable(
-	'price_daily',
-	{
-		id: integer('id').primaryKey({ autoIncrement: true }),
-		source: text('source').notNull(),
-		goldType: text('gold_type').notNull().default('unknown'),
-		weight: real('weight').notNull().default(1),
-		weightUnit: text('weight_unit').notNull().default('gram'),
-		sellPrice: integer('sell_price').notNull().default(0),
-		buybackPrice: integer('buyback_price'),
-		currency: text('currency').notNull().default('IDR'),
-		recordedAt: integer('recorded_at').notNull(),
-		createdAt: integer('created_at').notNull().default(0),
-	},
-	(table) => [
-		index('idx_daily_source_date').on(table.source, table.recordedAt),
+		index('idx_history_source_created').on(table.source, table.createdAt),
 	],
 );

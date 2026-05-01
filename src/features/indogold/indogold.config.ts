@@ -1,7 +1,7 @@
 import type { ScrapingConfig } from '../../lib/types/scraper.types';
 import { raw } from '../../lib/types/scraper.types';
 
-export const indogoldConfig: ScrapingConfig<'buybackPrice' | 'price' | 'type' | 'info'> = {
+export const indogoldConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'type' | 'info'> = {
 	engine: 'cheerio',
 	currency: 'IDR',
 	url: 'https://www.indogold.id/',
@@ -10,7 +10,7 @@ export const indogoldConfig: ScrapingConfig<'buybackPrice' | 'price' | 'type' | 
 		{
 			selector: {
 				buybackPrice: '#basic-price',
-				price: raw(''),
+				sellPrice: raw(''),
 				type: raw('indogold'),
 				info: '#basic-price',
 			},
@@ -22,7 +22,7 @@ export const indogoldConfig: ScrapingConfig<'buybackPrice' | 'price' | 'type' | 
 
 				return {
 					buybackPrice: buybackPriceMatch?.[1] ?? '',
-					price: priceMatch?.[1] ?? '',
+					sellPrice: priceMatch?.[1] ?? '',
 					type: rawData.type ?? 'indogold',
 					info: timeMatch?.[1] ?? 'Harga emas IndoGold',
 				};

@@ -1,3 +1,3 @@
 export { parseCurrency } from './currency';
-export { normalizeGoldPriceRows } from './price-response';
-export type { GoldPriceRow } from './price-response';
+export { normalizePriceRows } from './price-response';
+export type { PriceRow } from './price-response';
