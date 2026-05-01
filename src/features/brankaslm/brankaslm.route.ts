@@ -1,9 +1,11 @@
 import { Hono } from 'hono';
+import { JinaScraper } from '../../lib';
 import { brankaslmConfig } from './brankaslm.config';
 
-const app = new Hono();
+type Bindings = { JINA_API_KEY?: string };
+const app = new Hono<{ Bindings: Bindings }>();
 
-function parseCurrency(value: string): number {
+function parseCurrencyValue(value: string): number {
 	if (!value) return 0;
 	const cleaned = value.replace(/[^\d]/g, '');
 	return parseInt(cleaned, 10) || 0;
@@ -32,25 +34,8 @@ app.get('/', async (c) => {
 	}
 
 	try {
-		const response = await fetch(brankaslmConfig.proxyUrl, {
-			headers: { Accept: 'text/markdown' },
-			signal: AbortSignal.timeout(15000),
-		});
-
-		if (!response.ok) {
-			return c.json(
-				{
-					success: false,
-					error: `Proxy request failed: HTTP ${response.status}`,
-					timestamp,
-					source: 'brankaslm',
-					currency: brankaslmConfig.currency,
-				},
-				502
-			);
-		}
-
-		const markdown = await response.text();
+		const scraper = new JinaScraper(c.env.JINA_API_KEY);
+		const { text: markdown } = await scraper.fetch(brankaslmConfig.url);
 
 		const korporatRaw = extractPrice(markdown, 'Harga Beli Emas BRANKAS Korporat');
 		const fisikRaw = extractPrice(markdown, 'Harga Beli Emas Fisik');
@@ -62,7 +47,7 @@ app.get('/', async (c) => {
 		if (fisikRaw) {
 			items.push({
 				type: 'emas fisik',
-				buy: parseCurrency(fisikRaw),
+				buy: parseCurrencyValue(fisikRaw),
 				sell: null,
 				info,
 				buyRaw: fisikRaw,
@@ -73,7 +58,7 @@ app.get('/', async (c) => {
 		if (korporatRaw) {
 			items.push({
 				type: 'emas korporat',
-				buy: parseCurrency(korporatRaw),
+				buy: parseCurrencyValue(korporatRaw),
 				sell: null,
 				info,
 				buyRaw: korporatRaw,

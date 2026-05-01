@@ -20,7 +20,11 @@ import hartadinataabadiFeature from './features/hartadinataabadi';
 import galeri24Feature from './features/galeri24';
 import sampoernagoldFeature from './features/sampoernagold';
 
-const app = new Hono();
+type Bindings = {
+  JINA_API_KEY?: string;
+};
+
+const app = new Hono<{ Bindings: Bindings }>();
 
 app.route('/', rootFeature);
 app.route('/health', healthFeature);
