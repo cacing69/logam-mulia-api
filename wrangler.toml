@@ -5,6 +5,12 @@ compatibility_date = "2024-01-01"
 [vars]
 ENVIRONMENT = "development"
 
+[[d1_databases]]
+binding = "DB_D1"
+database_name = "logam_mulia_db"
+database_id = "c6daf29f-903d-497c-bba6-f427ac3b67a5"
+migrations_dir = "migrations/d1"
+
 [observability]
 enabled = false
 head_sampling_rate = 1

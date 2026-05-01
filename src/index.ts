@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 import { normalizeGoldPriceRows } from './lib';
+import { DbTurso, DbD1 } from './db';
 import rootFeature from './features/root';
 import healthFeature from './features/health';
 import anekalogamFeature from './features/anekalogam';
@@ -22,12 +23,39 @@ import galeri24Feature from './features/galeri24';
 import sampoernagoldFeature from './features/sampoernagold';
 
 type Bindings = {
-  JINA_API_KEY?: string;
+	JINA_API_KEY?: string;
+	TURSO_DATABASE_URL?: string;
+	TURSO_AUTH_TOKEN?: string;
+	DB_D1?: D1Database;
 };
 
 const app = new Hono<{ Bindings: Bindings }>();
 
 app.use('/api/prices/*', async (c, next) => {
+	const source = c.req.path.replace('/api/prices/', '');
+	const today = new Date().toISOString().slice(0, 10);
+
+	// Try D1 daily cache first
+	if (c.env.DB_D1) {
+		try {
+			const dbD1 = new DbD1(c.env.DB_D1);
+			const cached = await dbD1.getDaily(source, today);
+			if (cached.length > 0) {
+				return c.json({
+					success: true,
+					data: cached,
+					count: cached.length,
+					source,
+					currency: 'IDR',
+					timestamp: cached[0].recordedAt,
+					cached: true,
+				});
+			}
+		} catch (err) {
+			console.error(`[db_d1] Cache miss error for ${source}:`, err);
+		}
+	}
+
 	await next();
 
 	const contentType = c.res.headers.get('content-type') ?? '';
@@ -40,7 +68,6 @@ app.use('/api/prices/*', async (c, next) => {
 		return;
 	}
 
-	const source = typeof body.source === 'string' ? body.source : 'unknown';
 	const currency = typeof body.currency === 'string' ? body.currency : 'IDR';
 	const timestamp = body.timestamp as string | number | undefined;
 
@@ -56,9 +83,33 @@ app.use('/api/prices/*', async (c, next) => {
 		data: normalizedRows,
 		count: normalizedRows.length,
 		currency,
+		source,
 	};
 
-	c.res = c.json(responseBody, c.res.status);
+	// Save to D1 (daily cache + history)
+	if (c.env.DB_D1) {
+		try {
+			const dbD1 = new DbD1(c.env.DB_D1);
+			await dbD1.setDaily(source, today, normalizedRows);
+			await dbD1.insertHistory(normalizedRows);
+		} catch (err) {
+			console.error(`[db_d1] Failed to save for ${source}:`, err);
+		}
+	}
+
+	// Save to Turso history
+	const tursoUrl = c.env.TURSO_DATABASE_URL;
+	const tursoToken = c.env.TURSO_AUTH_TOKEN;
+	if (tursoUrl && tursoToken) {
+		try {
+			const dbTurso = new DbTurso(tursoUrl, tursoToken);
+			await dbTurso.insertHistory(normalizedRows);
+		} catch (err) {
+			console.error(`[db_turso] Failed to save history for ${source}:`, err);
+		}
+	}
+
+	c.res = c.json(responseBody);
 });
 
 app.route('/', rootFeature);

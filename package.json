@@ -10,7 +10,16 @@
     "test:run": "vitest run",
     "test:unit": "vitest run --exclude='**/*.integration.test.ts'",
     "test:integration": "vitest run --include='**/*.integration.test.ts'",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "db:generate": "drizzle-kit generate",
+    "db:turso:push": "drizzle-kit push",
+    "db:turso:push:remote": "drizzle-kit push",
+    "db:turso:studio": "drizzle-kit studio",
+    "db:d1:create": "wrangler d1 create logam-mulia-daily",
+    "db:d1:migrate:local": "wrangler d1 migrations apply logam_mulia_db --local",
+    "db:d1:migrate:remote": "wrangler d1 migrations apply logam_mulia_db --remote",
+    "db:d1:migrate": "npm run db:d1:migrate:local && npm run db:d1:migrate:remote",
+    "db:migrate": "npm run db:turso:push && npm run db:d1:migrate"
   },
   "repository": {
     "type": "git",
@@ -33,12 +42,16 @@
     "@cloudflare/vitest-pool-workers": "^0.15.2",
     "@cloudflare/workers-types": "^4.20260501.1",
     "@types/node": "^25.6.0",
+    "drizzle-kit": "^0.31.10",
+    "tsx": "^4.21.0",
     "typescript": "^6.0.3",
     "vitest": "^4.1.5",
     "wrangler": "^4.87.0"
   },
   "dependencies": {
+    "@libsql/client": "^0.17.3",
     "cheerio": "^1.2.0",
+    "drizzle-orm": "^0.45.2",
     "hono": "^4.12.16"
   }
 }
