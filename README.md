@@ -2,6 +2,7 @@
 
 # Logam Mulia API
 
+
 Hobby only. Scraping beberapa website yang menyediakan informasi harga jual/beli logam mulia emas di Indonesia, dont worry to make pull request
 
 
@@ -16,11 +17,9 @@ https://logam-mulia-api.vercel.app/
 https://logam-mulia-api.iamutaki.workers.dev/
 ```
 
-## Alasan migrasi ke Cloudflare Worker
+## GitAds Sponsored
 
-Deployment project ini di Vercel berstatus **paused** (tidak lagi melayani request), seperti tangkapan layar berikut. Karena itu API dipindahkan ke **Cloudflare Worker** supaya endpoint tetap aktif dan bisa diakses publik.
-
-![Vercel deployment paused — alasan migrasi ke Cloudflare Worker](images/vercel_paused.png)
+[Sponsored by GitAds](https://gitads.dev/v1/ad-track?source=cacing69/logam-mulia-api@github)
 
 ## Endpoint Available Saat Ini (Cloudflare Worker)
 
@@ -33,6 +32,12 @@ Rewrite dan migrasi API sedang berjalan dari Vercel ke Cloudflare Worker.
 Base URL Cloudflare Worker:
 
 - [https://logam-mulia-api.iamutaki.workers.dev](https://logam-mulia-api.iamutaki.workers.dev)
+
+## Alasan migrasi ke Cloudflare Worker
+
+Deployment project ini di Vercel berstatus **paused** (tidak lagi melayani request), seperti tangkapan layar berikut. Karena itu API dipindahkan ke **Cloudflare Worker** supaya endpoint tetap aktif dan bisa diakses publik.
+
+![Vercel deployment paused — alasan migrasi ke Cloudflare Worker](images/vercel_paused.png)
 
 #### List website yang tersedia
 
@@ -54,10 +59,6 @@ Base URL Cloudflare Worker:
 - [inbizia](https://www.inbizia.com/harga-emas-hari-ini-287964)
 - [Harga-Emas.com](https://www.hargaemas.com/)
 - [Treasury](https://treasury.id/)
-
-## GitAds Sponsored
-
-[Sponsored by GitAds](https://gitads.dev/v1/ad-track?source=cacing69/logam-mulia-api@github)
 
 Jika ingin menambahkan beberapa website lain, atau ada saran lain untuk bentuk response & requestnya, dipersilahkan untuk open issue terkait kritik dan saran
 
