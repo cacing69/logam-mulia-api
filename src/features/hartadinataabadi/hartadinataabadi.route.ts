@@ -10,8 +10,7 @@ app.get('/', async (c) => {
 	const result = await scraper.scrape(
 		(raw) => ({
 			type: raw.type || 'unknown',
-			buy: parseCurrency(raw.buy),
-			buyRaw: raw.buy,
+			price: parseCurrency(raw.sellPrice),
 		}),
 		defaultScrapingOptions
 	);

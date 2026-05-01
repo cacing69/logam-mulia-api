@@ -1,7 +1,8 @@
 import type { ScrapingConfig } from '../../lib/types/scraper.types';
 import { raw } from '../../lib/types/scraper.types';
 
-export const logammuliaConfig: ScrapingConfig<'price' | 'type' | 'info'> = {
+export const logammuliaConfig: ScrapingConfig<'sellPrice' | 'type' | 'info'> = {
+	name: 'logammulia',
 	engine: 'cheerio',
 	currency: 'IDR',
 	url: 'https://www.logammulia.com/harga-emas-hari-ini',
@@ -9,30 +10,30 @@ export const logammuliaConfig: ScrapingConfig<'price' | 'type' | 'info'> = {
 	items: [
 		{
 			selector: {
-				price: 'html:.table-bordered',
+				sellPrice: 'html:.table-bordered',
 				type: raw('antam'),
 				info: 'h2.ngc-title',
 			},
 			postProcess: (rawData) => {
-				const html = rawData.price ?? '';
+				const html = rawData.sellPrice ?? '';
 				const rows = html.split('</tr>');
 
-				let sell = '';
+				let buybackPrice = '';
 				for (const row of rows) {
 					const cells = row.split('</td>');
 					if (cells.length < 3) continue;
 
 					const weight = cells[0]?.replace(/<[^>]+>/g, '').trim() ?? '';
 					if (weight === '1 gr') {
-						sell = cells[1]?.replace(/<[^>]+>/g, '').trim() ?? '';
+						buybackPrice = cells[1]?.replace(/<[^>]+>/g, '').trim() ?? '';
 						break;
 					}
 				}
 
 				return {
 					type: rawData.type ?? 'emas batangan antam',
-					sell,
-					buy: '',
+					buybackPrice,
+					sellPrice: '',
 					info: rawData.info ?? '',
 				};
 			},

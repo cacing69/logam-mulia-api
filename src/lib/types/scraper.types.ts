@@ -1,8 +1,8 @@
 export interface RawValue {
-	__raw: string;
+	__raw: string | number;
 }
 
-export function raw(value: string | null): RawValue {
+export function raw(value: string | number | null): RawValue {
 	return { __raw: value ?? '' };
 }
 
@@ -15,6 +15,7 @@ export interface ItemDefinition<T extends string = string> {
 }
 
 export interface CheerioScrapingConfig<T extends string = string> {
+	name: string;
 	url: string;
 	engine: 'cheerio';
 	currency?: string;
@@ -34,11 +35,11 @@ export type AxiosMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 export interface AxiosSelectorDefinition {
 	type: string;
-	buy?: string;
-	sell?: string;
+	price?: string;
+	buybackPrice?: string;
 	info?: string;
 	weight?: number;
-	unit?: string;
+	weightUnit?: string;
 	[key: string]: string | number | undefined;
 }
 
@@ -48,6 +49,7 @@ export interface AxiosItemDefinition {
 }
 
 export interface AxiosScrapingConfig {
+	name: string;
 	url: string;
 	engine: 'axios';
 	responseType?: 'json';
@@ -62,6 +64,7 @@ export interface AxiosScrapingConfig {
 }
 
 export interface BaseScrapingConfig {
+	name: string;
 	url: string;
 	engine: 'cheerio' | 'axios';
 	currency?: string;

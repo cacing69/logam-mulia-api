@@ -1,6 +1,7 @@
 import type { AxiosScrapingConfig } from '../../lib';
 
 export const pegadaianConfig: AxiosScrapingConfig = {
+	name: 'pegadaian',
 	url: 'https://sahabat.pegadaian.co.id/gold/prices/chart?interval=7&isRequest=true',
 	engine: 'axios',
 	responseType: 'json',
@@ -23,11 +24,11 @@ export const pegadaianConfig: AxiosScrapingConfig = {
 	selector: [
 		{
 			type: 'pegadaian',
-			buy: 'hargaJual',
-			sell: 'hargaBeli',
+			sellPrice: 'hargaJual',
+			buybackPrice: 'hargaBeli',
 			info: 'message',
 			weight: 0.01,
-			unit: 'gram',
+			weightUnit: 'gram',
 		},
 	],
 };

@@ -1,8 +1,8 @@
 import { Hono } from 'hono';
+import type { Bindings } from '../../types';
 import { JinaScraper, parseCurrency } from '../../lib';
 import { lakuemasConfig } from './lakuemas.config';
 
-type Bindings = { JINA_API_KEY?: string };
 const app = new Hono<{ Bindings: Bindings }>();
 
 app.get('/', async (c) => {
@@ -44,8 +44,6 @@ app.get('/', async (c) => {
 				sell: parseCurrency(sell),
 				buy: parseCurrency(buy),
 				info: 'Harga Jual Emas Antam Hari Ini',
-				sellRaw: sell,
-				buyRaw: buy,
 			}],
 			count: 1,
 			timestamp,

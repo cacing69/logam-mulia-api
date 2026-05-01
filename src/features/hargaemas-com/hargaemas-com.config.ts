@@ -1,7 +1,8 @@
 import type { ScrapingConfig } from '../../lib/types/scraper.types';
 import { raw } from '../../lib/types/scraper.types';
 
-export const hargaemasComConfig: ScrapingConfig<'sell' | 'buy' | 'type' | 'info'> = {
+export const hargaemasComConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'type' | 'info'> = {
+	name: 'hargaemas-com',
 	engine: 'cheerio',
 	currency: 'IDR',
 	url: 'https://www.hargaemas.com/',
@@ -9,8 +10,8 @@ export const hargaemasComConfig: ScrapingConfig<'sell' | 'buy' | 'type' | 'info'
 	items: [
 		{
 			selector: {
-				sell: '.table.table-bordered.table-dark tbody tr:nth-child(2) td:nth-child(1) .price-current',
-				buy: '.table.table-bordered.table-dark tbody tr:nth-child(2) td:nth-child(2) .price-current',
+				buybackPrice: '.table.table-bordered.table-dark tbody tr:nth-child(2) td:nth-child(1) .price-current',
+				sellPrice: '.table.table-bordered.table-dark tbody tr:nth-child(2) td:nth-child(2) .price-current',
 				type: raw('antam'),
 				info: '.featured-posts .section-title h2',
 			},

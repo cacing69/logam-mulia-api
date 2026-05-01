@@ -1,6 +1,7 @@
 import type { AxiosScrapingConfig } from '../../lib';
 
 export const treasuryConfig: AxiosScrapingConfig = {
+	name: 'treasury',
 	url: 'https://api.treasury.id/api/v1/antigrvty/gold/rate',
 	engine: 'axios',
 	responseType: 'json',
@@ -8,11 +9,11 @@ export const treasuryConfig: AxiosScrapingConfig = {
 	selector: [
 		{
 			type: 'treasury',
-			buy: 'data.buying_rate',
-			sell: 'data.selling_rate',
+			sellPrice: 'data.buying_rate',
+			buybackPrice: 'data.selling_rate',
 			info: 'data.updated_at',
 			weight: 1,
-			unit: 'gram',
+			weightUnit: 'gram',
 		},
 	],
 };

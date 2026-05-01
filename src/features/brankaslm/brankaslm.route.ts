@@ -1,8 +1,8 @@
 import { Hono } from 'hono';
+import type { Bindings } from '../../types';
 import { JinaScraper } from '../../lib';
 import { brankaslmConfig } from './brankaslm.config';
 
-type Bindings = { JINA_API_KEY?: string };
 const app = new Hono<{ Bindings: Bindings }>();
 
 function parseCurrencyValue(value: string): number {
@@ -50,8 +50,6 @@ app.get('/', async (c) => {
 				buy: parseCurrencyValue(fisikRaw),
 				sell: null,
 				info,
-				buyRaw: fisikRaw,
-				sellRaw: null,
 			});
 		}
 
@@ -61,8 +59,6 @@ app.get('/', async (c) => {
 				buy: parseCurrencyValue(korporatRaw),
 				sell: null,
 				info,
-				buyRaw: korporatRaw,
-				sellRaw: null,
 			});
 		}
 
