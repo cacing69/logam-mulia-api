@@ -61,8 +61,8 @@ Deployment project ini di Vercel berstatus **paused** (tidak lagi melayani reque
 - [Semar Nusantara](https://goldprice.semar.co.id/home/multi/smg_press/smg) `paused: mapping response`
 - [Kurs Dolar](http://kurs.dollar.web.id/harga-emas-hari-ini.php) `migrated`
 - [Cermati](https://www.cermati.com/artikel/harga-emas-hari-ini) `migrated`
-- [Bank Syariah Indonesia](https://www.bankbsi.co.id/) `paused: looking for solution`
-- [Brankas](https://www.brankaslm.com/antam/index) `paused: looking for solution`
+- [Bank Syariah Indonesia](https://www.bankbsi.co.id/) `migrated`
+- [Brankas Logam Mulia](https://www.brankaslm.com/dashboard) `migrated`
 - [Indo Gold](https://www.indogold.id/) `migrated`
 - [Harga-Emas.net](https://harga-emas.net/) `migrated`
 - [inbizia](https://www.inbizia.com/harga-emas-hari-ini-287964) `deprecated`
