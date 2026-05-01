@@ -113,39 +113,6 @@ export class CheerioScraper<T extends Record<string, string> = Record<string, st
 			};
 		}
 
-		// Single item (legacy)
-		if (this.config.selector && this.config.url) {
-			try {
-				const result = await this.scrapeItem(
-					this.config.url,
-					this.config.selector,
-					this.config.postProcess,
-					transformer as (data: Record<string, string>) => Record<string, string>,
-					options
-				);
-
-				if (!result) {
-					throw new Error('Failed to scrape data');
-				}
-
-				return {
-					success: true,
-					data: (result as unknown) as TOutput,
-					timestamp,
-					source: this.source,
-					currency: this.config.currency,
-				};
-			} catch (error) {
-				return {
-					success: false,
-					error: error instanceof Error ? error.message : 'Unknown error',
-					timestamp,
-					source: this.source,
-					currency: this.config.currency,
-				};
-			}
-		}
-
 		// Multiple items dengan URL berbeda
 		if (this.config.items) {
 			const items: TOutput[] = [];

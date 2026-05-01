@@ -1,5 +1,6 @@
 import type {
 	AxiosScrapingConfig,
+	AxiosItemDefinition,
 	AxiosSelectorDefinition,
 	ScrapingOptions,
 	ScrapingResult,
@@ -130,8 +131,18 @@ export class AxiosScraper<T extends Record<string, string> = Record<string, stri
 
 		try {
 			const payload = await this.fetchJson(this.config.url, options);
-			const items = this.config.selector.map((itemSelector) => {
-				const rawData = this.mapSelector(payload, itemSelector);
+			const selectorItems: AxiosItemDefinition[] =
+				this.config.items ??
+				(this.config.selector ?? []).map((itemSelector) => ({
+					selector: itemSelector,
+				}));
+
+			if (selectorItems.length === 0) {
+				throw new Error('No selector or items defined in axios config.');
+			}
+
+			const items = selectorItems.map(({ selector }) => {
+				const rawData = this.mapSelector(payload, selector);
 				return transformer ? transformer(rawData) : ((rawData as unknown) as TOutput);
 			});
 

@@ -27,6 +27,7 @@ https://logam-mulia-api.iamutaki.workers.dev/
 - cermati: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/cermati](https://logam-mulia-api.iamutaki.workers.dev/api/prices/cermati)
 - indogold: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/indogold](https://logam-mulia-api.iamutaki.workers.dev/api/prices/indogold)
 - hargaemas-net: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-net](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-net)
+- treasury: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/treasury](https://logam-mulia-api.iamutaki.workers.dev/api/prices/treasury)
 
 ## Progress Migration (On Progress)
 
@@ -60,8 +61,8 @@ Deployment project ini di Vercel berstatus **paused** (tidak lagi melayani reque
 - [Indo Gold](https://www.indogold.id/) `migrated`
 - [Harga-Emas.net](https://harga-emas.net/) `migrated`
 - [inbizia](https://www.inbizia.com/harga-emas-hari-ini-287964) `deprecated`
-- [Harga-Emas.com](https://www.hargaemas.com/)
-- [Treasury](https://treasury.id/)
+- [Harga-Emas.com](https://www.hargaemas.com/) `migrated`
+- [Treasury](https://treasury.id/) `migrated`
 
 Jika ingin menambahkan beberapa website lain, atau ada saran lain untuk bentuk response & requestnya, dipersilahkan untuk open issue terkait kritik dan saran
 

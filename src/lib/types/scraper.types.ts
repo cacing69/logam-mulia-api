@@ -15,13 +15,14 @@ export interface ItemDefinition<T extends string = string> {
 }
 
 export interface CheerioScrapingConfig<T extends string = string> {
-	url?: string; // Default/base URL (deprecated, use items with url)
+	url: string;
 	engine: 'cheerio';
 	currency?: string;
 	active?: boolean; // Flag untuk menonaktifkan scraper (default: true)
-	// Single item (deprecated, use items)
-	selector?: Record<T, string | RawValue>;
-	postProcess?: ScrapingPostProcess;
+	method?: 'GET';
+	responseType?: 'text';
+	headers?: Record<string, string>;
+	body?: unknown;
 	// Multiple items dengan URL masing-masing
 	items?: ItemDefinition<T>[];
 }
@@ -38,6 +39,11 @@ export interface AxiosSelectorDefinition {
 	[key: string]: string | number | undefined;
 }
 
+export interface AxiosItemDefinition {
+	url?: string;
+	selector: AxiosSelectorDefinition;
+}
+
 export interface AxiosScrapingConfig {
 	url: string;
 	engine: 'axios';
@@ -45,9 +51,22 @@ export interface AxiosScrapingConfig {
 	method?: AxiosMethod;
 	currency?: string;
 	active?: boolean;
-	selector: AxiosSelectorDefinition[];
-	body?: unknown;
 	headers?: Record<string, string>;
+	body?: unknown;
+	selector?: AxiosSelectorDefinition[];
+	items?: AxiosItemDefinition[];
+	postProcess?: ScrapingPostProcess;
+}
+
+export interface BaseScrapingConfig {
+	url: string;
+	engine: 'cheerio' | 'axios';
+	currency?: string;
+	active?: boolean;
+	method?: AxiosMethod | 'GET';
+	responseType?: 'text' | 'json';
+	headers?: Record<string, string>;
+	body?: unknown;
 }
 
 export type ScrapingConfig<T extends string = string> = CheerioScrapingConfig<T>;
