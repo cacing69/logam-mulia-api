@@ -1,5 +1,6 @@
 export { CheerioScraper } from './scrapers/cheerio-scraper';
 export { AxiosScraper } from './scrapers/axios-scraper';
+export { JinaScraper } from './scrapers/jina-scraper';
 export { defaultScrapingOptions } from './constants/scraper-options';
 export { parseCurrency } from './utils/currency';
 export type {

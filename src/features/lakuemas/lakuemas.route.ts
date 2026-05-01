@@ -1,45 +1,70 @@
 import { Hono } from 'hono';
-import { CheerioScraper, defaultScrapingOptions, parseCurrency } from '../../lib';
+import { JinaScraper, parseCurrency } from '../../lib';
 import { lakuemasConfig } from './lakuemas.config';
 
-const app = new Hono();
-
-const scraper = new CheerioScraper('lakuemas', lakuemasConfig);
+type Bindings = { JINA_API_KEY?: string };
+const app = new Hono<{ Bindings: Bindings }>();
 
 app.get('/', async (c) => {
-	const result = await scraper.scrape(
-		(raw) => ({
-			type: raw.type || 'unknown',
-			sell: parseCurrency(raw.sell),
-			buy: parseCurrency(raw.buy),
-			info: raw.info,
-			sellRaw: raw.sell,
-			buyRaw: raw.buy,
-		}),
-		defaultScrapingOptions
-	);
+	const timestamp = new Date().toISOString();
 
-	if (!result.success) {
-		const statusCode = result.inactive ? 400 : 500;
+	if (lakuemasConfig.active === false) {
 		return c.json(
 			{
 				success: false,
-				error: result.error,
-				timestamp: result.timestamp,
-				source: result.source,
+				error: 'inactive',
+				timestamp,
+				source: 'lakuemas',
+				currency: lakuemasConfig.currency,
 			},
-			statusCode
+			400
 		);
 	}
 
-	return c.json({
-		success: true,
-		data: Array.isArray(result.data) ? result.data : [result.data],
-		count: result.count ?? (Array.isArray(result.data) ? result.data.length : 1),
-		timestamp: result.timestamp,
-		source: result.source,
-		currency: result.currency,
-	});
+	try {
+		const scraper = new JinaScraper(c.env.JINA_API_KEY);
+		const { text } = await scraper.fetch(lakuemasConfig.url);
+
+		const jualMatch = text.match(/##\s*HARGA JUAL EMAS HARI INI[\s\S]*?###\s*\*\*(IDR\s*[\d,.-]+)\*\*/i);
+		const beliMatch = text.match(/##\s*HARGA BELI EMAS HARI INI[\s\S]*?###\s*\*\*(IDR\s*[\d,.-]+)\*\*/i);
+
+		let sell = jualMatch?.[1]?.trim() ?? '';
+		let buy = beliMatch?.[1]?.trim() ?? '';
+
+		if (!sell || !buy) {
+			const fallbackMatches = [...text.matchAll(/IDR\s*([\d,]+),-\s*\/\s*Gram/gi)];
+			if (!buy) buy = fallbackMatches[0]?.[1] ? `IDR ${fallbackMatches[0][1]},-` : '';
+			if (!sell) sell = fallbackMatches[1]?.[1] ? `IDR ${fallbackMatches[1][1]},-` : '';
+		}
+
+		return c.json({
+			success: true,
+			data: [{
+				type: 'lakuemas',
+				sell: parseCurrency(sell),
+				buy: parseCurrency(buy),
+				info: 'Harga Jual Emas Antam Hari Ini',
+				sellRaw: sell,
+				buyRaw: buy,
+			}],
+			count: 1,
+			timestamp,
+			source: 'lakuemas',
+			currency: lakuemasConfig.currency,
+		});
+	} catch (error) {
+		const message = error instanceof Error ? error.message : 'Unknown error';
+		return c.json(
+			{
+				success: false,
+				error: message,
+				timestamp,
+				source: 'lakuemas',
+				currency: lakuemasConfig.currency,
+			},
+			500
+		);
+	}
 });
 
 export default app;

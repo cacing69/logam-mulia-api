@@ -1,45 +1,64 @@
 import { Hono } from 'hono';
-import { CheerioScraper, defaultScrapingOptions, parseCurrency } from '../../lib';
+import { JinaScraper, parseCurrency } from '../../lib';
 import { emaskuConfig } from './emasku.config';
 
-const app = new Hono();
-
-const scraper = new CheerioScraper('emasku', emaskuConfig);
+type Bindings = { JINA_API_KEY?: string };
+const app = new Hono<{ Bindings: Bindings }>();
 
 app.get('/', async (c) => {
-	const result = await scraper.scrape(
-		(raw) => ({
-			type: raw.type || 'unknown',
-			sell: parseCurrency(raw.sell),
-			buy: parseCurrency(raw.buy),
-			info: raw.info,
-			sellRaw: raw.sell,
-			buyRaw: raw.buy,
-		}),
-		defaultScrapingOptions
-	);
+	const timestamp = new Date().toISOString();
 
-	if (!result.success) {
-		const statusCode = result.inactive ? 400 : 500;
+	if (emaskuConfig.active === false) {
 		return c.json(
 			{
 				success: false,
-				error: result.error,
-				timestamp: result.timestamp,
-				source: result.source,
+				error: 'inactive',
+				timestamp,
+				source: 'emasku',
+				currency: emaskuConfig.currency,
 			},
-			statusCode
+			400
 		);
 	}
 
-	return c.json({
-		success: true,
-		data: Array.isArray(result.data) ? result.data : [result.data],
-		count: result.count ?? (Array.isArray(result.data) ? result.data.length : 1),
-		timestamp: result.timestamp,
-		source: result.source,
-		currency: result.currency,
-	});
+	try {
+		const scraper = new JinaScraper(c.env.JINA_API_KEY);
+		const { text } = await scraper.fetch(emaskuConfig.url);
+
+		const buyMatch = text.match(/##\s*Rp\s*([\d,.]+)/);
+		const buy = buyMatch?.[1]?.trim() ?? '';
+
+		const sellMatch = text.match(/Harga Buyback[\s\S]*?Rp\s*([\d,.]+)/);
+		const sell = sellMatch?.[1]?.trim() ?? '';
+
+		return c.json({
+			success: true,
+			data: [{
+				type: 'emasku',
+				sell: parseCurrency(sell),
+				buy: parseCurrency(buy),
+				info: 'Harga Emas Hari Ini - EMASKU (HRTA Gold)',
+				sellRaw: sell,
+				buyRaw: buy,
+			}],
+			count: 1,
+			timestamp,
+			source: 'emasku',
+			currency: emaskuConfig.currency,
+		});
+	} catch (error) {
+		const message = error instanceof Error ? error.message : 'Unknown error';
+		return c.json(
+			{
+				success: false,
+				error: message,
+				timestamp,
+				source: 'emasku',
+				currency: emaskuConfig.currency,
+			},
+			500
+		);
+	}
 });
 
 export default app;
