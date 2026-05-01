@@ -34,8 +34,8 @@ export type AxiosMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 export interface AxiosSelectorDefinition {
 	type: string;
-	buy?: string;
-	sell?: string;
+	price?: string;
+	buybackPrice?: string;
 	info?: string;
 	weight?: number;
 	unit?: string;

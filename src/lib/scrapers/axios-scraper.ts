@@ -99,7 +99,7 @@ export class AxiosScraper<T extends Record<string, string> = Record<string, stri
 					rawData[key] = value;
 					continue;
 				}
-				if (key === 'buy' || key === 'sell' || key === 'info') {
+				if (key === 'price' || key === 'buybackPrice' || key === 'info') {
 					rawData[key] = toStringValue(getByPath(payload, value));
 					continue;
 				}

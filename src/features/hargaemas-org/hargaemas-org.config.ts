@@ -15,11 +15,11 @@ export const hargaemasOrgConfig: ScrapingConfig<'price' | 'type' | 'info'> = {
 				info: 'title',
 			},
 			postProcess: (rawData) => {
-				const [sell = '', buy = ''] = (rawData.price ?? '').split('|').map((v) => v.trim());
+				const [buybackPrice = '', price = ''] = (rawData.price ?? '').split('|').map((v) => v.trim());
 
 				return {
-					sell,
-					buy,
+					buybackPrice,
+					price,
 					type: rawData.type ?? '',
 					info: rawData.info ?? '',
 				};

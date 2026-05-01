@@ -38,8 +38,6 @@ app.get('/', async (c) => {
 				sell: parseCurrency(sell),
 				buy: parseCurrency(buy),
 				info: 'Harga Emas Hari Ini - EMASKU (HRTA Gold)',
-				sellRaw: sell,
-				buyRaw: buy,
 			}],
 			count: 1,
 			timestamp,

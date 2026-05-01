@@ -1,7 +1,7 @@
 import type { ScrapingConfig } from '../../lib/types/scraper.types';
 import { raw } from '../../lib/types/scraper.types';
 
-export const cermatiConfig: ScrapingConfig<'sell' | 'buy' | 'type' | 'info'> = {
+export const cermatiConfig: ScrapingConfig<'buybackPrice' | 'price' | 'type' | 'info'> = {
 	engine: 'cheerio',
 	currency: 'IDR',
 	url: 'https://www.cermati.com/artikel/harga-emas-hari-ini',
@@ -9,13 +9,13 @@ export const cermatiConfig: ScrapingConfig<'sell' | 'buy' | 'type' | 'info'> = {
 	items: [
 		{
 			selector: {
-				sell: 'html:article[itemprop="articleBody"]',
-				buy: raw(''),
+				buybackPrice: 'html:article[itemprop="articleBody"]',
+				price: raw(''),
 				type: raw('cermati-antam-1g'),
 				info: 'article[itemprop="articleBody"] h1',
 			},
 			postProcess: (rawData) => {
-				const blob = rawData.sell ?? '';
+				const blob = rawData.buybackPrice ?? '';
 				const rowMatch = blob.match(
 					/<td[^>]*>\s*1 gram\s*<\/td>\s*<td[^>]*>\s*([\d.]+)\s*<\/td>\s*<td[^>]*>\s*([\d.]+)\s*<\/td>/i
 				);
@@ -24,8 +24,8 @@ export const cermatiConfig: ScrapingConfig<'sell' | 'buy' | 'type' | 'info'> = {
 				const title = rawData.info?.trim() ?? '';
 
 				return {
-					sell: antam,
-					buy: '',
+					buybackPrice: antam,
+					price: '',
 					type: rawData.type ?? 'cermati',
 					info: [title, digital ? `digital_mid: ${digital}` : ''].filter(Boolean).join(' | '),
 				};

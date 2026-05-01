@@ -44,8 +44,6 @@ app.get('/', async (c) => {
 				sell: parseCurrency(sell),
 				buy: parseCurrency(buy),
 				info: 'Harga Jual Emas Antam Hari Ini',
-				sellRaw: sell,
-				buyRaw: buy,
 			}],
 			count: 1,
 			timestamp,

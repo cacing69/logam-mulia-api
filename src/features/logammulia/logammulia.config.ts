@@ -17,22 +17,22 @@ export const logammuliaConfig: ScrapingConfig<'price' | 'type' | 'info'> = {
 				const html = rawData.price ?? '';
 				const rows = html.split('</tr>');
 
-				let sell = '';
+				let buybackPrice = '';
 				for (const row of rows) {
 					const cells = row.split('</td>');
 					if (cells.length < 3) continue;
 
 					const weight = cells[0]?.replace(/<[^>]+>/g, '').trim() ?? '';
 					if (weight === '1 gr') {
-						sell = cells[1]?.replace(/<[^>]+>/g, '').trim() ?? '';
+						buybackPrice = cells[1]?.replace(/<[^>]+>/g, '').trim() ?? '';
 						break;
 					}
 				}
 
 				return {
 					type: rawData.type ?? 'emas batangan antam',
-					sell,
-					buy: '',
+					buybackPrice,
+					price: '',
 					info: rawData.info ?? '',
 				};
 			},
