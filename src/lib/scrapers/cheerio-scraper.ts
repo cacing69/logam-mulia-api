@@ -113,51 +113,66 @@ export class CheerioScraper<T extends Record<string, string> = Record<string, st
 			};
 		}
 
-		// Multiple items dengan URL berbeda
-		if (this.config.items) {
-			const items: TOutput[] = [];
-			const errors: string[] = [];
+		// Build selector items: from items[] or from top-level selector
+		const selectorItems = this.config.items ?? (this.config.selector
+			? [{ selector: this.config.selector as Record<string, string | RawValue>, postProcess: this.config.postProcess }]
+			: []);
 
-			for (const itemDef of this.config.items) {
-				const targetUrl = itemDef.url ?? this.config.url;
-				if (!targetUrl) {
-					errors.push('missing item url and config.url');
-					continue;
-				}
+		if (selectorItems.length === 0) {
+			return {
+				success: false,
+				error: 'No selector or items defined in config.',
+				timestamp,
+				source: this.source,
+				currency: this.config.currency,
+			};
+		}
 
-				try {
-					const result = await this.scrapeItem(
-						targetUrl,
-						itemDef.selector,
-						itemDef.postProcess,
-						transformer as (data: Record<string, string>) => Record<string, string>,
-						options
-					);
+		const items: TOutput[] = [];
+		const errors: string[] = [];
 
-					if (result) {
-						items.push((result as unknown) as TOutput);
-					}
-				} catch (error) {
-					const errMsg = error instanceof Error ? error.message : 'Unknown error';
-					errors.push(`${targetUrl}: ${errMsg}`);
-				}
+		for (const itemDef of selectorItems) {
+			const targetUrl = itemDef.url ?? this.config.url;
+			if (!targetUrl) {
+				errors.push('missing item url and config.url');
+				continue;
 			}
 
-			// If all items failed, return error
-			if (items.length === 0 && errors.length > 0) {
-				return {
-					success: false,
-					error: `All items failed: ${errors.join('; ')}`,
-					timestamp,
-					source: this.source,
-					currency: this.config.currency,
-				};
-			}
+			try {
+				const result = await this.scrapeItem(
+					targetUrl,
+					itemDef.selector,
+					itemDef.postProcess,
+					transformer as (data: Record<string, string>) => Record<string, string>,
+					options
+				);
 
+				if (result) {
+					items.push((result as unknown) as TOutput);
+				}
+			} catch (error) {
+				const errMsg = error instanceof Error ? error.message : 'Unknown error';
+				errors.push(`${targetUrl}: ${errMsg}`);
+			}
+		}
+
+		// If all items failed, return error
+		if (items.length === 0 && errors.length > 0) {
+			return {
+				success: false,
+				error: `All items failed: ${errors.join('; ')}`,
+				timestamp,
+				source: this.source,
+				currency: this.config.currency,
+			};
+		}
+
+		// Single item without items[] — return as object, not array
+		if (!this.config.items && items.length === 1) {
 			return {
 				success: true,
-				data: items,
-				count: items.length,
+				data: items[0],
+				count: undefined,
 				timestamp,
 				source: this.source,
 				currency: this.config.currency,
@@ -165,8 +180,9 @@ export class CheerioScraper<T extends Record<string, string> = Record<string, st
 		}
 
 		return {
-			success: false,
-			error: 'No selector or items defined in config.',
+			success: true,
+			data: items,
+			count: items.length,
 			timestamp,
 			source: this.source,
 			currency: this.config.currency,

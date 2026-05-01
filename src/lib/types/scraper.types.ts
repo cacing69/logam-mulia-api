@@ -23,6 +23,9 @@ export interface CheerioScrapingConfig<T extends string = string> {
 	responseType?: 'text';
 	headers?: Record<string, string>;
 	body?: unknown;
+	// Single item selector (fallback when items is not defined)
+	selector?: Record<T, string | RawValue>;
+	postProcess?: ScrapingPostProcess;
 	// Multiple items dengan URL masing-masing
 	items?: ItemDefinition<T>[];
 }
