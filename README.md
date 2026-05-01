@@ -1,6 +1,12 @@
 # Logam Mulia API
 
-Cloudflare Workers API untuk Logam Mulia.
+Cloudflare Workers API untuk Logam Mulia. Dibangun dengan Hono framework dan TypeScript.
+
+## Tech Stack
+
+- **Runtime**: Cloudflare Workers
+- **Framework**: Hono
+- **Language**: TypeScript
 
 ## Setup
 
@@ -24,14 +30,42 @@ npm run deploy
 
 ## Endpoints
 
-- `GET /` - Welcome message
-- `GET /health` - Health check
+| Method | Endpoint    | Description    |
+|--------|-------------|----------------|
+| GET    | `/`         | Welcome message |
+| GET    | `/health`   | Health check    |
 
-## Project Structure
+## Project Structure (Feature-Based)
 
 ```
-├── src/
-│   └── index.ts       # Main worker entry point
-├── wrangler.toml      # Cloudflare Workers configuration
-└── package.json
+src/
+├── index.ts                 # Main entry point
+└── features/
+    ├── root/                # Root endpoint feature
+    │   ├── root.route.ts    # Route handlers
+    │   └── index.ts         # Feature exports
+    └── health/              # Health check feature
+        ├── health.route.ts  # Route handlers
+        ├── health.service.ts # Business logic
+        └── index.ts         # Feature exports
 ```
+
+### Adding a New Feature
+
+1. Create a new directory under `src/features/your-feature/`
+2. Create `your-feature.route.ts` for routes
+3. Create `your-feature.service.ts` for business logic
+4. Create `index.ts` to export the feature
+5. Import and register in `src/index.ts`
+
+## Environment Variables
+
+Copy `.env.example` to `.dev.vars` untuk development:
+
+```bash
+cp .env.example .dev.vars
+```
+
+## License
+
+MIT

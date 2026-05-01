@@ -1,8 +1,15 @@
-/node_modules
-/examples
-/dist
+node_modules
+examples
+dist
 .env
+.env.local
 .wrangler
 dev.vars
 *.log
 .DS_Store
+
+# TypeScript
+*.tsbuildinfo
+
+# Cache
+.cache

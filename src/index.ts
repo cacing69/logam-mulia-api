@@ -1,16 +1,10 @@
 import { Hono } from 'hono';
+import rootFeature from './features/root';
+import healthFeature from './features/health';
 
 const app = new Hono();
 
-app.get('/', (c) => {
-	return c.json({
-		message: 'Welcome to Logam Mulia API',
-		status: 'running',
-	});
-});
-
-app.get('/health', (c) => {
-	return c.json({ status: 'healthy' , message: 'Welcome to Logam Mulia API',});
-});
+app.route('/', rootFeature);
+app.route('/health', healthFeature);
 
 export default app;

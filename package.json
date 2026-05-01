@@ -1,7 +1,7 @@
 {
   "name": "logam-mulia-api",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/index.ts",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
@@ -9,17 +9,23 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cacing69/logam-mulia-api.git"
+    "url": "git+https://github.com/ibnulmutaki/logam-mulia-api.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "cloudflare",
+    "workers",
+    "api",
+    "hono"
+  ],
+  "author": "Ibnul Mutaki",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/cacing69/logam-mulia-api/issues"
+    "url": "https://github.com/ibnulmutaki/logam-mulia-api/issues"
   },
-  "homepage": "https://github.com/cacing69/logam-mulia-api#readme",
-  "description": "",
+  "homepage": "https://github.com/ibnulmutaki/logam-mulia-api#readme",
+  "description": "Logam Mulia API - Cloudflare Workers dengan Hono framework",
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260501.1",
     "@types/node": "^25.6.0",
     "typescript": "^6.0.3",
     "wrangler": "^4.87.0"
