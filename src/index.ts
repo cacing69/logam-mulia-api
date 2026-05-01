@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { normalizeGoldPriceRows } from './lib';
 import rootFeature from './features/root';
 import healthFeature from './features/health';
 import anekalogamFeature from './features/anekalogam';
@@ -25,6 +26,40 @@ type Bindings = {
 };
 
 const app = new Hono<{ Bindings: Bindings }>();
+
+app.use('/api/prices/*', async (c, next) => {
+	await next();
+
+	const contentType = c.res.headers.get('content-type') ?? '';
+	if (!contentType.includes('application/json')) {
+		return;
+	}
+
+	const body = await c.res.clone().json().catch(() => null) as Record<string, unknown> | null;
+	if (!body || body.success !== true || !('data' in body)) {
+		return;
+	}
+
+	const source = typeof body.source === 'string' ? body.source : 'unknown';
+	const currency = typeof body.currency === 'string' ? body.currency : 'IDR';
+	const timestamp = body.timestamp as string | number | undefined;
+
+	const normalizedRows = normalizeGoldPriceRows(body.data, {
+		source,
+		currency,
+		recordedAt: timestamp,
+		sourceSite: null,
+	});
+
+	const responseBody = {
+		...body,
+		data: normalizedRows,
+		count: normalizedRows.length,
+		currency,
+	};
+
+	c.res = c.json(responseBody, c.res.status);
+});
 
 app.route('/', rootFeature);
 app.route('/health', healthFeature);
