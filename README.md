@@ -16,6 +16,12 @@ https://logam-mulia-api.vercel.app/
 https://logam-mulia-api.iamutaki.workers.dev/
 ```
 
+## Alasan migrasi ke Cloudflare Worker
+
+Deployment project ini di Vercel berstatus **paused** (tidak lagi melayani request), seperti tangkapan layar berikut. Karena itu API dipindahkan ke **Cloudflare Worker** supaya endpoint tetap aktif dan bisa diakses publik.
+
+![Vercel deployment paused — alasan migrasi ke Cloudflare Worker](images/vercel_paused.png)
+
 ## Endpoint Available Saat Ini (Cloudflare Worker)
 
 1. anekalogam: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam](https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam)
