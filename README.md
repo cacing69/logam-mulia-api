@@ -13,6 +13,8 @@ https://logam-mulia-api.vercel.app/
 https://logam-mulia-api.iamutaki.workers.dev/
 ```
 
+
+
 ## GitAds Sponsored
 
 [![Sponsored by GitAds](https://gitads.dev/v1/ad-serve?source=cacing69/logam-mulia-api@github)](https://gitads.dev/v1/ad-track?source=cacing69/logam-mulia-api@github)
@@ -41,6 +43,31 @@ https://logam-mulia-api.iamutaki.workers.dev/
 | pegadaian | [`/pegadaian`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/pegadaian) | - | ❌ |
 
 ## Available params on history
+
+```bash
+# Endpoint (latest price)
+curl -X GET "https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam"
+```
+
+```bash
+# Endpoint (force refresh / skip cache)
+curl -X GET "https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam?refresh=true"
+```
+
+```bash
+# History (default pagination: page=1, length=20)
+curl -X GET "https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam/history"
+```
+
+```bash
+# History with pagination
+curl -X GET "https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam/history?page=1&length=20"
+```
+
+```bash
+# History with weight filter
+curl -X GET "https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam/history?weight=10"
+```
 
 | Param | Type | Notes |
 | ----- | ---- | ----- |
