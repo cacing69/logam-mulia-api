@@ -1,5 +1,11 @@
 import * as cheerio from 'cheerio';
-import type { ScrapingConfig, ScrapingResult, ScrapingOptions, RawValue } from '../types/scraper.types';
+import type {
+	ScrapingConfig,
+	ScrapingResult,
+	ScrapingOptions,
+	RawValue,
+	ScrapingPostProcess,
+} from '../types/scraper.types';
 
 export class CheerioScraper<T extends Record<string, string> = Record<string, string>> {
 	private config: ScrapingConfig<string>;
@@ -15,29 +21,55 @@ export class CheerioScraper<T extends Record<string, string> = Record<string, st
 	}
 
 	private async fetchHtml(url: string, options?: ScrapingOptions): Promise<cheerio.CheerioAPI> {
-		const controller = new AbortController();
-		const timeoutId = setTimeout(() => controller.abort(), options?.timeout ?? 10000);
+		const maxAttempts = (options?.retries ?? 0) + 1;
+		let lastError: Error | null = null;
 
-		try {
-			const response = await fetch(url, {
-				signal: controller.signal,
-				headers: options?.headers,
-			});
+		for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+			const controller = new AbortController();
+			const timeoutId = setTimeout(() => controller.abort(), options?.timeout ?? 10000);
 
-			if (!response.ok) {
-				throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+			try {
+				const response = await fetch(url, {
+					signal: controller.signal,
+					headers: options?.headers,
+				});
+
+				if (!response.ok) {
+					const body = await response.text();
+					const bodySnippet = body.slice(0, 180).replace(/\s+/g, ' ').trim();
+					const errorMessage = bodySnippet
+						? `HTTP ${response.status}: ${response.statusText} - ${bodySnippet}`
+						: `HTTP ${response.status}: ${response.statusText}`;
+
+					// Retry on transient server/network-side failures.
+					if (response.status >= 500 && attempt < maxAttempts) {
+						lastError = new Error(errorMessage);
+						continue;
+					}
+
+					throw new Error(errorMessage);
+				}
+
+				const html = await response.text();
+				return cheerio.load(html);
+			} catch (error) {
+				lastError = error instanceof Error ? error : new Error('Unknown fetch error');
+				if (attempt < maxAttempts) {
+					continue;
+				}
+				throw lastError;
+			} finally {
+				clearTimeout(timeoutId);
 			}
-
-			const html = await response.text();
-			return cheerio.load(html);
-		} finally {
-			clearTimeout(timeoutId);
 		}
+
+		throw lastError ?? new Error('Unknown fetch error');
 	}
 
 	private async scrapeItem(
 		url: string,
 		selector: Record<string, string | RawValue>,
+		postProcess?: ScrapingPostProcess,
 		transformer?: (data: Record<string, string>) => Record<string, string>,
 		options?: ScrapingOptions
 	): Promise<Record<string, string> | null> {
@@ -53,7 +85,8 @@ export class CheerioScraper<T extends Record<string, string> = Record<string, st
 				}
 			}
 
-			return transformer ? transformer(rawData) : rawData;
+			const processedData = postProcess ? postProcess(rawData) : rawData;
+			return transformer ? transformer(processedData) : processedData;
 		} catch (error) {
 			throw error; // Re-throw to handle at higher level
 		}
@@ -83,6 +116,7 @@ export class CheerioScraper<T extends Record<string, string> = Record<string, st
 				const result = await this.scrapeItem(
 					this.config.url,
 					this.config.selector,
+					this.config.postProcess,
 					transformer as (data: Record<string, string>) => Record<string, string>,
 					options
 				);
@@ -119,6 +153,7 @@ export class CheerioScraper<T extends Record<string, string> = Record<string, st
 					const result = await this.scrapeItem(
 						itemDef.url,
 						itemDef.selector,
+						itemDef.postProcess,
 						transformer as (data: Record<string, string>) => Record<string, string>,
 						options
 					);

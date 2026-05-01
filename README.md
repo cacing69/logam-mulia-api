@@ -24,6 +24,7 @@ https://logam-mulia-api.iamutaki.workers.dev/
 ## Endpoint Available Saat Ini (Cloudflare Worker)
 
 1. anekalogam: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam](https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam)
+2. hargaemas-org: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-org](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-org)
 
 ## Progress Migration (On Progress)
 
@@ -41,11 +42,11 @@ Deployment project ini di Vercel berstatus **paused** (tidak lagi melayani reque
 
 #### List website yang tersedia
 
-- [Aneka Logam](https://www.anekalogam.co.id/id)
-- [Logam Mulia](https://www.logammulia.com/id)
-- [Harga-Emas.org](https://harga-emas.org)
-- [Laku Emas](https://www.lakuemas.com/harga)
-- [Tokopedia](https://www.tokopedia.com/emas/harga-hari-ini/)
+- [Aneka Logam](https://www.anekalogam.co.id/id) `migrated`
+- [Logam Mulia](https://www.logammulia.com/id) `paused: looking for solution`
+- [Harga-Emas.org](https://harga-emas.org) `migrated`
+- [Laku Emas](https://www.lakuemas.com/harga) `migrated`
+- [Tokopedia](https://www.tokopedia.com/emas/harga-hari-ini/) `deprecated`
 - [Pegadaian](https://www.pegadaian.co.id/harga)
 - [Sakumas](https://sakumas.com/)
 - [Koin Works](https://koinworks.com/harga-emas-hari-ini/)

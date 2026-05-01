@@ -8,6 +8,10 @@ describe('parseCurrency', () => {
 		expect(parseCurrency('Rp10.000')).toBe(10000);
 	});
 
+	it('should parse IDR format with comma thousands and trailing dash', () => {
+		expect(parseCurrency('IDR 2,566,000,-')).toBe(2566000);
+	});
+
 	it('should parse currency with commas as decimal separator', () => {
 		expect(parseCurrency('Rp2.737,50')).toBe(2737.5);
 		expect(parseCurrency('1.500,25')).toBe(1500.25);
