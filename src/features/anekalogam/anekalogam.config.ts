@@ -15,15 +15,5 @@ export const anekalogamConfig: ScrapingConfig<'sell' | 'buy' | 'type' | 'info'> 
 				info: '#today-price > div.section-intro > p:nth-child(3)',
 			},
 		},
-		// Contoh tambah item dengan URL berbeda:
-		// {
-		//   url: 'https://www.anekalogam.co.id/ubs',
-		//   selector: {
-		//     sell: '.sell-price',
-		//     buy: '.buy-price',
-		//     type: raw('UBS'),
-		//     info: '.product-info'
-		//   }
-		// }
 	],
 };
