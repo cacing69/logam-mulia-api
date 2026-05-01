@@ -44,6 +44,12 @@ https://logam-mulia-api.iamutaki.workers.dev/
 
 ## Available params on history
 
+| Param | Type | Notes |
+| ----- | ---- | ----- |
+| page | int | Pagination page number |
+| length | int | Pagination length (max 1000) |
+| weight | int | Filter by weight |
+
 ```bash
 # Endpoint (latest price)
 curl -X GET "https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam"
@@ -68,12 +74,6 @@ curl -X GET "https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam/
 # History with weight filter
 curl -X GET "https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam/history?weight=10"
 ```
-
-| Param | Type | Notes |
-| ----- | ---- | ----- |
-| page | int | Pagination page number |
-| length | int | Pagination length (max 1000) |
-| weight | int | Filter by weight |
 
 Keterangan:
 
