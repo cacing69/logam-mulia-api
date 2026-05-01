@@ -5,7 +5,12 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "tail": "wrangler tail"
+    "tail": "wrangler tail",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:unit": "vitest run --exclude='**/*.integration.test.ts'",
+    "test:integration": "vitest run --include='**/*.integration.test.ts'",
+    "test:coverage": "vitest run --coverage"
   },
   "repository": {
     "type": "git",
@@ -25,12 +30,15 @@
   "homepage": "https://github.com/ibnulmutaki/logam-mulia-api#readme",
   "description": "Logam Mulia API - Cloudflare Workers dengan Hono framework",
   "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.15.2",
     "@cloudflare/workers-types": "^4.20260501.1",
     "@types/node": "^25.6.0",
     "typescript": "^6.0.3",
+    "vitest": "^4.1.5",
     "wrangler": "^4.87.0"
   },
   "dependencies": {
+    "cheerio": "^1.2.0",
     "hono": "^4.12.16"
   }
 }
