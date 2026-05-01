@@ -1,4 +1,4 @@
-name: Refresh Anekalogam (Prod)
+name: Run Sync Data
 
 on:
   schedule:
