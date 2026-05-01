@@ -1,0 +1,30 @@
+{
+  "name": "logam-mulia-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cacing69/logam-mulia-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cacing69/logam-mulia-api/issues"
+  },
+  "homepage": "https://github.com/cacing69/logam-mulia-api#readme",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "typescript": "^6.0.3",
+    "wrangler": "^4.87.0"
+  },
+  "dependencies": {
+    "hono": "^4.12.16"
+  }
+}
