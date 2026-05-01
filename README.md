@@ -1,41 +1,74 @@
-<!-- GitAds-Verify: 3FGPSI1T41Y2U29T9YLW1HH2VAPRXK9I -->
 
 # Logam Mulia API
 
-<p>Hobby only. Scraping beberapa website yang menyediakan informasi harga jual/beli logam mulia emas di Indonesia, dont worry to make pull request</p>
+Hobby only. Scraping beberapa website yang menyediakan informasi harga jual/beli logam mulia emas di Indonesia, dont worry to make pull request
 
-<pre>https://logam-mulia-api.vercel.app/</pre>
+```bash
+# inactive
+https://logam-mulia-api.vercel.app/
+```
 
-<h4>List website yang tersedia</h4>
-
-- [Aneka Logam](https://www.anekalogam.co.id/id)
-- [Logam Mulia](https://www.logammulia.com/id)
-- [Harga-Emas.org](https://harga-emas.org)
-- [Laku Emas](https://www.lakuemas.com/harga)
-- [Tokopedia](https://www.tokopedia.com/emas/harga-hari-ini/)
-- [Pegadaian](https://www.pegadaian.co.id/harga)
-- [Sakumas](https://sakumas.com/)
-- [Koin Works](https://koinworks.com/harga-emas-hari-ini/)
-- [Semar Nusantara](https://goldprice.semar.co.id/home/multi/smg_press/smg)
-- [Kurs Dolar](http://kurs.dollar.web.id/harga-emas-hari-ini.php)
-- [Cermati](https://www.cermati.com/artikel/harga-emas-hari-ini)
-- [Bank Syariah Indonesia](https://www.bankbsi.co.id/)
-- [Brankas](https://www.brankaslm.com/antam/index)
-- [Indo Gold](https://www.brankaslm.com/antam/index)
-- [Harga-Emas.net](https://harga-emas.net/)
-- [inbizia](https://www.inbizia.com/harga-emas-hari-ini-287964)
-- [Harga-Emas.com](https://www.hargaemas.com/)
-- [Treasury](https://treasury.id/)
+```bash
+# active
+https://logam-mulia-api.iamutaki.workers.dev/
+```
 
 ## GitAds Sponsored
-[![Sponsored by GitAds](https://gitads.dev/v1/ad-serve?source=cacing69/logam-mulia-api@github)](https://gitads.dev/v1/ad-track?source=cacing69/logam-mulia-api@github)
+
+[Sponsored by GitAds](https://gitads.dev/v1/ad-track?source=cacing69/logam-mulia-api@github)
+
+## Endpoint Available Saat Ini (Cloudflare Worker)
+
+- anekalogam: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam](https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam)
+- hargaemas-org: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-org](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-org)
+- lakuemas: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/lakuemas](https://logam-mulia-api.iamutaki.workers.dev/api/prices/lakuemas)
+- sakumas: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/sakumas](https://logam-mulia-api.iamutaki.workers.dev/api/prices/sakumas)
+- kursdolar: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/kursdolar](https://logam-mulia-api.iamutaki.workers.dev/api/prices/kursdolar)
+- cermati: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/cermati](https://logam-mulia-api.iamutaki.workers.dev/api/prices/cermati)
+- indogold: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/indogold](https://logam-mulia-api.iamutaki.workers.dev/api/prices/indogold)
+- hargaemas-net: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-net](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-net)
+- treasury: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/treasury](https://logam-mulia-api.iamutaki.workers.dev/api/prices/treasury)
+
+## Progress Migration (On Progress)
+
+Rewrite dan migrasi API sedang berjalan dari Vercel ke Cloudflare Worker.
+
+Base URL Cloudflare Worker:
+
+- [https://logam-mulia-api.iamutaki.workers.dev](https://logam-mulia-api.iamutaki.workers.dev)
+
+## Alasan migrasi ke Cloudflare Worker
+
+Deployment project ini di Vercel berstatus **paused** (tidak lagi melayani request), seperti tangkapan layar berikut. Karena itu API dipindahkan ke **Cloudflare Worker** supaya endpoint tetap aktif dan bisa diakses publik.
+
+![Vercel deployment paused — alasan migrasi ke Cloudflare Worker](images/vercel_paused.png)
+
+#### List website yang tersedia
+
+- [Aneka Logam](https://www.anekalogam.co.id/id) `migrated`
+- [Logam Mulia](https://www.logammulia.com/id) `paused: looking for solution`
+- [Harga-Emas.org](https://harga-emas.org) `migrated`
+- [Laku Emas](https://www.lakuemas.com/harga) `migrated`
+- [Tokopedia](https://www.tokopedia.com/emas/harga-hari-ini/) `deprecated`
+- [Pegadaian](https://www.pegadaian.co.id/harga) `paused: looking for solution`
+- [Sakumas](https://sakumas.asastapayment.com/) `migrated`
+- [Koin Works](https://koinworks.com/harga-emas-hari-ini/) `deprecated`
+- [Semar Nusantara](https://goldprice.semar.co.id/home/multi/smg_press/smg) `paused: mapping response`
+- [Kurs Dolar](http://kurs.dollar.web.id/harga-emas-hari-ini.php) `migrated`
+- [Cermati](https://www.cermati.com/artikel/harga-emas-hari-ini) `migrated`
+- [Bank Syariah Indonesia](https://www.bankbsi.co.id/) `paused: looking for solution`
+- [Brankas](https://www.brankaslm.com/antam/index) `paused: looking for solution`
+- [Indo Gold](https://www.indogold.id/) `migrated`
+- [Harga-Emas.net](https://harga-emas.net/) `migrated`
+- [inbizia](https://www.inbizia.com/harga-emas-hari-ini-287964) `deprecated`
+- [Harga-Emas.com](https://www.hargaemas.com/) `migrated`
+- [Treasury](https://treasury.id/) `migrated`
 
 Jika ingin menambahkan beberapa website lain, atau ada saran lain untuk bentuk response & requestnya, dipersilahkan untuk open issue terkait kritik dan saran
 
-
 contoh response
 
-`
+```json
 
 {
   data: [
@@ -48,27 +81,4 @@ contoh response
   meta: {}
 }
 
-`
-
-
-
-parameter site boleh diisi salah satu dari beberapa website yang tersedia
-
-- anekalogam : [https://logam-mulia-api.vercel.app/prices/anekalogam](https://logam-mulia-api.vercel.app/prices/anekalogam)
-- logammulia : [https://logam-mulia-api.vercel.app/prices/logammulia](https://logam-mulia-api.vercel.app/prices/logammulia) (error : blocked by cloudflare)
-- hargaemas-org : [https://logam-mulia-api.vercel.app/prices/hargaemas-org](https://logam-mulia-api.vercel.app/prices/hargaemas-org)
-- lakuemas : [https://logam-mulia-api.vercel.app/prices/lakuemas](https://logam-mulia-api.vercel.app/prices/lakuemas)
-- tokopedia : [https://logam-mulia-api.vercel.app/prices/tokopedia](https://logam-mulia-api.vercel.app/prices/tokopedia) (error : gateway timeout)
-- pegadaian : [https://logam-mulia-api.vercel.app/prices/pegadaian](https://logam-mulia-api.vercel.app/prices/pegadaian)
-- sakumas : [https://logam-mulia-api.vercel.app/prices/sakumas](https://logam-mulia-api.vercel.app/prices/sakumas)
-- semar : [https://logam-mulia-api.vercel.app/prices/semar](https://logam-mulia-api.vercel.app/prices/semar)
-- koinworks : [https://logam-mulia-api.vercel.app/prices/koinworks](https://logam-mulia-api.vercel.app/prices/koinworks)
-- kursdolar : [https://logam-mulia-api.vercel.app/prices/kursdolar](https://logam-mulia-api.vercel.app/prices/kursdolar)
-- cermati : [https://logam-mulia-api.vercel.app/prices/cermati](https://logam-mulia-api.vercel.app/prices/cermati)
-- bsi : [https://logam-mulia-api.vercel.app/prices/bsi](https://logam-mulia-api.vercel.app/prices/bsi)
-- brankaslm : [https://logam-mulia-api.vercel.app/prices/brankaslm](https://logam-mulia-api.vercel.app/prices/brankaslm)
-- indogold : [https://logam-mulia-api.vercel.app/prices/indogold](https://logam-mulia-api.vercel.app/prices/indogold)
-- hargaemas-net : [https://logam-mulia-api.vercel.app/prices/hargaemas-net](https://logam-mulia-api.vercel.app/prices/hargaemas-net)
-- inbizia : [https://logam-mulia-api.vercel.app/prices/inbizia](https://logam-mulia-api.vercel.app/prices/inbizia)
-- hargaemas-com : [https://logam-mulia-api.vercel.app/prices/hargaemas-com](https://logam-mulia-api.vercel.app/prices/hargaemas-com)
-- treasury : [https://logam-mulia-api.vercel.app/prices/treasury](https://logam-mulia-api.vercel.app/prices/treasury)
+```
