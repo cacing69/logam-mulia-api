@@ -35,7 +35,8 @@ export class CheerioScraper<T extends Record<string, string> = Record<string, st
 				});
 
 				if (!response.ok) {
-					const body = await response.text();
+					let body = '';
+					try { body = await response.text(); } catch { /* ignore */ }
 					const bodySnippet = body.slice(0, 180).replace(/\s+/g, ' ').trim();
 					const errorMessage = bodySnippet
 						? `HTTP ${response.status}: ${response.statusText} - ${bodySnippet}`
