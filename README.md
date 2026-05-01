@@ -12,8 +12,23 @@ https://logam-mulia-api.vercel.app/
 # active
 https://logam-mulia-api.iamutaki.workers.dev/
 ```
+contoh response
 
+```json
 
+{
+  "data": [
+    {
+      "sellPrice": 900000,
+      "buybackPrice": 850000,
+      "materialType": "antam",
+      "weight": 1,
+      "weightUnit": "gr"
+    }
+  ]
+}
+
+```
 
 ## GitAds Sponsored
 
@@ -123,22 +138,5 @@ Deployment project ini di Vercel berstatus **paused** (tidak lagi melayani reque
 | 21 | [Galeri 24](https://galeri24.co.id/harga-emas) | new |
 | 22 | [Sampoerna Gold](https://sampoernagold.com/) | new |
 
-Jika ingin menambahkan beberapa website lain, atau ada saran lain untuk bentuk response & requestnya, dipersilahkan untuk open issue terkait kritik dan saran
-
-contoh response
-
-```json
-
-{
-  "data": [
-    {
-      "sellPrice": 900000,
-      "buybackPrice": 850000,
-      "materialType": "antam",
-      "weight": 1,
-      "weightUnit": "gr"
-    }
-  ]
-}
-
-```
+Jika ada referensi website harga emas lain, silakan tambahkan komentar disini : [List of websites that can be scraped for data #10](https://github.com/cacing69/logam-mulia-api/issues/10).
+Kalau ada tambahan listing, saran, atau kontribusi lain, bisa disampai via [Issue](https://github.com/cacing69/logam-mulia-api/issues).
