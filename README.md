@@ -28,6 +28,11 @@ https://logam-mulia-api.iamutaki.workers.dev/
 - indogold: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/indogold](https://logam-mulia-api.iamutaki.workers.dev/api/prices/indogold)
 - hargaemas-net: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-net](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-net)
 - treasury: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/treasury](https://logam-mulia-api.iamutaki.workers.dev/api/prices/treasury)
+- logammulia: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/logammulia](https://logam-mulia-api.iamutaki.workers.dev/api/prices/logammulia)
+- emasku: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/emasku](https://logam-mulia-api.iamutaki.workers.dev/api/prices/emasku)
+- hartadinataabadi: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/hartadinataabadi](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hartadinataabadi)
+- galeri24: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/galeri24](https://logam-mulia-api.iamutaki.workers.dev/api/prices/galeri24)
+- sampoernagold: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/sampoernagold](https://logam-mulia-api.iamutaki.workers.dev/api/prices/sampoernagold)
 
 ## Progress Migration (On Progress)
 
@@ -46,7 +51,7 @@ Deployment project ini di Vercel berstatus **paused** (tidak lagi melayani reque
 #### List website yang tersedia
 
 - [Aneka Logam](https://www.anekalogam.co.id/id) `migrated`
-- [Logam Mulia](https://www.logammulia.com/id) `paused: looking for solution`
+- [Logam Mulia](https://www.logammulia.com/id) `migrated`
 - [Harga-Emas.org](https://harga-emas.org) `migrated`
 - [Laku Emas](https://www.lakuemas.com/harga) `migrated`
 - [Tokopedia](https://www.tokopedia.com/emas/harga-hari-ini/) `deprecated`
@@ -63,6 +68,10 @@ Deployment project ini di Vercel berstatus **paused** (tidak lagi melayani reque
 - [inbizia](https://www.inbizia.com/harga-emas-hari-ini-287964) `deprecated`
 - [Harga-Emas.com](https://www.hargaemas.com/) `migrated`
 - [Treasury](https://treasury.id/) `migrated`
+- [EmasKu](https://www.emasku.co.id/id) `new`
+- [Hartadinata Abadi](https://hartadinataabadi.co.id/) `new`
+- [Galeri 24](https://galeri24.co.id/harga-emas) `new`
+- [Sampoerna Gold](https://sampoernagold.com/) `new`
 
 Jika ingin menambahkan beberapa website lain, atau ada saran lain untuk bentuk response & requestnya, dipersilahkan untuk open issue terkait kritik dan saran
 

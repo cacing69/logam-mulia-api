@@ -141,9 +141,9 @@ describe('AnekaLogam Integration Tests (Real HTTP)', () => {
 			const invalidConfig = {
 				engine: 'cheerio' as const,
 				currency: 'IDR',
+				url: 'https://this-url-does-not-exist-12345.com',
 				items: [
 					{
-						url: 'https://this-url-does-not-exist-12345.com',
 						selector: {
 							sell: '.sell',
 							buy: '.buy',
@@ -165,9 +165,9 @@ describe('AnekaLogam Integration Tests (Real HTTP)', () => {
 			const notFoundConfig = {
 				engine: 'cheerio' as const,
 				currency: 'IDR',
+				url: 'https://www.anekalogam.co.id/page-does-not-exist',
 				items: [
 					{
-						url: 'https://www.anekalogam.co.id/page-does-not-exist',
 						selector: {
 							sell: '.sell',
 							buy: '.buy',

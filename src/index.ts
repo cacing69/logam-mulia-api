@@ -14,6 +14,11 @@ import indogoldFeature from './features/indogold';
 import hargaemasNetFeature from './features/hargaemas-net';
 import hargaemasComFeature from './features/hargaemas-com';
 import treasuryFeature from './features/treasury';
+import logammuliaFeature from './features/logammulia';
+import emaskuFeature from './features/emasku';
+import hartadinataabadiFeature from './features/hartadinataabadi';
+import galeri24Feature from './features/galeri24';
+import sampoernagoldFeature from './features/sampoernagold';
 
 const app = new Hono();
 
@@ -33,5 +38,10 @@ app.route('/api/prices/indogold', indogoldFeature);
 app.route('/api/prices/hargaemas-net', hargaemasNetFeature);
 app.route('/api/prices/hargaemas-com', hargaemasComFeature);
 app.route('/api/prices/treasury', treasuryFeature);
+app.route('/api/prices/logammulia', logammuliaFeature);
+app.route('/api/prices/emasku', emaskuFeature);
+app.route('/api/prices/hartadinataabadi', hartadinataabadiFeature);
+app.route('/api/prices/galeri24', galeri24Feature);
+app.route('/api/prices/sampoernagold', sampoernagoldFeature);
 
 export default app;
