@@ -2,6 +2,7 @@ import type { ScrapingConfig } from '../../lib/types/scraper.types';
 import { raw } from '../../lib/types/scraper.types';
 
 export const hartadinataabadiConfig: ScrapingConfig<'sellPrice' | 'buybackPrice' | 'type'> = {
+	name: 'hartadinataabadi',
 	engine: 'cheerio',
 	currency: 'IDR',
 	url: 'https://hartadinataabadi.co.id/',

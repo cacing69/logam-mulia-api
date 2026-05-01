@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import type { Bindings } from '../../types';
-import { CheerioScraper, defaultScrapingOptions, parseCurrency } from '../../lib';
+import { CheerioScraper, createErrorResponse, defaultScrapingOptions, parseCurrency } from '../../lib';
 import { fetchOrCache } from '../../lib/price-service';
 import { anekalogamConfig } from './anekalogam.config';
 
@@ -25,15 +25,7 @@ app.get('/', async (c) => {
 	);
 
 	if (!result.success) {
-		return c.json(
-			{
-				success: false,
-				error: result.error,
-				timestamp: result.timestamp,
-				source: 'anekalogam',
-			},
-			500,
-		);
+		return c.json(createErrorResponse(result.error ?? 'Unknown error'), 500);
 	}
 
 	return c.json(result);

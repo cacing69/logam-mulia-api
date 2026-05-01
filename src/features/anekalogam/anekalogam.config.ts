@@ -2,6 +2,7 @@ import type { ScrapingConfig } from '../../lib/types/scraper.types';
 import { raw } from '../../lib/types/scraper.types';
 
 export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'material' | 'materialType' | 'weight' | 'weightUnit' | 'info'> = {
+	name: 'anekalogam',
 	engine: 'cheerio',
 	currency: 'IDR',
 	url: 'https://www.anekalogam.co.id/id',

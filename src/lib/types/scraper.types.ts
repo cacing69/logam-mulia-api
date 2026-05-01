@@ -15,6 +15,7 @@ export interface ItemDefinition<T extends string = string> {
 }
 
 export interface CheerioScrapingConfig<T extends string = string> {
+	name: string;
 	url: string;
 	engine: 'cheerio';
 	currency?: string;
@@ -48,6 +49,7 @@ export interface AxiosItemDefinition {
 }
 
 export interface AxiosScrapingConfig {
+	name: string;
 	url: string;
 	engine: 'axios';
 	responseType?: 'json';
@@ -62,6 +64,7 @@ export interface AxiosScrapingConfig {
 }
 
 export interface BaseScrapingConfig {
+	name: string;
 	url: string;
 	engine: 'cheerio' | 'axios';
 	currency?: string;

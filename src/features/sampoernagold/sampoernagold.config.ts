@@ -2,6 +2,7 @@ import type { ScrapingConfig } from '../../lib/types/scraper.types';
 import { raw } from '../../lib/types/scraper.types';
 
 export const sampoernagoldConfig: ScrapingConfig<'sellPrice' | 'buybackPrice' | 'type' | 'info'> = {
+	name: 'sampoernagold',
 	engine: 'cheerio',
 	currency: 'IDR',
 	url: 'https://sampoernagold.com/',

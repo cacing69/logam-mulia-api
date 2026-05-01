@@ -2,6 +2,7 @@ import type { ScrapingConfig } from '../../lib/types/scraper.types';
 import { raw } from '../../lib/types/scraper.types';
 
 export const indogoldConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'type' | 'info'> = {
+	name: 'indogold',
 	engine: 'cheerio',
 	currency: 'IDR',
 	url: 'https://www.indogold.id/',

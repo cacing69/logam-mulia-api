@@ -2,6 +2,7 @@ import type { ScrapingConfig } from '../../lib/types/scraper.types';
 import { raw } from '../../lib/types/scraper.types';
 
 export const galeri24Config: ScrapingConfig<'sellPrice' | 'buybackPrice' | 'type' | 'info'> = {
+	name: 'galeri24',
 	engine: 'cheerio',
 	currency: 'IDR',
 	url: 'https://galeri24.co.id/harga-emas',

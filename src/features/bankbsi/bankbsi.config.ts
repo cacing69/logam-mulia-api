@@ -2,6 +2,7 @@ import type { ScrapingConfig } from '../../lib/types/scraper.types';
 import { raw } from '../../lib/types/scraper.types';
 
 export const bankbsiConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'type' | 'info' | 'weight'> = {
+	name: 'bankbsi',
 	engine: 'cheerio',
 	currency: 'IDR',
 	url: 'https://translate.google.com/translate?sl=id&tl=en&u=https://www.bankbsi.co.id/',

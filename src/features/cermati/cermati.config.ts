@@ -2,6 +2,7 @@ import type { ScrapingConfig } from '../../lib/types/scraper.types';
 import { raw } from '../../lib/types/scraper.types';
 
 export const cermatiConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'type' | 'info'> = {
+	name: 'cermati',
 	engine: 'cheerio',
 	currency: 'IDR',
 	url: 'https://www.cermati.com/artikel/harga-emas-hari-ini',

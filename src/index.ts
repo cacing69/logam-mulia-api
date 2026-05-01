@@ -1,8 +1,10 @@
 import { Hono } from 'hono';
+import { createErrorResponse, getHistoryBySource } from './lib';
 import type { Bindings } from './types';
 import rootFeature from './features/root';
 import healthFeature from './features/health';
 import anekalogamFeature from './features/anekalogam';
+import { anekalogamConfig } from './features/anekalogam/anekalogam.config';
 import hargaEmasOrgFeature from './features/hargaemas-org';
 import lakuemasFeature from './features/lakuemas';
 import pegadaianFeature from './features/pegadaian';
@@ -22,9 +24,32 @@ import galeri24Feature from './features/galeri24';
 import sampoernagoldFeature from './features/sampoernagold';
 
 const app = new Hono<{ Bindings: Bindings }>();
+const SUPPORTED_SOURCES = new Set([
+	anekalogamConfig.name,
+]);
 
 app.route('/', rootFeature);
 app.route('/health', healthFeature);
+
+app.get('/api/prices/:source/history', async (c) => {
+	const source = c.req.param('source');
+	if (!SUPPORTED_SOURCES.has(source)) {
+		return c.json(createErrorResponse('Unknown source'), 404);
+	}
+
+	const result = await getHistoryBySource(c.env, source, {
+		page: c.req.query('page'),
+		length: c.req.query('length'),
+		weight: c.req.query('weight'),
+	});
+
+	if (!result.success) {
+		const statusCode = result.statusCode === 400 ? 400 : 500;
+		return c.json(createErrorResponse(result.error ?? 'Unknown error'), statusCode);
+	}
+
+	return c.json(result);
+});
 
 app.route('/api/prices/anekalogam', anekalogamFeature);
 app.route('/api/prices/hargaemas-org', hargaEmasOrgFeature);

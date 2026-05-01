@@ -1,6 +1,7 @@
 import type { AxiosScrapingConfig } from '../../lib';
 
 export const treasuryConfig: AxiosScrapingConfig = {
+	name: 'treasury',
 	url: 'https://api.treasury.id/api/v1/antigrvty/gold/rate',
 	engine: 'axios',
 	responseType: 'json',

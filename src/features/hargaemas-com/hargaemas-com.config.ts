@@ -2,6 +2,7 @@ import type { ScrapingConfig } from '../../lib/types/scraper.types';
 import { raw } from '../../lib/types/scraper.types';
 
 export const hargaemasComConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'type' | 'info'> = {
+	name: 'hargaemas-com',
 	engine: 'cheerio',
 	currency: 'IDR',
 	url: 'https://www.hargaemas.com/',

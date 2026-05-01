@@ -2,6 +2,7 @@ import type { ScrapingConfig } from '../../lib/types/scraper.types';
 import { raw } from '../../lib/types/scraper.types';
 
 export const kursdolarConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'type' | 'info'> = {
+	name: 'kursdolar',
 	engine: 'cheerio',
 	currency: 'IDR',
 	url: 'https://kurs.dollar.web.id/harga-emas-hari-ini.php',

@@ -1,6 +1,7 @@
 import type { AxiosScrapingConfig } from '../../lib';
 
 export const pegadaianConfig: AxiosScrapingConfig = {
+	name: 'pegadaian',
 	url: 'https://sahabat.pegadaian.co.id/gold/prices/chart?interval=7&isRequest=true',
 	engine: 'axios',
 	responseType: 'json',

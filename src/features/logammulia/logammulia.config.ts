@@ -2,6 +2,7 @@ import type { ScrapingConfig } from '../../lib/types/scraper.types';
 import { raw } from '../../lib/types/scraper.types';
 
 export const logammuliaConfig: ScrapingConfig<'sellPrice' | 'type' | 'info'> = {
+	name: 'logammulia',
 	engine: 'cheerio',
 	currency: 'IDR',
 	url: 'https://www.logammulia.com/harga-emas-hari-ini',

@@ -4,6 +4,9 @@ export { JinaScraper } from './scrapers/jina-scraper';
 export { defaultScrapingOptions } from './constants/scraper-options';
 export { parseCurrency } from './utils/currency';
 export { normalizePriceRows } from './utils/price-response';
+export { getHistoryBySource, normalizePagination } from './history-service';
+export { createErrorResponse } from './http-error';
+export type { ApiErrorResponse } from './http-error';
 export type { PriceRow } from './utils/price-response';
 export type {
 	ScrapingConfig,
