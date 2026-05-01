@@ -11,7 +11,7 @@ export const anekalogamConfig: ScrapingConfig<'sell' | 'buy' | 'type' | 'info'> 
 			selector: {
 				sell: '#today-price > div.section-intro > div.buy-sell-rate > div:nth-child(1) .tprice',
 				buy: '#today-price > div.section-intro > div.buy-sell-rate > div:nth-child(2) .tprice',
-				type: raw('Logam Mulia ANTAM Certicard gramasi 100 gram'),
+				type: raw('antam'),
 				info: '#today-price > div.section-intro > p:nth-child(3)',
 			},
 		},

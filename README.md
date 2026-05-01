@@ -1,16 +1,24 @@
-<!-- GitAds-Verify: 3FGPSI1T41Y2U29T9YLW1HH2VAPRXK9I -->
+
 
 # Logam Mulia API
 
-<p>Hobby only. Scraping beberapa website yang menyediakan informasi harga jual/beli logam mulia emas di Indonesia, dont worry to make pull request</p>
+Hobby only. Scraping beberapa website yang menyediakan informasi harga jual/beli logam mulia emas di Indonesia, dont worry to make pull request
 
-<pre>https://logam-mulia-api.vercel.app/ (tidak aktif)</pre>
-<pre>https://logam-mulia-api.iamutaki.workers.dev/ (aktif)</pre>
+
+
+```bash
+# inactive
+https://logam-mulia-api.vercel.app/
+```
+
+```bash
+# active
+https://logam-mulia-api.iamutaki.workers.dev/
+```
 
 ## Endpoint Available Saat Ini (Cloudflare Worker)
 
 1. anekalogam: [https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam](https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam)
-
 
 ## Progress Migration (On Progress)
 
@@ -20,7 +28,7 @@ Base URL Cloudflare Worker:
 
 - [https://logam-mulia-api.iamutaki.workers.dev](https://logam-mulia-api.iamutaki.workers.dev)
 
-<h4>List website yang tersedia</h4>
+#### List website yang tersedia
 
 - [Aneka Logam](https://www.anekalogam.co.id/id)
 - [Logam Mulia](https://www.logammulia.com/id)
@@ -43,13 +51,13 @@ Base URL Cloudflare Worker:
 
 ## GitAds Sponsored
 
-[![Sponsored by GitAds](https://gitads.dev/v1/ad-serve?source=cacing69/logam-mulia-api@github)](https://gitads.dev/v1/ad-track?source=cacing69/logam-mulia-api@github)
+[Sponsored by GitAds](https://gitads.dev/v1/ad-track?source=cacing69/logam-mulia-api@github)
 
 Jika ingin menambahkan beberapa website lain, atau ada saran lain untuk bentuk response & requestnya, dipersilahkan untuk open issue terkait kritik dan saran
 
 contoh response
 
-`
+```json
 
 {
   data: [
@@ -62,4 +70,4 @@ contoh response
   meta: {}
 }
 
-`
+```
