@@ -1,3 +1,4 @@
+
 import { raw, type ScrapingConfig } from '../../lib/types/scraper.types';
 
 function parseMaterialType(text: string): string {

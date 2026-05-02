@@ -19,7 +19,7 @@ import indogoldFeature from './features/indogold';
 import hargaemasNetFeature, { hargaemasNetConfig } from './features/hargaemas-net';
 import hargaemasComFeature, { hargaemasComConfig } from './features/hargaemas-com';
 import treasuryFeature from './features/treasury';
-import logammuliaFeature from './features/logammulia';
+import logammuliaFeature, { logammuliaConfig } from './features/logammulia';
 import emaskuFeature from './features/emasku';
 import { emaskuConfig } from './features/emasku/emasku.config';
 import hartadinataabadiFeature, { hartadinataabadiConfig } from './features/hartadinataabadi';
@@ -40,6 +40,7 @@ const SUPPORTED_SOURCES = new Set([
 	hartadinataabadiConfig.name,
 	kursdolarConfig.name,
 	lakuemasConfig.name,
+	logammuliaConfig.name,
 ]);
 
 app.route('/', rootFeature);
