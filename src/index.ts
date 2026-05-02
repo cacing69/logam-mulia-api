@@ -12,6 +12,7 @@ import sakumasFeature from './features/sakumas';
 import kursdolarFeature from './features/kursdolar';
 import cermatiFeature from './features/cermati';
 import bankbsiFeature from './features/bankbsi';
+import { bankbsiConfig } from './features/bankbsi/bankbsi.config';
 import brankaslmFeature from './features/brankaslm';
 import indogoldFeature from './features/indogold';
 import hargaemasNetFeature from './features/hargaemas-net';
@@ -24,9 +25,7 @@ import galeri24Feature from './features/galeri24';
 import sampoernagoldFeature from './features/sampoernagold';
 
 const app = new Hono<{ Bindings: Bindings }>();
-const SUPPORTED_SOURCES = new Set([
-	anekalogamConfig.name,
-]);
+const SUPPORTED_SOURCES = new Set([anekalogamConfig.name, bankbsiConfig.name]);
 
 app.route('/', rootFeature);
 app.route('/health', healthFeature);

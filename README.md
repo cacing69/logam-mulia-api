@@ -36,26 +36,26 @@ contoh response
 
 ## Endpoint Available Saat Ini (Cloudflare Worker)
 
-| Source | Endpoint | History Endpoint | Cached |
-| ------ | -------- | ---------------- | ------ |
-| anekalogam | [`/anekalogam`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam) | [`/anekalogam/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam/history) | ✅ |
-| hargaemas-org | [`/hargaemas-org`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-org) | - | ❌ |
-| lakuemas | [`/lakuemas`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/lakuemas) | - | ❌ |
-| sakumas | [`/sakumas`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/sakumas) | - | ❌ |
-| kursdolar | [`/kursdolar`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/kursdolar) | - | ❌ |
-| cermati | [`/cermati`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/cermati) | - | ❌ |
-| indogold | [`/indogold`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/indogold) | - | ❌ |
-| hargaemas-net | [`/hargaemas-net`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-net) | - | ❌ |
-| hargaemas-com | [`/hargaemas-com`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-com) | - | ❌ |
-| treasury | [`/treasury`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/treasury) | - | ❌ |
-| logammulia | [`/logammulia`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/logammulia) | - | ❌ |
-| emasku | [`/emasku`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/emasku) | - | ❌ |
-| hartadinataabadi | [`/hartadinataabadi`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hartadinataabadi) | - | ❌ |
-| galeri24 | [`/galeri24`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/galeri24) | - | ❌ |
-| sampoernagold | [`/sampoernagold`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/sampoernagold) | - | ❌ |
-| bankbsi | [`/bankbsi`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/bankbsi) | - | ❌ |
-| brankaslm | [`/brankaslm`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/brankaslm) | - | ❌ |
-| pegadaian | [`/pegadaian`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/pegadaian) | - | ❌ |
+| Source | Status | Endpoint | History Endpoint | Cached |
+| ------ | ------ | -------- | ---------------- | ------ |
+| anekalogam | ✅ | [`/anekalogam`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam) | [`/anekalogam/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam/history) | ✅ |
+| hargaemas-org | ✅ | [`/hargaemas-org`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-org) | - | ❌ |
+| lakuemas | ✅ | [`/lakuemas`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/lakuemas) | - | ❌ |
+| sakumas | ✅ | [`/sakumas`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/sakumas) | - | ❌ |
+| kursdolar | ✅ | [`/kursdolar`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/kursdolar) | - | ❌ |
+| cermati | ✅ | [`/cermati`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/cermati) | - | ❌ |
+| indogold | ✅ | [`/indogold`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/indogold) | - | ❌ |
+| hargaemas-net | ✅ | [`/hargaemas-net`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-net) | - | ❌ |
+| hargaemas-com | ✅ | [`/hargaemas-com`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-com) | - | ❌ |
+| treasury | ✅ | [`/treasury`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/treasury) | - | ❌ |
+| logammulia | ✅ | [`/logammulia`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/logammulia) | - | ❌ |
+| emasku | ✅ | [`/emasku`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/emasku) | - | ❌ |
+| hartadinataabadi | ✅ | [`/hartadinataabadi`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hartadinataabadi) | - | ❌ |
+| galeri24 | ✅ | [`/galeri24`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/galeri24) | - | ❌ |
+| sampoernagold | ✅ | [`/sampoernagold`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/sampoernagold) | - | ❌ |
+| bankbsi | ✅ | [`/bankbsi`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/bankbsi) | [`/bankbsi/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/bankbsi/history) | ✅ |
+| brankaslm | ✅ | [`/brankaslm`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/brankaslm) | - | ❌ |
+| pegadaian | ✅ | [`/pegadaian`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/pegadaian) | - | ❌ |
 
 ## Available params on history
 
