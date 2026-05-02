@@ -15,7 +15,18 @@ https://logam-mulia-api.iamutaki.workers.dev/
 contoh response
 
 ```json
+// old response (deprecated)
+{
+  "data": [
+    {
+      "sell": 900000,
+      "buy": 850000,
+      "tipe": "antam",
+    }
+  ]
+}
 
+// new response
 {
   "data": [
     {
@@ -45,7 +56,7 @@ contoh response
 | kursdolar | ✅ | [`/kursdolar`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/kursdolar) | - | ❌ |
 | cermati | ✅ | [`/cermati`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/cermati) | [`/cermati/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/cermati/history) | ✅ |
 | indogold | ✅ | [`/indogold`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/indogold) | - | ❌ |
-| hargaemas-net | ✅ | [`/hargaemas-net`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-net) | - | ❌ |
+| hargaemas-net | ✅ | [`/hargaemas-net`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-net) | [`/hargaemas-net/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-net/history) | ✅ |
 | hargaemas-com | ✅ | [`/hargaemas-com`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-com) | [`/hargaemas-com/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-com/history) | ✅ |
 | treasury | ✅ | [`/treasury`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/treasury) | - | ❌ |
 | logammulia | ✅ | [`/logammulia`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/logammulia) | - | ❌ |
