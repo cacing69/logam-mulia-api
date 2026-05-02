@@ -50,7 +50,7 @@ contoh response
 | Source | Status | Endpoint | History Endpoint | Cached |
 | ------ | ------ | -------- | ---------------- | ------ |
 | anekalogam | ✅ | [`/anekalogam`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam) | [`/anekalogam/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam/history) | ✅ |
-| hargaemas-org | ✅ | [`/hargaemas-org`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-org) | - | ❌ |
+| hargaemas-org | ✅ | [`/hargaemas-org`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-org) | [`/hargaemas-org/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-org/history) | ✅ |
 | lakuemas | ✅ | [`/lakuemas`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/lakuemas) | - | ❌ |
 | sakumas | ✅ | [`/sakumas`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/sakumas) | - | ❌ |
 | kursdolar | ✅ | [`/kursdolar`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/kursdolar) | - | ❌ |

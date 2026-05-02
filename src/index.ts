@@ -5,7 +5,7 @@ import rootFeature from './features/root';
 import healthFeature from './features/health';
 import anekalogamFeature from './features/anekalogam';
 import { anekalogamConfig } from './features/anekalogam/anekalogam.config';
-import hargaEmasOrgFeature from './features/hargaemas-org';
+import hargaEmasOrgFeature, { hargaemasOrgConfig } from './features/hargaemas-org';
 import lakuemasFeature from './features/lakuemas';
 import pegadaianFeature from './features/pegadaian';
 import sakumasFeature from './features/sakumas';
@@ -36,6 +36,7 @@ const SUPPORTED_SOURCES = new Set([
 	galeri24Config.name,
 	hargaemasComConfig.name,
 	hargaemasNetConfig.name,
+	hargaemasOrgConfig.name,
 ]);
 
 app.route('/', rootFeature);
