@@ -32,6 +32,7 @@ function postProcessRow(rawData: Record<string, string>) {
  */
 function makeItem(dataRow: number, sectionHeaderRow: number) {
 	return {
+		lineKey: `gold-${sectionHeaderRow}-tr${dataRow}`,
 		selector: {
 			weight: `${goldTable} tbody tr:nth-child(${dataRow}) > td:nth-child(1)`,
 			sellPrice: `${goldTable} tbody tr:nth-child(${dataRow}) > td:nth-child(2)`,
@@ -46,6 +47,7 @@ function makeItem(dataRow: number, sectionHeaderRow: number) {
 
 function makeItemSilver(dataRow: number, sectionHeaderRow: number) {
 	return {
+		lineKey: `silver-${sectionHeaderRow}-tr${dataRow}`,
 		selector: {
 			weight: `${silverTable} tbody tr:nth-child(${dataRow}) > td:nth-child(1)`,
 			sellPrice: `${silverTable} tbody tr:nth-child(${dataRow}) > td:nth-child(2)`,

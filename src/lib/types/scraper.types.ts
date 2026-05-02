@@ -12,6 +12,8 @@ export interface ItemDefinition<T extends string = string> {
 	url?: string; // Optional: fallback ke config.url jika tidak diisi
 	selector: Record<T, string | RawValue>;
 	postProcess?: ScrapingPostProcess;
+	/** Kunci stabil per item multi-baris (disalurkan ke `line_key` DB bila dinormalisasi). */
+	lineKey?: string;
 }
 
 export interface CheerioScrapingConfig<T extends string = string> {

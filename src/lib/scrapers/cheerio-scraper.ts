@@ -144,6 +144,9 @@ export class CheerioScraper<T extends Record<string, string> = Record<string, st
 				for (const def of defs) {
 					const rawData = this.extractFromDom($, def.selector);
 					const processedData = def.postProcess ? def.postProcess(rawData) : rawData;
+					if (def.lineKey !== undefined) {
+						processedData.lineKey = def.lineKey;
+					}
 					// Backward compatibility for existing transformers/tests.
 					if (processedData.sell === undefined && processedData.buybackPrice !== undefined) {
 						processedData.sell = processedData.buybackPrice;

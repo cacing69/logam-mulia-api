@@ -12,6 +12,8 @@ export interface PriceRow {
 	/** Tanggal bisnis `YYYY-MM-DD` (Asia/Jakarta), selaras kolom `recorded_date`. */
 	recordedDate: string;
 	createdAt: string;
+	/** Selaras `line_key` — membedakan baris scrape dengan berat + material_type sama. */
+	lineKey: string;
 	meta: string | null;
 }
 
@@ -94,6 +96,7 @@ export function normalizePriceRows(
 				currency: String(item.currency ?? currency),
 				recordedDate,
 				createdAt: createdAt,
+				lineKey: String(item.lineKey ?? item.line_key ?? ''),
 				meta: toMeta(item.meta),
 			};
 		});

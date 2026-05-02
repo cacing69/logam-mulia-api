@@ -12,6 +12,8 @@ export interface PublicPriceHistoryRow {
 	buybackPrice: number | null;
 	currency: string;
 	recordedDate: string;
+	/** Kunci stabil per baris scrape; string kosong jika sumber tidak membedakan. */
+	lineKey: string;
 }
 
 export interface FetchResult {
@@ -34,6 +36,7 @@ function toPublicRows(rows: PriceRow[]): PublicPriceHistoryRow[] {
 		buybackPrice: row.buybackPrice,
 		currency: row.currency,
 		recordedDate: row.recordedDate,
+		lineKey: row.lineKey,
 	}));
 }
 

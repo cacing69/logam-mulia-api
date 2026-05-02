@@ -6,10 +6,10 @@ import healthFeature from './features/health';
 import anekalogamFeature from './features/anekalogam';
 import { anekalogamConfig } from './features/anekalogam/anekalogam.config';
 import hargaEmasOrgFeature, { hargaemasOrgConfig } from './features/hargaemas-org';
-import lakuemasFeature, { lakuemasConfig } from './features/lakuemas';
+import lakuemasFeature from './features/lakuemas';
 import pegadaianFeature from './features/pegadaian';
 import sakumasFeature from './features/sakumas';
-import kursdolarFeature, { kursdolarConfig } from './features/kursdolar';
+import kursdolarFeature from './features/kursdolar';
 import cermatiFeature, { cermatiConfig } from './features/cermati';
 import bankbsiFeature from './features/bankbsi';
 import { bankbsiConfig } from './features/bankbsi/bankbsi.config';
@@ -19,7 +19,7 @@ import indogoldFeature from './features/indogold';
 import hargaemasNetFeature, { hargaemasNetConfig } from './features/hargaemas-net';
 import hargaemasComFeature, { hargaemasComConfig } from './features/hargaemas-com';
 import treasuryFeature from './features/treasury';
-import logammuliaFeature, { logammuliaConfig } from './features/logammulia';
+import logammuliaFeature from './features/logammulia';
 import emaskuFeature from './features/emasku';
 import { emaskuConfig } from './features/emasku/emasku.config';
 import hartadinataabadiFeature, { hartadinataabadiConfig } from './features/hartadinataabadi';
@@ -38,9 +38,6 @@ const SUPPORTED_SOURCES = new Set([
 	hargaemasNetConfig.name,
 	hargaemasOrgConfig.name,
 	hartadinataabadiConfig.name,
-	kursdolarConfig.name,
-	lakuemasConfig.name,
-	logammuliaConfig.name,
 ]);
 
 app.route('/', rootFeature);
