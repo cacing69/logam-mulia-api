@@ -51,7 +51,7 @@ contoh response
 | ------ | ------ | -------- | ---------------- | ------ |
 | anekalogam | ✅ | [`/anekalogam`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam) | [`/anekalogam/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam/history) | ✅ |
 | hargaemas-org | ✅ | [`/hargaemas-org`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-org) | [`/hargaemas-org/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-org/history) | ✅ |
-| lakuemas | ✅ | [`/lakuemas`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/lakuemas) | - | ❌ |
+| lakuemas | ✅ | [`/lakuemas`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/lakuemas) | [`/lakuemas/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/lakuemas/history) | ✅ |
 | sakumas | ✅ | [`/sakumas`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/sakumas) | - | ❌ |
 | kursdolar | ✅ | [`/kursdolar`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/kursdolar) | [`/kursdolar/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/kursdolar/history) | ✅ |
 | cermati | ✅ | [`/cermati`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/cermati) | [`/cermati/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/cermati/history) | ✅ |

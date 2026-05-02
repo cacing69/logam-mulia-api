@@ -6,7 +6,7 @@ import healthFeature from './features/health';
 import anekalogamFeature from './features/anekalogam';
 import { anekalogamConfig } from './features/anekalogam/anekalogam.config';
 import hargaEmasOrgFeature, { hargaemasOrgConfig } from './features/hargaemas-org';
-import lakuemasFeature from './features/lakuemas';
+import lakuemasFeature, { lakuemasConfig } from './features/lakuemas';
 import pegadaianFeature from './features/pegadaian';
 import sakumasFeature from './features/sakumas';
 import kursdolarFeature, { kursdolarConfig } from './features/kursdolar';
@@ -39,6 +39,7 @@ const SUPPORTED_SOURCES = new Set([
 	hargaemasOrgConfig.name,
 	hartadinataabadiConfig.name,
 	kursdolarConfig.name,
+	lakuemasConfig.name,
 ]);
 
 app.route('/', rootFeature);
