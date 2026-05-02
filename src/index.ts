@@ -10,7 +10,7 @@ import lakuemasFeature from './features/lakuemas';
 import pegadaianFeature from './features/pegadaian';
 import sakumasFeature from './features/sakumas';
 import kursdolarFeature from './features/kursdolar';
-import cermatiFeature from './features/cermati';
+import cermatiFeature, { cermatiConfig } from './features/cermati';
 import bankbsiFeature from './features/bankbsi';
 import { bankbsiConfig } from './features/bankbsi/bankbsi.config';
 import brankaslmFeature from './features/brankaslm';
@@ -23,7 +23,7 @@ import logammuliaFeature from './features/logammulia';
 import emaskuFeature from './features/emasku';
 import { emaskuConfig } from './features/emasku/emasku.config';
 import hartadinataabadiFeature from './features/hartadinataabadi';
-import galeri24Feature from './features/galeri24';
+import galeri24Feature, { galeri24Config } from './features/galeri24';
 import sampoernagoldFeature from './features/sampoernagold';
 
 const app = new Hono<{ Bindings: Bindings }>();
@@ -31,7 +31,9 @@ const SUPPORTED_SOURCES = new Set([
 	anekalogamConfig.name,
 	bankbsiConfig.name,
 	brankaslmConfig.name,
+	cermatiConfig.name,
 	emaskuConfig.name,
+	galeri24Config.name,
 ]);
 
 app.route('/', rootFeature);

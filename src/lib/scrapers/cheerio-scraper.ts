@@ -42,9 +42,12 @@ export class CheerioScraper<T extends Record<string, string> = Record<string, st
 						? `HTTP ${response.status}: ${response.statusText} - ${bodySnippet}`
 						: `HTTP ${response.status}: ${response.statusText}`;
 
-					// Retry on transient server/network-side failures.
-					if (response.status >= 500 && attempt < maxAttempts) {
+					// Retry on transient server/network-side failures and rate limits.
+					if ((response.status >= 500 || response.status === 429) && attempt < maxAttempts) {
 						lastError = new Error(errorMessage);
+						if (response.status === 429) {
+							await new Promise((r) => setTimeout(r, 3000));
+						}
 						continue;
 					}
 
