@@ -64,6 +64,7 @@ contoh response
 | page | int | Pagination page number |
 | length | int | Pagination length (max 1000) |
 | weight | int | Filter by weight |
+| materialType | string | Filter by material type (e.g. `ANTAM`, `UBS`, `GALERI 24`) |
 
 ```bash
 # Endpoint (latest price)
@@ -88,6 +89,16 @@ curl -X GET "https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam/
 ```bash
 # History with weight filter
 curl -X GET "https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam/history?weight=10"
+```
+
+```bash
+# History with materialType filter
+curl -X GET "https://logam-mulia-api.iamutaki.workers.dev/api/prices/galeri24/history?materialType=ANTAM"
+```
+
+```bash
+# History with combined filters
+curl -X GET "https://logam-mulia-api.iamutaki.workers.dev/api/prices/galeri24/history?materialType=ANTAM&weight=1"
 ```
 
 Keterangan:
