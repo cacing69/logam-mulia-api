@@ -1,22 +1,27 @@
 import { Hono } from 'hono';
+import type { Bindings } from '../../types';
 import { CheerioScraper, createErrorResponse, defaultScrapingOptions, parseCurrency } from '../../lib';
+import { fetchOrCache } from '../../lib/price-service';
 import { logammuliaConfig } from './logammulia.config';
 
-const app = new Hono();
+const app = new Hono<{ Bindings: Bindings }>();
 
 const scraper = new CheerioScraper('logammulia', logammuliaConfig);
 
 app.get('/', async (c) => {
-	const result = await scraper.scrape(
-		(raw) => ({
-			material: raw.material || 'gold',
-			materialType: raw.materialType || 'unknown',
-			buybackPrice: parseCurrency(raw.buybackPrice),
-			sellPrice: parseCurrency(raw.sellPrice),
-			weight: raw.weight ? Number(raw.weight) : 1,
-			weightUnit: raw.weightUnit || 'gr',
-		}),
-		defaultScrapingOptions,
+	const refresh = c.req.query('refresh') === 'true';
+	const result = await fetchOrCache(c.env, 'logammulia', { refresh }, () =>
+		scraper.scrape(
+			(raw) => ({
+				material: raw.material || 'gold',
+				materialType: raw.materialType || 'unknown',
+				buybackPrice: parseCurrency(raw.buybackPrice),
+				sellPrice: parseCurrency(raw.sellPrice),
+				weight: raw.weight ? Number(raw.weight) : 1,
+				weightUnit: raw.weightUnit || 'gr',
+			}),
+			defaultScrapingOptions,
+		),
 	);
 
 	if (!result.success) {

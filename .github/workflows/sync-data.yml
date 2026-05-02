@@ -47,8 +47,15 @@ jobs:
           hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/brankaslm?refresh=true" "brankaslm"
           hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/cermati?refresh=true" "cermati"
           hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-com?refresh=true" "hargaemas-com"
+          hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-net?refresh=true" "hargaemas-net"
+          hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-org?refresh=true" "hargaemas-org"
+          hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/hartadinataabadi?refresh=true" "hartadinataabadi"
+          hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/indogold?refresh=true" "indogold"
           hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/emasku?refresh=true" "emasku"
           hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/galeri24?refresh=true" "galeri24"
+          hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/kursdolar?refresh=true" "kursdolar"
+          hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/lakuemas?refresh=true" "lakuemas"
+          hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/logammulia?refresh=true" "logammulia"
 
           SUCCESS=$((TOTAL - FAILED))
           {

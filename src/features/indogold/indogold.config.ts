@@ -1,28 +1,20 @@
-import type { ScrapingConfig } from '../../lib/types/scraper.types';
-import { raw } from '../../lib/types/scraper.types';
+import type { AxiosScrapingConfig } from '../../lib/types/scraper.types';
 
-export const indogoldConfig: ScrapingConfig<'buybackPrice' | 'sellPrice'> = {
+export const INDOGOLD_API_URL = 'https://www.indogold.id/home/get_data_pricelist';
+export const INDOGOLD_PAGE_URL = 'https://www.indogold.id/harga-emas-hari-ini';
+
+export const indogoldConfig: AxiosScrapingConfig = {
 	name: 'indogold',
-	engine: 'cheerio',
+	engine: 'axios',
+	responseType: 'json',
+	method: 'GET',
 	currency: 'IDR',
-	url: 'https://www.indogold.id/',
+	url: INDOGOLD_PAGE_URL,
 	active: true,
-	items: [
-		{
-			selector: {
-				buybackPrice: '#basic-price',
-				sellPrice: raw(''),
-			},
-			postProcess: (rawData) => {
-				const text = rawData.buybackPrice ?? '';
-				const priceMatch = text.match(/Harga Beli[\s\S]*?Rp\s*([\d,\.]+)/i);
-				const buybackPriceMatch = text.match(/Harga Jual[\s\S]*?Rp\s*([\d,\.]+)/i);
-
-				return {
-					buybackPrice: buybackPriceMatch?.[1] ?? '',
-					sellPrice: priceMatch?.[1] ?? '',
-				};
-			},
-		},
-	],
+	postProcess: () => {
+		// Handled in route — postProcess runs before selector mapping,
+		// but we need the full API response to build items dynamically.
+		return {} as Record<string, string>;
+	},
+	selector: [],
 };
