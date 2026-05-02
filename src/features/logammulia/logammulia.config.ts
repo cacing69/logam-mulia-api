@@ -1,7 +1,7 @@
 import type { ScrapingConfig } from '../../lib/types/scraper.types';
 import { raw } from '../../lib/types/scraper.types';
 
-export const logammuliaConfig: ScrapingConfig<'sellPrice' | 'type' | 'info'> = {
+export const logammuliaConfig: ScrapingConfig<'sellPrice'> = {
 	name: 'logammulia',
 	engine: 'cheerio',
 	currency: 'IDR',
@@ -11,8 +11,6 @@ export const logammuliaConfig: ScrapingConfig<'sellPrice' | 'type' | 'info'> = {
 		{
 			selector: {
 				sellPrice: 'html:.table-bordered',
-				type: raw('antam'),
-				info: 'h2.ngc-title',
 			},
 			postProcess: (rawData) => {
 				const html = rawData.sellPrice ?? '';
@@ -31,10 +29,8 @@ export const logammuliaConfig: ScrapingConfig<'sellPrice' | 'type' | 'info'> = {
 				}
 
 				return {
-					type: rawData.type ?? 'emas batangan antam',
 					buybackPrice,
 					sellPrice: '',
-					info: rawData.info ?? '',
 				};
 			},
 		},

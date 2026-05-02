@@ -10,7 +10,7 @@ function parseCerticardMaterialType(text: string): string {
 	return match?.[1]?.trim() ?? 'Antam';
 }
 
-function postProcessCerticardRow(rawData: Record<string, string>) {
+function postProcessRow(rawData: Record<string, string>) {
 	const label = (rawData.weight ?? rawData.weightUnit ?? '').trim();
 	const { weight, weightUnit } = parseGramWeightLabel(label);
 	return {
@@ -21,7 +21,7 @@ function postProcessCerticardRow(rawData: Record<string, string>) {
 	};
 }
 
-export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'material' | 'materialType' | 'weight' | 'weightUnit' | 'info'> = {
+export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'material' | 'materialType' | 'weight' | 'weightUnit' > = {
 	name: 'anekalogam',
 	engine: 'cheerio',
 	currency: 'IDR',
@@ -34,7 +34,6 @@ export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'ma
 				sellPrice: '#today-price > div.section-intro > div.buy-sell-rate > div:nth-child(2) .tprice',
 				material: raw('gold'),
 				materialType: "#today-price > div.section-intro > p:nth-child(3)",
-				info: '#today-price > div.section-intro > p:nth-child(3)',
 				weight: raw(1),
 				weightUnit: raw('gr'),
 			},
@@ -54,11 +53,10 @@ export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'ma
 				sellPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(1) > td:nth-child(2) > span > span:nth-child(2)',
 				material: raw('gold'),
 				materialType: certicardMaterialTypeSelector,
-				info: '#today-price > div.section-intro > p:nth-child(3)',
 				weight: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(1) > td:nth-child(1) > a`,
 				weightUnit: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(1) > td:nth-child(1) > a`,
 			},
-			postProcess: postProcessCerticardRow,
+			postProcess: postProcessRow,
 		},
 		{
 			selector: {
@@ -66,11 +64,10 @@ export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'ma
 				sellPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(2) > td:nth-child(2) > span > span:nth-child(2)',
 				material: raw('gold'),
 				materialType: certicardMaterialTypeSelector,
-				info: '#today-price > div.section-intro > p:nth-child(3)',
 				weight: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(2) > td:nth-child(1) > a`,
 				weightUnit: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(2) > td:nth-child(1) > a`,
 			},
-			postProcess: postProcessCerticardRow,
+			postProcess: postProcessRow,
 		},
 		{
 			selector: {
@@ -78,11 +75,10 @@ export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'ma
 				sellPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(3) > td:nth-child(2) > span > span:nth-child(2)',
 				material: raw('gold'),
 				materialType: certicardMaterialTypeSelector,
-				info: '#today-price > div.section-intro > p:nth-child(3)',
 				weight: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(3) > td:nth-child(1) > a`,
 				weightUnit: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(3) > td:nth-child(1) > a`,
 			},
-			postProcess: postProcessCerticardRow,
+			postProcess: postProcessRow,
 		},
 		{
 			selector: {
@@ -90,11 +86,10 @@ export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'ma
 				sellPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(4) > td:nth-child(2) > span > span:nth-child(2)',
 				material: raw('gold'),
 				materialType: certicardMaterialTypeSelector,
-				info: '#today-price > div.section-intro > p:nth-child(3)',
 				weight: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(4) > td:nth-child(1) > a`,
 				weightUnit: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(4) > td:nth-child(1) > a`,
 			},
-			postProcess: postProcessCerticardRow,
+			postProcess: postProcessRow,
 		},
 		{
 			selector: {
@@ -102,11 +97,10 @@ export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'ma
 				sellPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(5) > td:nth-child(2) > span > span:nth-child(2)',
 				material: raw('gold'),
 				materialType: certicardMaterialTypeSelector,
-				info: '#today-price > div.section-intro > p:nth-child(3)',
 				weight: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(5) > td:nth-child(1) > a`,
 				weightUnit: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(5) > td:nth-child(1) > a`,
 			},
-			postProcess: postProcessCerticardRow,
+			postProcess: postProcessRow,
 		},
 		{
 			selector: {
@@ -114,11 +108,10 @@ export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'ma
 				sellPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(6) > td:nth-child(2) > span > span:nth-child(2)',
 				material: raw('gold'),
 				materialType: certicardMaterialTypeSelector,
-				info: '#today-price > div.section-intro > p:nth-child(3)',
 				weight: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(6) > td:nth-child(1) > a`,
 				weightUnit: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(6) > td:nth-child(1) > a`,
 			},
-			postProcess: postProcessCerticardRow,
+			postProcess: postProcessRow,
 		},
 		{
 			selector: {
@@ -126,11 +119,10 @@ export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'ma
 				sellPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(7) > td:nth-child(2) > span > span:nth-child(2)',
 				material: raw('gold'),
 				materialType: certicardMaterialTypeSelector,
-				info: '#today-price > div.section-intro > p:nth-child(3)',
 				weight: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(7) > td:nth-child(1) > a`,
 				weightUnit: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(7) > td:nth-child(1) > a`,
 			},
-			postProcess: postProcessCerticardRow,
+			postProcess: postProcessRow,
 		},
 		{
 			selector: {
@@ -138,11 +130,10 @@ export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'ma
 				sellPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(8) > td:nth-child(2) > span > span:nth-child(2)',
 				material: raw('gold'),
 				materialType: certicardMaterialTypeSelector,
-				info: '#today-price > div.section-intro > p:nth-child(3)',
 				weight: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(8) > td:nth-child(1) > a`,
 				weightUnit: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(8) > td:nth-child(1) > a`,
 			},
-			postProcess: postProcessCerticardRow,
+			postProcess: postProcessRow,
 		},
 	],
 };

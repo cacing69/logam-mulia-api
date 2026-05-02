@@ -18,15 +18,12 @@ export const pegadaianConfig: AxiosScrapingConfig = {
 		return {
 			hargaJual: String(lastItem.hargaJual ?? ''),
 			hargaBeli: String(lastItem.hargaBeli ?? ''),
-			message: String(inner.message ?? ''),
 		};
 	},
 	selector: [
 		{
-			type: 'pegadaian',
 			sellPrice: 'hargaJual',
 			buybackPrice: 'hargaBeli',
-			info: 'message',
 			weight: 0.01,
 			weightUnit: 'gram',
 		},

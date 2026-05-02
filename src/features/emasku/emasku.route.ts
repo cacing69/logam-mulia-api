@@ -1,24 +1,13 @@
 import { Hono } from 'hono';
 import type { Bindings } from '../../types';
-import { JinaScraper, parseCurrency } from '../../lib';
+import { JinaScraper, createErrorResponse, parseCurrency } from '../../lib';
 import { emaskuConfig } from './emasku.config';
 
 const app = new Hono<{ Bindings: Bindings }>();
 
 app.get('/', async (c) => {
-	const timestamp = new Date().toISOString();
-
 	if (emaskuConfig.active === false) {
-		return c.json(
-			{
-				success: false,
-				error: 'inactive',
-				timestamp,
-				source: 'emasku',
-				currency: emaskuConfig.currency,
-			},
-			400
-		);
+		return c.json(createErrorResponse('inactive'), 400);
 	}
 
 	try {
@@ -34,28 +23,21 @@ app.get('/', async (c) => {
 		return c.json({
 			success: true,
 			data: [{
-				type: 'emasku',
-				sell: parseCurrency(sell),
-				buy: parseCurrency(buy),
-				info: 'Harga Emas Hari Ini - EMASKU (HRTA Gold)',
+				material: 'gold',
+				materialType: 'emasku',
+				buybackPrice: parseCurrency(buy),
+				sellPrice: parseCurrency(sell),
+				weight: 1,
+				weightUnit: 'gr',
 			}],
 			count: 1,
-			timestamp,
+			timestamp: new Date().toISOString(),
 			source: 'emasku',
 			currency: emaskuConfig.currency,
 		});
 	} catch (error) {
 		const message = error instanceof Error ? error.message : 'Unknown error';
-		return c.json(
-			{
-				success: false,
-				error: message,
-				timestamp,
-				source: 'emasku',
-				currency: emaskuConfig.currency,
-			},
-			500
-		);
+		return c.json(createErrorResponse(message), 500);
 	}
 });
 

@@ -13,10 +13,10 @@ app.get('/', async (c) => {
 	const result = await fetchOrCache(c.env, bankbsiConfig.name, { refresh }, () =>
 		scraper.scrape(
 			(raw) => ({
-				type: raw.type || 'unknown',
+				material: raw.material || 'gold',
+				materialType: raw.materialType || 'unknown',
 				buybackPrice: parseCurrency(raw.buybackPrice),
-				price: parseCurrency(raw.sellPrice),
-				info: raw.info,
+				sellPrice: parseCurrency(raw.sellPrice),
 				weight: raw.weight ? Number(raw.weight) : 1,
 				weightUnit: raw.weightUnit || 'gr',
 			}),

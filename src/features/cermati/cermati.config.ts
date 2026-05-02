@@ -1,7 +1,21 @@
+import { parseGramWeightLabel } from '../../lib';
 import type { ScrapingConfig } from '../../lib/types/scraper.types';
 import { raw } from '../../lib/types/scraper.types';
 
-export const cermatiConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'type' | 'info'> = {
+const PRICE_ROW_REGEX =
+	/<td[^>]*>\s*1 gram\s*<\/td>\s*<td[^>]*>\s*([\d.]+)\s*<\/td>\s*<td[^>]*>\s*([\d.]+)\s*<\/td>/i;
+
+	function postProcessRow(rawData: Record<string, string>) {
+		const label = (rawData.weight ?? rawData.weightUnit ?? '').trim();
+		const { weight, weightUnit } = parseGramWeightLabel(label);
+		return {
+			...rawData,
+			weight: weight || rawData.weight,
+			weightUnit: weightUnit || rawData.weightUnit,
+		};
+	}
+
+export const cermatiConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'material' | 'materialType' | 'weight' | 'weightUnit'> = {
 	name: 'cermati',
 	engine: 'cheerio',
 	currency: 'IDR',
@@ -10,27 +24,14 @@ export const cermatiConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'type'
 	items: [
 		{
 			selector: {
-				buybackPrice: 'html:article[itemprop="articleBody"]',
-				sellPrice: raw(''),
-				type: raw('cermati-antam-1g'),
-				info: 'article[itemprop="articleBody"] h1',
+				sellPrice: '#parent-node > div.table-holder > table > tbody > tr:nth-child(1) > td:nth-child(2)',
+				buybackPrice: raw(null),
+				material: raw('gold'),
+				materialType: `#parent-node > div.table-holder > table > thead > tr > th:nth-child(2)`,
+				weight: `#parent-node > div.table-holder > table > tbody > tr:nth-child(1) > td:nth-child(1)`,
+				weightUnit: `#parent-node > div.table-holder > table > tbody > tr:nth-child(1) > td:nth-child(1)`,
 			},
-			postProcess: (rawData) => {
-				const blob = rawData.buybackPrice ?? '';
-				const rowMatch = blob.match(
-					/<td[^>]*>\s*1 gram\s*<\/td>\s*<td[^>]*>\s*([\d.]+)\s*<\/td>\s*<td[^>]*>\s*([\d.]+)\s*<\/td>/i
-				);
-				const antam = rowMatch?.[1]?.trim() ?? '';
-				const digital = rowMatch?.[2]?.trim() ?? '';
-				const title = rawData.info?.trim() ?? '';
-
-				return {
-					buybackPrice: antam,
-					sellPrice: '',
-					type: rawData.type ?? 'cermati',
-					info: [title, digital ? `digital_mid: ${digital}` : ''].filter(Boolean).join(' | '),
-				};
-			},
+			postProcess: postProcessRow,
 		},
 	],
 };

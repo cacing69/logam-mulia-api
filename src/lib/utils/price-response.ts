@@ -94,7 +94,7 @@ export function normalizePriceRows(
 				currency: String(item.currency ?? currency),
 				recordedDate,
 				createdAt: createdAt,
-				meta: toMeta(item.meta ?? item.info),
+				meta: toMeta(item.meta),
 			};
 		});
 }
