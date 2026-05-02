@@ -46,6 +46,7 @@ jobs:
           hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/bankbsi?refresh=true" "bankbsi"
           hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/brankaslm?refresh=true" "brankaslm"
           hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/cermati?refresh=true" "cermati"
+          hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-com?refresh=true" "hargaemas-com"
           hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/emasku?refresh=true" "emasku"
           hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/galeri24?refresh=true" "galeri24"
 
