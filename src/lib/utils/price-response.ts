@@ -9,6 +9,8 @@ export interface PriceRow {
 	sellPrice: number;
 	buybackPrice: number | null;
 	currency: string;
+	/** Tanggal bisnis `YYYY-MM-DD` (Asia/Jakarta), selaras kolom `recorded_date`. */
+	recordedDate: string;
 	createdAt: string;
 	meta: string | null;
 }
@@ -49,19 +51,29 @@ function toMeta(value: unknown): string | null {
 	}
 }
 
+/**
+ * Menyatukan baris mentah scraper ke {@link PriceRow} / kolom DB.
+ *
+ * **Sell:** `sellPrice` → fallback `price`, `sell` (legacy Cheerio).
+ * **Buyback:** `buybackPrice` → fallback `buyback_price`, `buy` (legacy `buy` = harga beli / buyback).
+ * Sumber Jina markdown: pakai `sellPrice` / `buybackPrice` ({@link JinaMarkdownLabelRowResult}).
+ */
 export function normalizePriceRows(
 	data: unknown,
 	params: {
 		source: string;
 		currency?: string;
 		recordedAt?: string | number;
-	}
+		/** `YYYY-MM-DD` Asia/Jakarta — wajib untuk `recorded_date` / deduplikasi harian. */
+		recordedDate: string;
+	},
 ): PriceRow[] {
 	const list = Array.isArray(data) ? data : [data];
 	const currency = params.currency ?? 'IDR';
 	const createdAt = params.recordedAt
 		? new Date(params.recordedAt).toISOString()
 		: new Date().toISOString();
+	const recordedDate = params.recordedDate;
 
 	return list
 		.filter((item): item is GenericRecord => typeof item === 'object' && item !== null)
@@ -80,8 +92,9 @@ export function normalizePriceRows(
 				sellPrice,
 				buybackPrice: buybackPriceRaw >= 0 ? buybackPriceRaw : null,
 				currency: String(item.currency ?? currency),
+				recordedDate,
 				createdAt: createdAt,
-				meta: toMeta(item.meta ?? item.info),
+				meta: toMeta(item.meta),
 			};
 		});
 }

@@ -1,3 +1,4 @@
+import { parseGramWeightLabel } from '../../lib/utils/parse-gram-weight-label';
 import type { ScrapingConfig } from '../../lib/types/scraper.types';
 import { raw } from '../../lib/types/scraper.types';
 
@@ -9,7 +10,33 @@ function parseCerticardMaterialType(text: string): string {
 	return match?.[1]?.trim() ?? 'Antam';
 }
 
-export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'material' | 'materialType' | 'weight' | 'weightUnit' | 'info'> = {
+function postProcessRow(rawData: Record<string, string>) {
+	const label = (rawData.weight ?? rawData.weightUnit ?? '').trim();
+	const { weight, weightUnit } = parseGramWeightLabel(label);
+	return {
+		...rawData,
+		materialType: parseCerticardMaterialType(rawData.materialType ?? ''),
+		weight: weight || rawData.weight,
+		weightUnit: weightUnit || rawData.weightUnit,
+	};
+}
+
+function makeItem(row: number, col: number) {
+	const base = 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table';
+	return {
+		selector: {
+			buybackPrice: `${base} > tbody > tr:nth-child(${row}) > td:nth-child(3) > span > span:nth-child(2)`,
+			sellPrice: `${base} > tbody > tr:nth-child(${row}) > td:nth-child(2) > span > span:nth-child(2)`,
+			material: raw('gold'),
+			materialType: certicardMaterialTypeSelector,
+			weight: `${base} > tbody > tr:nth-child(${row}) > td:nth-child(1) > a`,
+			weightUnit: `${base} > tbody > tr:nth-child(${row}) > td:nth-child(1) > a`,
+		},
+		postProcess: postProcessRow,
+	};
+}
+
+export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'material' | 'materialType' | 'weight' | 'weightUnit' > = {
 	name: 'anekalogam',
 	engine: 'cheerio',
 	currency: 'IDR',
@@ -22,7 +49,6 @@ export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'ma
 				sellPrice: '#today-price > div.section-intro > div.buy-sell-rate > div:nth-child(2) .tprice',
 				material: raw('gold'),
 				materialType: "#today-price > div.section-intro > p:nth-child(3)",
-				info: '#today-price > div.section-intro > p:nth-child(3)',
 				weight: raw(1),
 				weightUnit: raw('gr'),
 			},
@@ -36,125 +62,6 @@ export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'ma
 				};
 			},
 		},
-		{
-			selector: {
-				buybackPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(1) > td:nth-child(3) > span > span:nth-child(2)',
-				sellPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(1) > td:nth-child(2) > span > span:nth-child(2)',
-				material: raw('gold'),
-				materialType: certicardMaterialTypeSelector,
-				info: '#today-price > div.section-intro > p:nth-child(3)',
-				weight: raw(1),
-				weightUnit: raw('gr'),
-			},
-			postProcess: (rawData) => ({
-				...rawData,
-				materialType: parseCerticardMaterialType(rawData.materialType ?? ''),
-			}),
-		},
-		{
-			selector: {
-				buybackPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(2) > td:nth-child(3) > span > span:nth-child(2)',
-				sellPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(2) > td:nth-child(2) > span > span:nth-child(2)',
-				material: raw('gold'),
-				materialType: certicardMaterialTypeSelector,
-				info: '#today-price > div.section-intro > p:nth-child(3)',
-				weight: raw(2),
-				weightUnit: raw('gr'),
-			},
-			postProcess: (rawData) => ({
-				...rawData,
-				materialType: parseCerticardMaterialType(rawData.materialType ?? ''),
-			}),
-		},
-		{
-			selector: {
-				buybackPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(3) > td:nth-child(3) > span > span:nth-child(2)',
-				sellPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(3) > td:nth-child(2) > span > span:nth-child(2)',
-				material: raw('gold'),
-				materialType: certicardMaterialTypeSelector,
-				info: '#today-price > div.section-intro > p:nth-child(3)',
-				weight: raw(3),
-				weightUnit: raw('gr'),
-			},
-			postProcess: (rawData) => ({
-				...rawData,
-				materialType: parseCerticardMaterialType(rawData.materialType ?? ''),
-			}),
-		},
-		{
-			selector: {
-				buybackPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(4) > td:nth-child(3) > span > span:nth-child(2)',
-				sellPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(4) > td:nth-child(2) > span > span:nth-child(2)',
-				material: raw('gold'),
-				materialType: certicardMaterialTypeSelector,
-				info: '#today-price > div.section-intro > p:nth-child(3)',
-				weight: raw(5),
-				weightUnit: raw('gr'),
-			},
-			postProcess: (rawData) => ({
-				...rawData,
-				materialType: parseCerticardMaterialType(rawData.materialType ?? ''),
-			}),
-		},
-		{
-			selector: {
-				buybackPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(5) > td:nth-child(3) > span > span:nth-child(2)',
-				sellPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(5) > td:nth-child(2) > span > span:nth-child(2)',
-				material: raw('gold'),
-				materialType: certicardMaterialTypeSelector,
-				info: '#today-price > div.section-intro > p:nth-child(3)',
-				weight: raw(10),
-				weightUnit: raw('gr'),
-			},
-			postProcess: (rawData) => ({
-				...rawData,
-				materialType: parseCerticardMaterialType(rawData.materialType ?? ''),
-			}),
-		},
-		{
-			selector: {
-				buybackPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(6) > td:nth-child(3) > span > span:nth-child(2)',
-				sellPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(6) > td:nth-child(2) > span > span:nth-child(2)',
-				material: raw('gold'),
-				materialType: certicardMaterialTypeSelector,
-				info: '#today-price > div.section-intro > p:nth-child(3)',
-				weight: raw(25),
-				weightUnit: raw('gr'),
-			},
-			postProcess: (rawData) => ({
-				...rawData,
-				materialType: parseCerticardMaterialType(rawData.materialType ?? ''),
-			}),
-		},
-		{
-			selector: {
-				buybackPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(7) > td:nth-child(3) > span > span:nth-child(2)',
-				sellPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(7) > td:nth-child(2) > span > span:nth-child(2)',
-				material: raw('gold'),
-				materialType: certicardMaterialTypeSelector,
-				info: '#today-price > div.section-intro > p:nth-child(3)',
-				weight: raw(50),
-				weightUnit: raw('gr'),
-			},
-			postProcess: (rawData) => ({
-				...rawData,
-				materialType: parseCerticardMaterialType(rawData.materialType ?? ''),
-			}),
-		},
-		{
-			selector: {
-				buybackPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(8) > td:nth-child(3) > span > span:nth-child(2)',
-				sellPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(8) > td:nth-child(2) > span > span:nth-child(2)',
-				material: raw('gold'),
-				materialType: certicardMaterialTypeSelector,
-				info: '#today-price > div.section-intro > p:nth-child(3)',
-				weight: raw(100),
-				weightUnit: raw('gr'),
-			},
-			postProcess: (rawData) => ({
-				...rawData,
-				materialType: parseCerticardMaterialType(rawData.materialType ?? ''),
-			}),
-		},
+		...Array.from({ length: 8 }, (_, i) => makeItem(i + 1, 2)),
 	],
 };

@@ -92,7 +92,7 @@ export class AxiosScraper<T extends Record<string, string> = Record<string, stri
 
 	private mapSelector(payload: unknown, selector: AxiosSelectorDefinition): Record<string, string> {
 		const rawData: Record<string, string> = {};
-		const literalKeys = new Set(['type', 'weightUnit', 'unit']);
+		const literalKeys = new Set(['weightUnit', 'unit']);
 
 		for (const [key, value] of Object.entries(selector)) {
 			if (typeof value === 'string') {

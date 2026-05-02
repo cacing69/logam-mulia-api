@@ -1,5 +1,6 @@
-import { normalizePriceRows, type PriceRow } from './utils/price-response';
 import { createPriceRepository } from '../db';
+import { jakartaCalendarDateString } from './utils/calendar-date';
+import { normalizePriceRows, type PriceRow } from './utils/price-response';
 
 export interface PublicPriceHistoryRow {
 	source: string;
@@ -10,6 +11,7 @@ export interface PublicPriceHistoryRow {
 	sellPrice: number;
 	buybackPrice: number | null;
 	currency: string;
+	recordedDate: string;
 }
 
 export interface FetchResult {
@@ -31,6 +33,7 @@ function toPublicRows(rows: PriceRow[]): PublicPriceHistoryRow[] {
 		sellPrice: row.sellPrice,
 		buybackPrice: row.buybackPrice,
 		currency: row.currency,
+		recordedDate: row.recordedDate,
 	}));
 }
 
@@ -54,13 +57,13 @@ export async function fetchOrCache(
 		inactive?: boolean;
 	}>,
 ): Promise<FetchResult> {
-	const today = new Date().toISOString().slice(0, 10);
+	const today = jakartaCalendarDateString();
 	const repo = createPriceRepository(env);
 	const shouldRefresh = options.refresh === true;
 
-	// 1. Check if today's data exists in history
+	// 1. Refresh paksa: kosongkan riwayat `source` hanya di D1 (Turso tetap utuh).
 	if (shouldRefresh) {
-		await repo.deleteToday(source, today);
+		await repo.deleteSourceHistoryD1Only(source);
 	}
 
 	const cached = shouldRefresh ? [] : await repo.getToday(source, today);
@@ -89,15 +92,18 @@ export async function fetchOrCache(
 		};
 	}
 
-	// 3. Normalize
+	// 3. Normalize + bucket tanggal Jakarta
 	const normalizedRows = normalizePriceRows(result.data, {
 		source,
 		currency: result.currency,
 		recordedAt: result.timestamp,
+		recordedDate: today,
 	});
 
-	// 4. Insert to all databases
+	// 4. Upsert (UNIQUE source + recorded_date + material + berat) — konkuren aman di level DB
 	await repo.insert(normalizedRows);
+	// 5. D1 “daily”: setelah hari ini tersimpan, buang baris `source` dengan recorded_date < hari ini (Turso tidak di-prune).
+	await repo.pruneD1HistoryBeforeRecordedDate(source, today);
 	const publicRows = toPublicRows(normalizedRows);
 
 	return {

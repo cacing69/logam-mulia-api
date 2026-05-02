@@ -13,7 +13,7 @@ describe('Sakumas Unit Tests', () => {
 		vi.resetAllMocks();
 	});
 
-	it('should parse buy/sell and info from sakumas html selectors', async () => {
+	it('should parse buyback/sell price from sakumas html selectors', async () => {
 		const mockHtml = `
       <html>
         <head><title>Sakumas</title></head>
@@ -35,12 +35,12 @@ describe('Sakumas Unit Tests', () => {
 
 		const scraper = new CheerioScraper('sakumas', sakumasConfig);
 		const result = await scraper.scrape((raw) => ({
-			type: raw.type || 'unknown',
-			sell: parseCurrency(raw.sell),
-			buy: parseCurrency(raw.buy),
-			info: raw.info,
-			sellRaw: raw.sell,
-			buyRaw: raw.buy,
+			material: raw.material || 'gold',
+			materialType: raw.materialType || 'unknown',
+			buybackPrice: parseCurrency(raw.buybackPrice),
+			sellPrice: parseCurrency(raw.sellPrice),
+			weight: raw.weight ? Number(raw.weight) : 1,
+			weightUnit: raw.weightUnit || 'gr',
 		}));
 
 		expect(result.success).toBe(true);
@@ -53,11 +53,11 @@ describe('Sakumas Unit Tests', () => {
 		}
 
 		const firstItem = result.data[0];
-		expect(firstItem.type).toBe('sakumas');
-		expect(firstItem.sellRaw).toBe('950.755');
-		expect(firstItem.buyRaw).toBe('979.278');
-		expect(firstItem.sell).toBe(950755);
-		expect(firstItem.buy).toBe(979278);
-		expect(firstItem.info).toContain('Harga');
+		expect(firstItem.material).toBe('gold');
+		expect(firstItem.materialType).toBe('unknown');
+		expect(firstItem.sellPrice).toBe(979278);
+		expect(firstItem.buybackPrice).toBe(950755);
+		expect(firstItem.weight).toBe(1);
+		expect(firstItem.weightUnit).toBe('gr');
 	});
 });

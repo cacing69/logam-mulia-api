@@ -1,24 +1,13 @@
 import { Hono } from 'hono';
 import type { Bindings } from '../../types';
-import { JinaScraper, parseCurrency } from '../../lib';
+import { JinaScraper, createErrorResponse, parseCurrency } from '../../lib';
 import { lakuemasConfig } from './lakuemas.config';
 
 const app = new Hono<{ Bindings: Bindings }>();
 
 app.get('/', async (c) => {
-	const timestamp = new Date().toISOString();
-
 	if (lakuemasConfig.active === false) {
-		return c.json(
-			{
-				success: false,
-				error: 'inactive',
-				timestamp,
-				source: 'lakuemas',
-				currency: lakuemasConfig.currency,
-			},
-			400
-		);
+		return c.json(createErrorResponse('inactive'), 400);
 	}
 
 	try {
@@ -40,28 +29,21 @@ app.get('/', async (c) => {
 		return c.json({
 			success: true,
 			data: [{
-				type: 'lakuemas',
-				sell: parseCurrency(sell),
-				buy: parseCurrency(buy),
-				info: 'Harga Jual Emas Antam Hari Ini',
+				material: 'gold',
+				materialType: 'lakuemas',
+				buybackPrice: parseCurrency(buy),
+				sellPrice: parseCurrency(sell),
+				weight: 1,
+				weightUnit: 'gr',
 			}],
 			count: 1,
-			timestamp,
+			timestamp: new Date().toISOString(),
 			source: 'lakuemas',
 			currency: lakuemasConfig.currency,
 		});
 	} catch (error) {
 		const message = error instanceof Error ? error.message : 'Unknown error';
-		return c.json(
-			{
-				success: false,
-				error: message,
-				timestamp,
-				source: 'lakuemas',
-				currency: lakuemasConfig.currency,
-			},
-			500
-		);
+		return c.json(createErrorResponse(message), 500);
 	}
 });
 

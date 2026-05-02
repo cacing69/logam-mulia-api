@@ -8,10 +8,8 @@ export const treasuryConfig: AxiosScrapingConfig = {
 	method: 'POST',
 	selector: [
 		{
-			type: 'treasury',
 			sellPrice: 'data.buying_rate',
 			buybackPrice: 'data.selling_rate',
-			info: 'data.updated_at',
 			weight: 1,
 			weightUnit: 'gram',
 		},

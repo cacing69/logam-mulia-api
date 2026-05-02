@@ -14,6 +14,8 @@ export interface HistoryItem {
 	sellPrice: number;
 	buybackPrice: number | null;
 	currency: string;
+	/** Tanggal bisnis `YYYY-MM-DD` (Asia/Jakarta). */
+	recordedDate: string;
 	createdAt: string;
 }
 
@@ -161,10 +163,10 @@ export async function getHistoryBySource(
 
 		const rowsResult = await client.execute({
 			sql: `
-				SELECT source, material, material_type, weight, weight_unit, sell_price, buyback_price, currency, created_at
+				SELECT source, material, material_type, weight, weight_unit, sell_price, buyback_price, currency, recorded_date, created_at
 				FROM price_history
 				WHERE ${whereClause}
-				ORDER BY datetime(created_at) DESC
+				ORDER BY recorded_date DESC, datetime(created_at) DESC
 				LIMIT ? OFFSET ?
 			`,
 			args: [...whereArgs, length, offset],
@@ -179,6 +181,7 @@ export async function getHistoryBySource(
 			sellPrice: Number(row.sell_price ?? 0),
 			buybackPrice: row.buyback_price === null ? null : Number(row.buyback_price),
 			currency: String(row.currency ?? 'IDR'),
+			recordedDate: String(row.recorded_date ?? ''),
 			createdAt: String(row.created_at ?? ''),
 		}));
 

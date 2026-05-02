@@ -42,12 +42,12 @@ describe('Kursdolar Unit Tests', () => {
 
 		const scraper = new CheerioScraper('kursdolar', kursdolarConfig);
 		const result = await scraper.scrape((raw) => ({
-			type: raw.type || 'unknown',
-			sell: parseCurrency(raw.sell),
-			buy: parseCurrency(raw.buy),
-			info: raw.info,
-			sellRaw: raw.sell,
-			buyRaw: raw.buy,
+			material: raw.material || 'gold',
+			materialType: raw.materialType || 'unknown',
+			buybackPrice: parseCurrency(raw.buybackPrice),
+			sellPrice: parseCurrency(raw.sellPrice),
+			weight: raw.weight ? Number(raw.weight) : 1,
+			weightUnit: raw.weightUnit || 'gr',
 		}));
 
 		expect(result.success).toBe(true);
@@ -60,11 +60,11 @@ describe('Kursdolar Unit Tests', () => {
 		}
 
 		const firstItem = result.data[0];
-		expect(firstItem.type).toBe('emas');
-		expect(firstItem.buyRaw).toBe('1.267.271');
-		expect(firstItem.sellRaw).toBe('1.393.998');
-		expect(firstItem.buy).toBe(1267271);
-		expect(firstItem.sell).toBe(1393998);
-		expect(firstItem.info).toContain('Harga Emas Hari Ini');
+		expect(firstItem.material).toBe('gold');
+		expect(firstItem.materialType).toBe('unknown');
+		expect(firstItem.sellPrice).toBe(1267271);
+		expect(firstItem.buybackPrice).toBe(1393998);
+		expect(firstItem.weight).toBe(1);
+		expect(firstItem.weightUnit).toBe('gr');
 	});
 });

@@ -19,13 +19,25 @@ export class PriceRepository {
 	}
 
 	async getToday(source: string, date: string): Promise<PriceRow[]> {
-		if (!this.dbD1) return [];
-		try {
-			return await this.dbD1.getToday(source, date);
-		} catch (err) {
-			console.error(`[repo] getToday error for ${source}:`, err);
-			return [];
+		if (this.dbD1) {
+			try {
+				const fromD1 = await this.dbD1.getToday(source, date);
+				if (fromD1.length > 0) {
+					return fromD1;
+				}
+			} catch (err) {
+				console.error(`[repo] getToday D1 error for ${source}:`, err);
+			}
 		}
+		if (this.dbTurso) {
+			try {
+				return await this.dbTurso.getToday(source, date);
+			} catch (err) {
+				console.error(`[repo] getToday Turso error for ${source}:`, err);
+				return [];
+			}
+		}
+		return [];
 	}
 
 	async insert(rows: PriceRow[]): Promise<void> {
@@ -33,17 +45,13 @@ export class PriceRepository {
 
 		if (this.dbD1) {
 			tasks.push(
-				this.dbD1
-					.insert(rows)
-					.catch((err) => console.error('[repo] D1 insert error:', err)),
+				this.dbD1.insert(rows).catch((err) => console.error('[repo] D1 upsert error:', err)),
 			);
 		}
 
 		if (this.dbTurso) {
 			tasks.push(
-				this.dbTurso
-					.insert(rows)
-					.catch((err) => console.error('[repo] Turso insert error:', err)),
+				this.dbTurso.insert(rows).catch((err) => console.error('[repo] Turso upsert error:', err)),
 			);
 		}
 
@@ -70,6 +78,29 @@ export class PriceRepository {
 		}
 
 		await Promise.all(tasks);
+	}
+
+	/**
+	 * `?refresh=true`: kosongkan **seluruh** riwayat `source` hanya di **D1** (snapshot harian).
+	 * **Turso tidak dihapus** — riwayat panjang tetap di sana.
+	 */
+	async deleteSourceHistoryD1Only(source: string): Promise<void> {
+		if (!this.dbD1) {
+			return;
+		}
+		await this.dbD1.deleteAllRowsForSource(source).catch((err) => {
+			console.error('[repo] D1 deleteSourceHistoryD1Only error:', err);
+		});
+	}
+
+	/** D1 saja: buang baris `source` dengan `recorded_date` sebelum `recordedDate` (setelah upsert hari ini). */
+	async pruneD1HistoryBeforeRecordedDate(source: string, recordedDate: string): Promise<void> {
+		if (!this.dbD1) {
+			return;
+		}
+		await this.dbD1.deleteSourceRecordedDateStrictlyBefore(source, recordedDate).catch((err) => {
+			console.error('[repo] D1 prune history error:', err);
+		});
 	}
 }
 

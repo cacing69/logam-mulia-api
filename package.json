@@ -14,11 +14,18 @@
     "db:generate": "drizzle-kit generate",
     "db:turso:push": "drizzle-kit push",
     "db:turso:push:remote": "drizzle-kit push",
+    "db:turso:reset-remote": "tsx scripts/turso-reset-and-migrate.ts",
     "db:turso:studio": "drizzle-kit studio",
     "db:d1:create": "wrangler d1 create logam-mulia-daily",
     "db:d1:migrate:local": "wrangler d1 migrations apply logam_mulia_db --local",
     "db:d1:migrate:remote": "wrangler d1 migrations apply logam_mulia_db --remote",
     "db:d1:migrate": "npm run db:d1:migrate:local && npm run db:d1:migrate:remote",
+    "db:d1:reset-data:local": "wrangler d1 execute logam_mulia_db --local --file=./scripts/d1-reset-migrations.sql",
+    "db:d1:reset-data:remote": "wrangler d1 execute logam_mulia_db --remote --file=./scripts/d1-reset-migrations.sql",
+    "db:d1:reset-and-migrate:local": "npm run db:d1:reset-data:local && npm run db:d1:migrate:local",
+    "db:d1:reset-and-migrate:remote": "npm run db:d1:reset-data:remote && npm run db:d1:migrate:remote",
+    "db:d1:fresh-local": "rm -rf .wrangler/state/v3/d1 && wrangler d1 migrations apply logam_mulia_db --local",
+    "db:reset-remote": "npm run db:turso:reset-remote && npm run db:d1:reset-and-migrate:remote",
     "db:migrate": "npm run db:turso:push && npm run db:d1:migrate"
   },
   "repository": {

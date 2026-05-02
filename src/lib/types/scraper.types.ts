@@ -34,10 +34,8 @@ export interface CheerioScrapingConfig<T extends string = string> {
 export type AxiosMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 export interface AxiosSelectorDefinition {
-	type: string;
-	price?: string;
 	buybackPrice?: string;
-	info?: string;
+	sellPrice?: string;
 	weight?: number;
 	weightUnit?: string;
 	[key: string]: string | number | undefined;
