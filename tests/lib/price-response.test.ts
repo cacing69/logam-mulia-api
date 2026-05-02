@@ -15,5 +15,14 @@ describe('normalizePriceRows', () => {
 		expect(rows[0].recordedDate).toBe('2026-05-02');
 		expect(rows[0].source).toBe('test');
 		expect(rows[0].materialType).toBe('Antam');
+		expect(rows[0].lineKey).toBe('');
+	});
+
+	it('maps lineKey from raw row', () => {
+		const rows = normalizePriceRows([{ sellPrice: 1, lineKey: 'slot-a' }], {
+			source: 'test',
+			recordedDate: '2026-05-02',
+		});
+		expect(rows[0].lineKey).toBe('slot-a');
 	});
 });

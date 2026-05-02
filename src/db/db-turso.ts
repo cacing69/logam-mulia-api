@@ -30,6 +30,7 @@ export class DbTurso implements PriceStore {
 			currency: r.currency,
 			recordedDate: r.recordedDate,
 			createdAt: r.createdAt,
+			lineKey: r.lineKey ?? '',
 			meta: null,
 		}));
 	}
@@ -59,6 +60,7 @@ export class DbTurso implements PriceStore {
 					currency: row.currency,
 					recordedDate: row.recordedDate,
 					createdAt: row.createdAt,
+					lineKey: row.lineKey || '',
 				})),
 			)
 			.onConflictDoUpdate({
@@ -68,6 +70,7 @@ export class DbTurso implements PriceStore {
 					priceHistory.materialType,
 					priceHistory.weight,
 					priceHistory.weightUnit,
+					priceHistory.lineKey,
 				],
 				set: {
 					material: sql`excluded.material`,

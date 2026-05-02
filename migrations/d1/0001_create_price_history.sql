@@ -1,4 +1,5 @@
 -- Skema final + reset bersih (jalankan setelah hapus jejak migrasi / DB kosong).
+-- `line_key`: membedakan baris scrape dengan berat + material_type sama (mis. Logam Mulia).
 DROP TABLE IF EXISTS price_history;
 
 CREATE TABLE price_history (
@@ -13,7 +14,8 @@ CREATE TABLE price_history (
 	currency TEXT NOT NULL DEFAULT 'IDR',
 	recorded_date TEXT NOT NULL,
 	created_at TEXT NOT NULL,
-	UNIQUE (source, recorded_date, material_type, weight, weight_unit)
+	line_key TEXT NOT NULL DEFAULT '',
+	UNIQUE (source, recorded_date, material_type, weight, weight_unit, line_key)
 );
 
 CREATE INDEX idx_history_source_recorded_date ON price_history (source, recorded_date);

@@ -14,6 +14,7 @@ export const priceHistory = sqliteTable(
 		currency: text('currency').notNull().default('IDR'),
 		recordedDate: text('recorded_date').notNull(),
 		createdAt: text('created_at').notNull(),
+		lineKey: text('line_key').notNull().default(''),
 	},
 	(table) => [
 		uniqueIndex('ux_price_history_source_day_material').on(
@@ -22,6 +23,7 @@ export const priceHistory = sqliteTable(
 			table.materialType,
 			table.weight,
 			table.weightUnit,
+			table.lineKey,
 		),
 		index('idx_history_source_recorded_date').on(table.source, table.recordedDate),
 	],

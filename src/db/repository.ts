@@ -54,16 +54,20 @@ export class PriceRepository {
 	async insert(rows: PriceRow[]): Promise<void> {
 		const tasks: Promise<void>[] = [];
 
+		const logDbError = (label: string, err: unknown) => {
+			const msg = err instanceof Error ? err.message : String(err);
+			console.error(`[repo] ${label}:`, msg);
+			console.error(`[repo] ${label} (full):`, err);
+		};
+
 		if (this.dbD1) {
-			tasks.push(
-				this.dbD1.insert(rows).catch((err) => console.error('[repo] D1 upsert error:', err)),
-			);
+			tasks.push(this.dbD1.insert(rows).catch((err) => logDbError('D1 upsert error', err)));
+		} else if (rows.length > 0) {
+			console.warn('[repo] D1 upsert skipped: env.DB_D1 tidak ada (cek binding wrangler / deploy)');
 		}
 
 		if (this.dbTurso) {
-			tasks.push(
-				this.dbTurso.insert(rows).catch((err) => console.error('[repo] Turso upsert error:', err)),
-			);
+			tasks.push(this.dbTurso.insert(rows).catch((err) => logDbError('Turso upsert error', err)));
 		}
 
 		await Promise.all(tasks);

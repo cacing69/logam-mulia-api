@@ -13,6 +13,7 @@ app.get('/', async (c) => {
 	const result = await fetchOrCache(c.env, 'logammulia', { refresh }, () =>
 		scraper.scrape(
 			(raw) => ({
+				lineKey: raw.lineKey ?? '',
 				material: raw.material || 'gold',
 				materialType: raw.materialType || 'unknown',
 				buybackPrice: parseCurrency(raw.buybackPrice),

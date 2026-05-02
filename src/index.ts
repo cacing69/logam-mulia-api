@@ -7,24 +7,24 @@ import anekalogamFeature from './features/anekalogam';
 import { anekalogamConfig } from './features/anekalogam/anekalogam.config';
 import hargaEmasOrgFeature, { hargaemasOrgConfig } from './features/hargaemas-org';
 import lakuemasFeature, { lakuemasConfig } from './features/lakuemas';
-import pegadaianFeature from './features/pegadaian';
-import sakumasFeature from './features/sakumas';
+import pegadaianFeature, { pegadaianConfig } from './features/pegadaian';
+import sakumasFeature, { sakumasConfig } from './features/sakumas';
 import kursdolarFeature, { kursdolarConfig } from './features/kursdolar';
 import cermatiFeature, { cermatiConfig } from './features/cermati';
 import bankbsiFeature from './features/bankbsi';
 import { bankbsiConfig } from './features/bankbsi/bankbsi.config';
 import brankaslmFeature from './features/brankaslm';
 import { brankaslmConfig } from './features/brankaslm/brankaslm.config';
-import indogoldFeature from './features/indogold';
+import indogoldFeature, { indogoldConfig } from './features/indogold';
 import hargaemasNetFeature, { hargaemasNetConfig } from './features/hargaemas-net';
 import hargaemasComFeature, { hargaemasComConfig } from './features/hargaemas-com';
-import treasuryFeature from './features/treasury';
+import treasuryFeature, { treasuryConfig } from './features/treasury';
 import logammuliaFeature, { logammuliaConfig } from './features/logammulia';
 import emaskuFeature from './features/emasku';
 import { emaskuConfig } from './features/emasku/emasku.config';
 import hartadinataabadiFeature, { hartadinataabadiConfig } from './features/hartadinataabadi';
 import galeri24Feature, { galeri24Config } from './features/galeri24';
-import sampoernagoldFeature from './features/sampoernagold';
+import sampoernagoldFeature, { sampoernagoldConfig } from './features/sampoernagold';
 
 const app = new Hono<{ Bindings: Bindings }>();
 const SUPPORTED_SOURCES = new Set([
@@ -38,9 +38,14 @@ const SUPPORTED_SOURCES = new Set([
 	hargaemasNetConfig.name,
 	hargaemasOrgConfig.name,
 	hartadinataabadiConfig.name,
+	indogoldConfig.name,
 	kursdolarConfig.name,
 	lakuemasConfig.name,
 	logammuliaConfig.name,
+	// pegadaianConfig.name,
+	// sakumasConfig.name,
+	// sampoernagoldConfig.name,
+	// treasuryConfig.name,
 ]);
 
 app.route('/', rootFeature);

@@ -17,6 +17,7 @@ export interface HistoryItem {
 	/** Tanggal bisnis `YYYY-MM-DD` (Asia/Jakarta). */
 	recordedDate: string;
 	createdAt: string;
+	lineKey: string;
 }
 
 export interface HistoryResponse {
@@ -176,7 +177,7 @@ export async function getHistoryBySource(
 
 		const rowsResult = await client.execute({
 			sql: `
-				SELECT source, material, material_type, weight, weight_unit, sell_price, buyback_price, currency, recorded_date, created_at
+				SELECT source, material, material_type, weight, weight_unit, sell_price, buyback_price, currency, recorded_date, created_at, line_key
 				FROM price_history
 				WHERE ${whereClause}
 				ORDER BY recorded_date DESC, datetime(created_at) DESC
@@ -196,6 +197,7 @@ export async function getHistoryBySource(
 			currency: String(row.currency ?? 'IDR'),
 			recordedDate: String(row.recorded_date ?? ''),
 			createdAt: String(row.created_at ?? ''),
+			lineKey: String(row.line_key ?? ''),
 		}));
 
 		return {

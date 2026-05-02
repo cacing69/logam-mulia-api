@@ -1,4 +1,4 @@
--- Skema final + reset bersih (sama dengan D1).
+-- Skema final + reset bersih (selaras D1).
 DROP TABLE IF EXISTS price_history;
 
 CREATE TABLE `price_history` (
@@ -13,7 +13,8 @@ CREATE TABLE `price_history` (
 	`currency` text DEFAULT 'IDR' NOT NULL,
 	`recorded_date` text NOT NULL,
 	`created_at` text NOT NULL,
-	UNIQUE (`source`, `recorded_date`, `material_type`, `weight`, `weight_unit`)
+	`line_key` text DEFAULT '' NOT NULL,
+	UNIQUE (`source`, `recorded_date`, `material_type`, `weight`, `weight_unit`, `line_key`)
 );
 
 CREATE INDEX `idx_history_source_recorded_date` ON `price_history` (`source`, `recorded_date`);
