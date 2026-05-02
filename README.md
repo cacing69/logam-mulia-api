@@ -43,7 +43,7 @@ contoh response
 | lakuemas | ✅ | [`/lakuemas`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/lakuemas) | - | ❌ |
 | sakumas | ✅ | [`/sakumas`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/sakumas) | - | ❌ |
 | kursdolar | ✅ | [`/kursdolar`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/kursdolar) | - | ❌ |
-| cermati | ✅ | [`/cermati`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/cermati) | - | ❌ |
+| cermati | ✅ | [`/cermati`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/cermati) | [`/cermati/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/cermati/history) | ✅ |
 | indogold | ✅ | [`/indogold`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/indogold) | - | ❌ |
 | hargaemas-net | ✅ | [`/hargaemas-net`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-net) | - | ❌ |
 | hargaemas-com | ✅ | [`/hargaemas-com`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-com) | - | ❌ |
