@@ -9,7 +9,7 @@ import hargaEmasOrgFeature, { hargaemasOrgConfig } from './features/hargaemas-or
 import lakuemasFeature from './features/lakuemas';
 import pegadaianFeature from './features/pegadaian';
 import sakumasFeature from './features/sakumas';
-import kursdolarFeature from './features/kursdolar';
+import kursdolarFeature, { kursdolarConfig } from './features/kursdolar';
 import cermatiFeature, { cermatiConfig } from './features/cermati';
 import bankbsiFeature from './features/bankbsi';
 import { bankbsiConfig } from './features/bankbsi/bankbsi.config';
@@ -38,6 +38,7 @@ const SUPPORTED_SOURCES = new Set([
 	hargaemasNetConfig.name,
 	hargaemasOrgConfig.name,
 	hartadinataabadiConfig.name,
+	kursdolarConfig.name,
 ]);
 
 app.route('/', rootFeature);

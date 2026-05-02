@@ -53,7 +53,7 @@ contoh response
 | hargaemas-org | ✅ | [`/hargaemas-org`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-org) | [`/hargaemas-org/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-org/history) | ✅ |
 | lakuemas | ✅ | [`/lakuemas`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/lakuemas) | - | ❌ |
 | sakumas | ✅ | [`/sakumas`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/sakumas) | - | ❌ |
-| kursdolar | ✅ | [`/kursdolar`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/kursdolar) | - | ❌ |
+| kursdolar | ✅ | [`/kursdolar`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/kursdolar) | [`/kursdolar/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/kursdolar/history) | ✅ |
 | cermati | ✅ | [`/cermati`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/cermati) | [`/cermati/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/cermati/history) | ✅ |
 | indogold | ✅ | [`/indogold`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/indogold) | [`/indogold/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/indogold/history) | ✅ |
 | hargaemas-net | ✅ | [`/hargaemas-net`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-net) | [`/hargaemas-net/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-net/history) | ✅ |
