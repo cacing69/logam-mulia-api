@@ -21,6 +21,21 @@ function postProcessRow(rawData: Record<string, string>) {
 	};
 }
 
+function makeItem(row: number, col: number) {
+	const base = 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table';
+	return {
+		selector: {
+			buybackPrice: `${base} > tbody > tr:nth-child(${row}) > td:nth-child(3) > span > span:nth-child(2)`,
+			sellPrice: `${base} > tbody > tr:nth-child(${row}) > td:nth-child(2) > span > span:nth-child(2)`,
+			material: raw('gold'),
+			materialType: certicardMaterialTypeSelector,
+			weight: `${base} > tbody > tr:nth-child(${row}) > td:nth-child(1) > a`,
+			weightUnit: `${base} > tbody > tr:nth-child(${row}) > td:nth-child(1) > a`,
+		},
+		postProcess: postProcessRow,
+	};
+}
+
 export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'material' | 'materialType' | 'weight' | 'weightUnit' > = {
 	name: 'anekalogam',
 	engine: 'cheerio',
@@ -47,93 +62,6 @@ export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'ma
 				};
 			},
 		},
-		{
-			selector: {
-				buybackPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(1) > td:nth-child(3) > span > span:nth-child(2)',
-				sellPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(1) > td:nth-child(2) > span > span:nth-child(2)',
-				material: raw('gold'),
-				materialType: certicardMaterialTypeSelector,
-				weight: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(1) > td:nth-child(1) > a`,
-				weightUnit: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(1) > td:nth-child(1) > a`,
-			},
-			postProcess: postProcessRow,
-		},
-		{
-			selector: {
-				buybackPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(2) > td:nth-child(3) > span > span:nth-child(2)',
-				sellPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(2) > td:nth-child(2) > span > span:nth-child(2)',
-				material: raw('gold'),
-				materialType: certicardMaterialTypeSelector,
-				weight: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(2) > td:nth-child(1) > a`,
-				weightUnit: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(2) > td:nth-child(1) > a`,
-			},
-			postProcess: postProcessRow,
-		},
-		{
-			selector: {
-				buybackPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(3) > td:nth-child(3) > span > span:nth-child(2)',
-				sellPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(3) > td:nth-child(2) > span > span:nth-child(2)',
-				material: raw('gold'),
-				materialType: certicardMaterialTypeSelector,
-				weight: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(3) > td:nth-child(1) > a`,
-				weightUnit: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(3) > td:nth-child(1) > a`,
-			},
-			postProcess: postProcessRow,
-		},
-		{
-			selector: {
-				buybackPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(4) > td:nth-child(3) > span > span:nth-child(2)',
-				sellPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(4) > td:nth-child(2) > span > span:nth-child(2)',
-				material: raw('gold'),
-				materialType: certicardMaterialTypeSelector,
-				weight: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(4) > td:nth-child(1) > a`,
-				weightUnit: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(4) > td:nth-child(1) > a`,
-			},
-			postProcess: postProcessRow,
-		},
-		{
-			selector: {
-				buybackPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(5) > td:nth-child(3) > span > span:nth-child(2)',
-				sellPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(5) > td:nth-child(2) > span > span:nth-child(2)',
-				material: raw('gold'),
-				materialType: certicardMaterialTypeSelector,
-				weight: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(5) > td:nth-child(1) > a`,
-				weightUnit: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(5) > td:nth-child(1) > a`,
-			},
-			postProcess: postProcessRow,
-		},
-		{
-			selector: {
-				buybackPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(6) > td:nth-child(3) > span > span:nth-child(2)',
-				sellPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(6) > td:nth-child(2) > span > span:nth-child(2)',
-				material: raw('gold'),
-				materialType: certicardMaterialTypeSelector,
-				weight: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(6) > td:nth-child(1) > a`,
-				weightUnit: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(6) > td:nth-child(1) > a`,
-			},
-			postProcess: postProcessRow,
-		},
-		{
-			selector: {
-				buybackPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(7) > td:nth-child(3) > span > span:nth-child(2)',
-				sellPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(7) > td:nth-child(2) > span > span:nth-child(2)',
-				material: raw('gold'),
-				materialType: certicardMaterialTypeSelector,
-				weight: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(7) > td:nth-child(1) > a`,
-				weightUnit: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(7) > td:nth-child(1) > a`,
-			},
-			postProcess: postProcessRow,
-		},
-		{
-			selector: {
-				buybackPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(8) > td:nth-child(3) > span > span:nth-child(2)',
-				sellPrice: 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(8) > td:nth-child(2) > span > span:nth-child(2)',
-				material: raw('gold'),
-				materialType: certicardMaterialTypeSelector,
-				weight: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(8) > td:nth-child(1) > a`,
-				weightUnit: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(8) > td:nth-child(1) > a`,
-			},
-			postProcess: postProcessRow,
-		},
+		...Array.from({ length: 8 }, (_, i) => makeItem(i + 1, 2)),
 	],
 };
