@@ -1,5 +1,11 @@
-
 import { raw, type ScrapingConfig } from '../../lib/types/scraper.types';
+
+/**
+ * Blok `schema.org/Table` berisi: tabel spot internasional, small, iklan, hr, h2 BSI, lalu **tabel BSI** (`nth-child(6)`).
+ * Jangkar lewat `itemscope` + `#main` agar tetap cocok pada varian AMP / non-AMP.
+ */
+const schemaTableBlock = '#main div[itemscope][itemtype*="schema.org/Table"]';
+const bsiPriceTable = `${schemaTableBlock} > table:nth-child(6)`;
 
 function parseMaterialType(text: string): string {
 	return text.replace(/^Harga\s+/i, '').replace(/\s*\(.*?\)/, '').trim();
@@ -13,20 +19,20 @@ function postProcessRow(rawData: Record<string, string>) {
 }
 
 function makeItem(row: number) {
-
 	return {
 		selector: {
-			weight: `#main > div > div:nth-child(7) > table:nth-child(6) > tbody > tr:nth-child(2) > td.bold`,
-			sellPrice: `#main > div > div:nth-child(7) > table:nth-child(6) > tbody > tr:nth-child(${row}) > td:nth-child(2)`,
-			buybackPrice: `#main > div > div:nth-child(7) > table:nth-child(6) > tbody > tr:nth-child(${row}) > td:nth-child(3)`,
+			weight: `${bsiPriceTable} tbody tr:nth-child(${row}) > td.bold`,
+			sellPrice: `${bsiPriceTable} tbody tr:nth-child(${row}) > td:nth-child(2)`,
+			buybackPrice: `${bsiPriceTable} tbody tr:nth-child(${row}) > td:nth-child(3)`,
 			material: raw('gold'),
-			materialType: `#main > div > div:nth-child(7) > h2:nth-child(5)`,
+			materialType: `${schemaTableBlock} > h2:nth-child(5)`,
 			weightUnit: raw('gr'),
 		},
 		postProcess: postProcessRow,
 	};
 }
 
+/** Tabel BSI: header `tr` ke-1, lalu baris 1 g … 500 g (12 baris). */
 const DATA_ROW_COUNT = 12;
 
 export const kursdolarConfig: ScrapingConfig<
@@ -37,7 +43,5 @@ export const kursdolarConfig: ScrapingConfig<
 	currency: 'IDR',
 	url: 'https://kurs.dollar.web.id/harga-emas-hari-ini.php',
 	active: true,
-	items: [
-		...Array.from({ length: DATA_ROW_COUNT }, (_, i) => makeItem(i + 2))
-	],
+	items: [...Array.from({ length: DATA_ROW_COUNT }, (_, i) => makeItem(i + 2))],
 };
