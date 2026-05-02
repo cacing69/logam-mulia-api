@@ -34,12 +34,14 @@ export interface HistoryResponse {
 
 export interface HistoryFilters {
 	weight?: number;
+	materialType?: string;
 }
 
 export interface HistoryQueryParams {
 	page?: string;
 	length?: string;
 	weight?: string;
+	materialType?: string;
 }
 
 function parseUnsignedInt(
@@ -92,21 +94,25 @@ export function normalizePagination(pageRaw?: string, lengthRaw?: string): {
 	};
 }
 
-function normalizeFilters(weightRaw?: string): { ok: true; filters: HistoryFilters } | { ok: false; error: string } {
-	if (weightRaw === undefined || weightRaw === '') {
-		return { ok: true, filters: {} };
+function normalizeFilters(weightRaw?: string, materialTypeRaw?: string): { ok: true; filters: HistoryFilters } | { ok: false; error: string } {
+	const filters: HistoryFilters = {};
+
+	if (weightRaw !== undefined && weightRaw !== '') {
+		if (!/^\d+(\.\d+)?$/.test(weightRaw)) {
+			return { ok: false, error: 'weight must be a positive number' };
+		}
+		const weight = Number.parseFloat(weightRaw);
+		if (!Number.isFinite(weight) || weight <= 0) {
+			return { ok: false, error: 'weight must be a positive number' };
+		}
+		filters.weight = weight;
 	}
 
-	if (!/^\d+(\.\d+)?$/.test(weightRaw)) {
-		return { ok: false, error: 'weight must be a positive number' };
+	if (materialTypeRaw !== undefined && materialTypeRaw !== '') {
+		filters.materialType = materialTypeRaw.trim();
 	}
 
-	const weight = Number.parseFloat(weightRaw);
-	if (!Number.isFinite(weight) || weight <= 0) {
-		return { ok: false, error: 'weight must be a positive number' };
-	}
-
-	return { ok: true, filters: { weight } };
+	return { ok: true, filters };
 }
 
 export async function getHistoryBySource(
@@ -124,7 +130,7 @@ export async function getHistoryBySource(
 	}
 
 	const { page, length, offset } = pagination;
-	const filtersParsed = normalizeFilters(query.weight);
+	const filtersParsed = normalizeFilters(query.weight, query.materialType);
 	if (!filtersParsed.ok) {
 		return {
 			success: false,
@@ -148,12 +154,19 @@ export async function getHistoryBySource(
 			authToken: env.TURSO_AUTH_TOKEN,
 		});
 
-		const whereClause = filters.weight !== undefined
-			? 'source = ? AND weight = ?'
-			: 'source = ?';
-		const whereArgs = filters.weight !== undefined
-			? [source, filters.weight]
-			: [source];
+		const conditions: string[] = ['source = ?'];
+		const whereArgs: (string | number)[] = [source];
+
+		if (filters.weight !== undefined) {
+			conditions.push('weight = ?');
+			whereArgs.push(filters.weight);
+		}
+		if (filters.materialType !== undefined) {
+			conditions.push('material_type = ?');
+			whereArgs.push(filters.materialType);
+		}
+
+		const whereClause = conditions.join(' AND ');
 
 		const countResult = await client.execute({
 			sql: `SELECT COUNT(*) AS total FROM price_history WHERE ${whereClause}`,
