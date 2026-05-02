@@ -13,20 +13,22 @@ describe('Cermati Unit Tests', () => {
 		vi.resetAllMocks();
 	});
 
-	it('should parse 1 gram Antam price and set buy to null', async () => {
+	it('should parse 0.5 gram Antam price from table', async () => {
 		const mockHtml = `
       <html>
         <body>
           <article itemprop="articleBody">
             <h1><strong>Harga Emas 24 Karat</strong></h1>
-            <div class="table-holder">
-              <table>
-                <thead><tr><th>Berat</th><th>Antam</th><th>Digital</th><th></th></tr></thead>
-                <tbody>
-                  <tr><td>0.5 gram</td><td>1.434.500</td><td>1.277.655</td><td></td></tr>
-                  <tr><td>1 gram</td><td>2.769.000</td><td>2.555.310</td><td></td></tr>
-                </tbody>
-              </table>
+            <div id="parent-node">
+              <div class="table-holder">
+                <table>
+                  <thead><tr><th>Berat</th><th>Antam</th><th>Digital</th><th></th></tr></thead>
+                  <tbody>
+                    <tr><td>0.5 gram</td><td>1.434.500</td><td>1.277.655</td><td></td></tr>
+                    <tr><td>1 gram</td><td>2.769.000</td><td>2.555.310</td><td></td></tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </article>
         </body>
@@ -41,12 +43,12 @@ describe('Cermati Unit Tests', () => {
 
 		const scraper = new CheerioScraper('cermati', cermatiConfig);
 		const result = await scraper.scrape((raw) => ({
-			type: raw.type || 'unknown',
-			sell: parseCurrency(raw.sell),
-			buy: null,
-			info: raw.info,
-			sellRaw: raw.sell,
-			buyRaw: null,
+			material: raw.material || 'gold',
+			materialType: raw.materialType || 'unknown',
+			buybackPrice: parseCurrency(raw.buybackPrice),
+			sellPrice: parseCurrency(raw.sellPrice),
+			weight: raw.weight ? Number(raw.weight) : 1,
+			weightUnit: raw.weightUnit || 'gr',
 		}));
 
 		expect(result.success).toBe(true);
@@ -58,11 +60,10 @@ describe('Cermati Unit Tests', () => {
 		}
 
 		const firstItem = result.data[0];
-		expect(firstItem.type).toBe('cermati-antam-1g');
-		expect(firstItem.sellRaw).toBe('2.769.000');
-		expect(firstItem.sell).toBe(2769000);
-		expect(firstItem.buy).toBeNull();
-		expect(firstItem.buyRaw).toBeNull();
-		expect(firstItem.info).toContain('digital_mid: 2.555.310');
+		expect(firstItem.material).toBe('gold');
+		expect(firstItem.sellPrice).toBe(1434500);
+		expect(firstItem.buybackPrice).toBe(0);
+		expect(firstItem.weight).toBe(0.5);
+		expect(firstItem.weightUnit).toBe('gr');
 	});
 });
