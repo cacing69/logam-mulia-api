@@ -37,10 +37,8 @@ export class PriceRepository {
 				const fromTurso = await this.dbTurso.getToday(source, date);
 				// Turso punya hari ini tapi D1 kosong/error → response di-cache dari Turso tanpa scrape;
 				// tanpa backfill, D1 tidak pernah terisi (mis. upsert D1 gagal tapi Turso berhasil).
-				if (fromTurso.length > 0 && d1Missed) {
-					await this.dbD1!.insert(fromTurso).catch((err) => {
-						console.error('[repo] D1 backfill from Turso error:', err);
-					});
+				if (fromTurso.length > 0 && d1Missed && this.dbD1) {
+					await this.dbD1.insert(fromTurso);
 				}
 				return fromTurso;
 			} catch (err) {
@@ -52,48 +50,53 @@ export class PriceRepository {
 	}
 
 	async insert(rows: PriceRow[]): Promise<void> {
-		const tasks: Promise<void>[] = [];
+		if (rows.length === 0) {
+			return;
+		}
 
-		const logDbError = (label: string, err: unknown) => {
-			const msg = err instanceof Error ? err.message : String(err);
-			console.error(`[repo] ${label}:`, msg);
-			console.error(`[repo] ${label} (full):`, err);
-		};
+		// Turso dulu: kalau gagal, D1 belum ditulis (hindari partial). D1 di-chunk di DbD1 (batas 100 parameter/query).
+		if (this.dbTurso) {
+			await this.dbTurso.insert(rows);
+		}
 
 		if (this.dbD1) {
-			tasks.push(this.dbD1.insert(rows).catch((err) => logDbError('D1 upsert error', err)));
-		} else if (rows.length > 0) {
+			await this.dbD1.insert(rows);
+		} else {
 			console.warn('[repo] D1 upsert skipped: env.DB_D1 tidak ada (cek binding wrangler / deploy)');
 		}
+	}
 
-		if (this.dbTurso) {
-			tasks.push(this.dbTurso.insert(rows).catch((err) => logDbError('Turso upsert error', err)));
+	/** Hapus semua baris `source` + `recorded_date === date` di D1 dan Turso. */
+	async deleteToday(source: string, date: string): Promise<void> {
+		const tasks: Promise<void>[] = [];
+		if (this.dbD1) {
+			tasks.push(this.dbD1.deleteToday(source, date));
 		}
-
+		if (this.dbTurso) {
+			tasks.push(this.dbTurso.deleteToday(source, date));
+		}
 		await Promise.all(tasks);
 	}
 
-	/** Hapus semua baris `source` + `recorded_date === date` di D1 dan Turso (dipakai `?refresh=true`). */
-	async deleteToday(source: string, date: string): Promise<void> {
-		const tasks: Promise<void>[] = [];
-
-		if (this.dbD1) {
-			tasks.push(
-				this.dbD1
-					.deleteToday(source, date)
-					.catch((err) => console.error('[repo] D1 deleteToday error:', err)),
-			);
-		}
-
+	/**
+	 * Jalur `?refresh=true`: hapus hari ini di Turso → paralel (Turso insert | D1 batch delete+insert+prune).
+	 * Hapus Turso dilakukan sebelum paralel; scrape harus sudah sukses di pemanggil.
+	 */
+	async refreshWrite(source: string, date: string, rows: PriceRow[]): Promise<void> {
 		if (this.dbTurso) {
-			tasks.push(
-				this.dbTurso
-					.deleteToday(source, date)
-					.catch((err) => console.error('[repo] Turso deleteToday error:', err)),
-			);
+			await this.dbTurso.deleteToday(source, date);
 		}
 
-		await Promise.all(tasks);
+		const parallel: Promise<void>[] = [];
+		if (this.dbTurso && rows.length > 0) {
+			parallel.push(this.dbTurso.insert(rows));
+		}
+		if (this.dbD1) {
+			parallel.push(this.dbD1.replaceTodayAndPrune(source, date, rows));
+		} else if (rows.length > 0) {
+			console.warn('[repo] D1 upsert skipped: env.DB_D1 tidak ada (cek binding wrangler / deploy)');
+		}
+		await Promise.all(parallel);
 	}
 
 	/** D1 saja: buang baris `source` dengan `recorded_date` sebelum `recordedDate` (setelah upsert hari ini). */

@@ -64,11 +64,7 @@ export async function fetchOrCache(
 	const repo = createPriceRepository(env);
 	const shouldRefresh = options.refresh === true;
 
-	// 1. Refresh paksa: hapus baris `source` + tanggal akses (hari ini, Jakarta) di D1 dan Turso.
-	if (shouldRefresh) {
-		await repo.deleteToday(source, today);
-	}
-
+	// Refresh tidak menghapus DB di sini — jika scrape gagal, cache hari ini tidak ikut terhapus (lihat refreshWrite).
 	const cached = shouldRefresh ? [] : await repo.getToday(source, today);
 	if (!shouldRefresh && cached.length > 0) {
 		const publicRows = toPublicRows(cached);
@@ -103,10 +99,13 @@ export async function fetchOrCache(
 		recordedDate: today,
 	});
 
-	// 4. Upsert (UNIQUE source + recorded_date + material + berat) — konkuren aman di level DB
-	await repo.insert(normalizedRows);
-	// 5. D1 “daily”: setelah hari ini tersimpan, buang baris `source` dengan recorded_date < hari ini (Turso tidak di-prune).
-	await repo.pruneD1HistoryBeforeRecordedDate(source, today);
+	// 4. Tulis DB: refresh = hapus hari ini + tulis + prune D1 (satu batch D1); biasa = upsert + prune D1.
+	if (shouldRefresh) {
+		await repo.refreshWrite(source, today, normalizedRows);
+	} else {
+		await repo.insert(normalizedRows);
+		await repo.pruneD1HistoryBeforeRecordedDate(source, today);
+	}
 	const publicRows = toPublicRows(normalizedRows);
 
 	return {
