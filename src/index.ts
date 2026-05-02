@@ -22,7 +22,7 @@ import treasuryFeature from './features/treasury';
 import logammuliaFeature from './features/logammulia';
 import emaskuFeature from './features/emasku';
 import { emaskuConfig } from './features/emasku/emasku.config';
-import hartadinataabadiFeature from './features/hartadinataabadi';
+import hartadinataabadiFeature, { hartadinataabadiConfig } from './features/hartadinataabadi';
 import galeri24Feature, { galeri24Config } from './features/galeri24';
 import sampoernagoldFeature from './features/sampoernagold';
 
@@ -37,6 +37,7 @@ const SUPPORTED_SOURCES = new Set([
 	hargaemasComConfig.name,
 	hargaemasNetConfig.name,
 	hargaemasOrgConfig.name,
+	hartadinataabadiConfig.name,
 ]);
 
 app.route('/', rootFeature);

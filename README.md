@@ -61,7 +61,7 @@ contoh response
 | treasury | ✅ | [`/treasury`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/treasury) | - | ❌ |
 | logammulia | ✅ | [`/logammulia`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/logammulia) | - | ❌ |
 | emasku | ✅ | [`/emasku`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/emasku) | [`/emasku/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/emasku/history) | ✅ |
-| hartadinataabadi | ✅ | [`/hartadinataabadi`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hartadinataabadi) | - | ❌ |
+| hartadinataabadi | ✅ | [`/hartadinataabadi`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hartadinataabadi) | [`/hartadinataabadi/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hartadinataabadi/history) | ✅ |
 | galeri24 | ✅ | [`/galeri24`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/galeri24) | [`/galeri24/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/galeri24/history) | ✅ |
 | sampoernagold | ✅ | [`/sampoernagold`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/sampoernagold) | - | ❌ |
 | bankbsi | ✅ | [`/bankbsi`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/bankbsi) | [`/bankbsi/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/bankbsi/history) | ✅ |
