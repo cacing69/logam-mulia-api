@@ -38,11 +38,6 @@ export class DbD1 implements PriceStore {
 			.where(and(eq(priceHistory.source, source), eq(priceHistory.recordedDate, date)));
 	}
 
-	/** Hapus semua baris `source` di D1 (refresh paksa — Turso tidak disentuh dari repo). */
-	async deleteAllRowsForSource(source: string): Promise<void> {
-		await this.db.delete(priceHistory).where(eq(priceHistory.source, source));
-	}
-
 	/** D1 daily: hapus riwayat `source` dengan `recorded_date` sebelum `beforeDate` (`YYYY-MM-DD`). */
 	async deleteSourceRecordedDateStrictlyBefore(source: string, beforeDate: string): Promise<void> {
 		await this.db

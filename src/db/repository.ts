@@ -19,19 +19,30 @@ export class PriceRepository {
 	}
 
 	async getToday(source: string, date: string): Promise<PriceRow[]> {
+		let d1Missed = false;
 		if (this.dbD1) {
 			try {
 				const fromD1 = await this.dbD1.getToday(source, date);
 				if (fromD1.length > 0) {
 					return fromD1;
 				}
+				d1Missed = true;
 			} catch (err) {
 				console.error(`[repo] getToday D1 error for ${source}:`, err);
+				d1Missed = true;
 			}
 		}
 		if (this.dbTurso) {
 			try {
-				return await this.dbTurso.getToday(source, date);
+				const fromTurso = await this.dbTurso.getToday(source, date);
+				// Turso punya hari ini tapi D1 kosong/error → response di-cache dari Turso tanpa scrape;
+				// tanpa backfill, D1 tidak pernah terisi (mis. upsert D1 gagal tapi Turso berhasil).
+				if (fromTurso.length > 0 && d1Missed) {
+					await this.dbD1!.insert(fromTurso).catch((err) => {
+						console.error('[repo] D1 backfill from Turso error:', err);
+					});
+				}
+				return fromTurso;
 			} catch (err) {
 				console.error(`[repo] getToday Turso error for ${source}:`, err);
 				return [];
@@ -58,6 +69,7 @@ export class PriceRepository {
 		await Promise.all(tasks);
 	}
 
+	/** Hapus semua baris `source` + `recorded_date === date` di D1 dan Turso (dipakai `?refresh=true`). */
 	async deleteToday(source: string, date: string): Promise<void> {
 		const tasks: Promise<void>[] = [];
 
@@ -78,19 +90,6 @@ export class PriceRepository {
 		}
 
 		await Promise.all(tasks);
-	}
-
-	/**
-	 * `?refresh=true`: kosongkan **seluruh** riwayat `source` hanya di **D1** (snapshot harian).
-	 * **Turso tidak dihapus** — riwayat panjang tetap di sana.
-	 */
-	async deleteSourceHistoryD1Only(source: string): Promise<void> {
-		if (!this.dbD1) {
-			return;
-		}
-		await this.dbD1.deleteAllRowsForSource(source).catch((err) => {
-			console.error('[repo] D1 deleteSourceHistoryD1Only error:', err);
-		});
 	}
 
 	/** D1 saja: buang baris `source` dengan `recorded_date` sebelum `recordedDate` (setelah upsert hari ini). */
