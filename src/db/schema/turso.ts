@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer, real, index } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer, real, index, uniqueIndex } from 'drizzle-orm/sqlite-core';
 
 export const priceHistory = sqliteTable(
 	'price_history',
@@ -12,9 +12,17 @@ export const priceHistory = sqliteTable(
 		sellPrice: integer('sell_price').notNull().default(0),
 		buybackPrice: integer('buyback_price'),
 		currency: text('currency').notNull().default('IDR'),
+		recordedDate: text('recorded_date').notNull(),
 		createdAt: text('created_at').notNull(),
 	},
 	(table) => [
-		index('idx_history_source_created').on(table.source, table.createdAt),
+		uniqueIndex('ux_price_history_source_day_material').on(
+			table.source,
+			table.recordedDate,
+			table.materialType,
+			table.weight,
+			table.weightUnit,
+		),
+		index('idx_history_source_recorded_date').on(table.source, table.recordedDate),
 	],
 );

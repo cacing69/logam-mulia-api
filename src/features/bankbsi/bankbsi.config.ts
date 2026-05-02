@@ -2,6 +2,9 @@ import { parseGramWeightLabel } from '../../lib/utils/parse-gram-weight-label';
 import type { ScrapingConfig } from '../../lib/types/scraper.types';
 import { raw } from '../../lib/types/scraper.types';
 
+/** Regex label berat di UI BSI (termasuk lewat Google Translate): `1 gram`, `1gram`, dll. */
+export const bankbsiGramWeightLabelRe = /^([\d.,]+)\s*gram$/i;
+
 export const bankbsiConfig: ScrapingConfig<
 	'buybackPrice' | 'sellPrice' | 'type' | 'info' | 'weight' | 'weightUnit'
 > = {
@@ -22,7 +25,9 @@ export const bankbsiConfig: ScrapingConfig<
 			},
 			postProcess: (rawData) => {
 				const label = (rawData.weight ?? rawData.weightUnit ?? '').trim();
-				const { weight, weightUnit } = parseGramWeightLabel(label);
+				const { weight, weightUnit } = parseGramWeightLabel(label, {
+					pattern: bankbsiGramWeightLabelRe,
+				});
 				return {
 					...rawData,
 					weight,

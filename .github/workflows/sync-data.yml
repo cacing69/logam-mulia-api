@@ -44,6 +44,7 @@ jobs:
 
           hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam?refresh=true" "anekalogam"
           hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/bankbsi?refresh=true" "bankbsi"
+          hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/brankaslm?refresh=true" "brankaslm"
 
           SUCCESS=$((TOTAL - FAILED))
           {

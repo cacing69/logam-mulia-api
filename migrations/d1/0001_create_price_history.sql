@@ -1,4 +1,7 @@
-CREATE TABLE IF NOT EXISTS price_history (
+-- Skema final + reset bersih (jalankan setelah hapus jejak migrasi / DB kosong).
+DROP TABLE IF EXISTS price_history;
+
+CREATE TABLE price_history (
 	id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
 	source TEXT NOT NULL,
 	material TEXT NOT NULL DEFAULT 'gold',
@@ -8,7 +11,9 @@ CREATE TABLE IF NOT EXISTS price_history (
 	sell_price INTEGER NOT NULL DEFAULT 0,
 	buyback_price INTEGER,
 	currency TEXT NOT NULL DEFAULT 'IDR',
-	created_at TEXT NOT NULL
+	recorded_date TEXT NOT NULL,
+	created_at TEXT NOT NULL,
+	UNIQUE (source, recorded_date, material_type, weight, weight_unit)
 );
 
-CREATE INDEX IF NOT EXISTS idx_history_source_created ON price_history (source, created_at);
+CREATE INDEX idx_history_source_recorded_date ON price_history (source, recorded_date);
