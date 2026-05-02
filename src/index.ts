@@ -17,7 +17,7 @@ import brankaslmFeature from './features/brankaslm';
 import { brankaslmConfig } from './features/brankaslm/brankaslm.config';
 import indogoldFeature from './features/indogold';
 import hargaemasNetFeature from './features/hargaemas-net';
-import hargaemasComFeature from './features/hargaemas-com';
+import hargaemasComFeature, { hargaemasComConfig } from './features/hargaemas-com';
 import treasuryFeature from './features/treasury';
 import logammuliaFeature from './features/logammulia';
 import emaskuFeature from './features/emasku';
@@ -34,6 +34,7 @@ const SUPPORTED_SOURCES = new Set([
 	cermatiConfig.name,
 	emaskuConfig.name,
 	galeri24Config.name,
+	hargaemasComConfig.name,
 ]);
 
 app.route('/', rootFeature);

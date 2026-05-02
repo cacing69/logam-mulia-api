@@ -46,7 +46,7 @@ contoh response
 | cermati | ✅ | [`/cermati`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/cermati) | [`/cermati/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/cermati/history) | ✅ |
 | indogold | ✅ | [`/indogold`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/indogold) | - | ❌ |
 | hargaemas-net | ✅ | [`/hargaemas-net`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-net) | - | ❌ |
-| hargaemas-com | ✅ | [`/hargaemas-com`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-com) | - | ❌ |
+| hargaemas-com | ✅ | [`/hargaemas-com`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-com) | [`/hargaemas-com/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-com/history) | ✅ |
 | treasury | ✅ | [`/treasury`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/treasury) | - | ❌ |
 | logammulia | ✅ | [`/logammulia`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/logammulia) | - | ❌ |
 | emasku | ✅ | [`/emasku`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/emasku) | [`/emasku/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/emasku/history) | ✅ |
