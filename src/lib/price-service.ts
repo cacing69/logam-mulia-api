@@ -61,9 +61,9 @@ export async function fetchOrCache(
 	const repo = createPriceRepository(env);
 	const shouldRefresh = options.refresh === true;
 
-	// 1. Refresh paksa: kosongkan riwayat `source` hanya di D1 (Turso tetap utuh).
+	// 1. Refresh paksa: hapus baris `source` + tanggal akses (hari ini, Jakarta) di D1 dan Turso.
 	if (shouldRefresh) {
-		await repo.deleteSourceHistoryD1Only(source);
+		await repo.deleteToday(source, today);
 	}
 
 	const cached = shouldRefresh ? [] : await repo.getToday(source, today);
