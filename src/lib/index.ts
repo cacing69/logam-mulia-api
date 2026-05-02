@@ -3,6 +3,8 @@ export { AxiosScraper } from './scrapers/axios-scraper';
 export { JinaScraper } from './scrapers/jina-scraper';
 export { defaultScrapingOptions } from './constants/scraper-options';
 export { parseCurrency } from './utils/currency';
+export { parseGramWeightLabel } from './utils/parse-gram-weight-label';
+export type { GramWeightLabelParseResult } from './utils/parse-gram-weight-label';
 export { normalizePriceRows } from './utils/price-response';
 export { getHistoryBySource, normalizePagination } from './history-service';
 export { createErrorResponse } from './http-error';

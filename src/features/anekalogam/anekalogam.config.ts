@@ -1,3 +1,4 @@
+import { parseGramWeightLabel } from '../../lib/utils/parse-gram-weight-label';
 import type { ScrapingConfig } from '../../lib/types/scraper.types';
 import { raw } from '../../lib/types/scraper.types';
 
@@ -7,6 +8,17 @@ const certicardMaterialTypeSelector =
 function parseCerticardMaterialType(text: string): string {
 	const match = text.match(/Harga berlaku untuk\s+(.+)/);
 	return match?.[1]?.trim() ?? 'Antam';
+}
+
+function postProcessCerticardRow(rawData: Record<string, string>) {
+	const label = (rawData.weight ?? rawData.weightUnit ?? '').trim();
+	const { weight, weightUnit } = parseGramWeightLabel(label);
+	return {
+		...rawData,
+		materialType: parseCerticardMaterialType(rawData.materialType ?? ''),
+		weight: weight || rawData.weight,
+		weightUnit: weightUnit || rawData.weightUnit,
+	};
 }
 
 export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'material' | 'materialType' | 'weight' | 'weightUnit' | 'info'> = {
@@ -43,13 +55,10 @@ export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'ma
 				material: raw('gold'),
 				materialType: certicardMaterialTypeSelector,
 				info: '#today-price > div.section-intro > p:nth-child(3)',
-				weight: raw(1),
-				weightUnit: raw('gr'),
+				weight: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(1) > td:nth-child(1) > a`,
+				weightUnit: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(1) > td:nth-child(1) > a`,
 			},
-			postProcess: (rawData) => ({
-				...rawData,
-				materialType: parseCerticardMaterialType(rawData.materialType ?? ''),
-			}),
+			postProcess: postProcessCerticardRow,
 		},
 		{
 			selector: {
@@ -58,13 +67,10 @@ export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'ma
 				material: raw('gold'),
 				materialType: certicardMaterialTypeSelector,
 				info: '#today-price > div.section-intro > p:nth-child(3)',
-				weight: raw(2),
-				weightUnit: raw('gr'),
+				weight: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(2) > td:nth-child(1) > a`,
+				weightUnit: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(2) > td:nth-child(1) > a`,
 			},
-			postProcess: (rawData) => ({
-				...rawData,
-				materialType: parseCerticardMaterialType(rawData.materialType ?? ''),
-			}),
+			postProcess: postProcessCerticardRow,
 		},
 		{
 			selector: {
@@ -73,13 +79,10 @@ export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'ma
 				material: raw('gold'),
 				materialType: certicardMaterialTypeSelector,
 				info: '#today-price > div.section-intro > p:nth-child(3)',
-				weight: raw(3),
-				weightUnit: raw('gr'),
+				weight: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(3) > td:nth-child(1) > a`,
+				weightUnit: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(3) > td:nth-child(1) > a`,
 			},
-			postProcess: (rawData) => ({
-				...rawData,
-				materialType: parseCerticardMaterialType(rawData.materialType ?? ''),
-			}),
+			postProcess: postProcessCerticardRow,
 		},
 		{
 			selector: {
@@ -88,13 +91,10 @@ export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'ma
 				material: raw('gold'),
 				materialType: certicardMaterialTypeSelector,
 				info: '#today-price > div.section-intro > p:nth-child(3)',
-				weight: raw(5),
-				weightUnit: raw('gr'),
+				weight: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(4) > td:nth-child(1) > a`,
+				weightUnit: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(4) > td:nth-child(1) > a`,
 			},
-			postProcess: (rawData) => ({
-				...rawData,
-				materialType: parseCerticardMaterialType(rawData.materialType ?? ''),
-			}),
+			postProcess: postProcessCerticardRow,
 		},
 		{
 			selector: {
@@ -103,13 +103,10 @@ export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'ma
 				material: raw('gold'),
 				materialType: certicardMaterialTypeSelector,
 				info: '#today-price > div.section-intro > p:nth-child(3)',
-				weight: raw(10),
-				weightUnit: raw('gr'),
+				weight: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(5) > td:nth-child(1) > a`,
+				weightUnit: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(5) > td:nth-child(1) > a`,
 			},
-			postProcess: (rawData) => ({
-				...rawData,
-				materialType: parseCerticardMaterialType(rawData.materialType ?? ''),
-			}),
+			postProcess: postProcessCerticardRow,
 		},
 		{
 			selector: {
@@ -118,13 +115,10 @@ export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'ma
 				material: raw('gold'),
 				materialType: certicardMaterialTypeSelector,
 				info: '#today-price > div.section-intro > p:nth-child(3)',
-				weight: raw(25),
-				weightUnit: raw('gr'),
+				weight: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(6) > td:nth-child(1) > a`,
+				weightUnit: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(6) > td:nth-child(1) > a`,
 			},
-			postProcess: (rawData) => ({
-				...rawData,
-				materialType: parseCerticardMaterialType(rawData.materialType ?? ''),
-			}),
+			postProcess: postProcessCerticardRow,
 		},
 		{
 			selector: {
@@ -133,13 +127,10 @@ export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'ma
 				material: raw('gold'),
 				materialType: certicardMaterialTypeSelector,
 				info: '#today-price > div.section-intro > p:nth-child(3)',
-				weight: raw(50),
-				weightUnit: raw('gr'),
+				weight: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(7) > td:nth-child(1) > a`,
+				weightUnit: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(7) > td:nth-child(1) > a`,
 			},
-			postProcess: (rawData) => ({
-				...rawData,
-				materialType: parseCerticardMaterialType(rawData.materialType ?? ''),
-			}),
+			postProcess: postProcessCerticardRow,
 		},
 		{
 			selector: {
@@ -148,13 +139,10 @@ export const anekalogamConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'ma
 				material: raw('gold'),
 				materialType: certicardMaterialTypeSelector,
 				info: '#today-price > div.section-intro > p:nth-child(3)',
-				weight: raw(100),
-				weightUnit: raw('gr'),
+				weight: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(8) > td:nth-child(1) > a`,
+				weightUnit: `body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table > tbody > tr:nth-child(8) > td:nth-child(1) > a`,
 			},
-			postProcess: (rawData) => ({
-				...rawData,
-				materialType: parseCerticardMaterialType(rawData.materialType ?? ''),
-			}),
+			postProcess: postProcessCerticardRow,
 		},
 	],
 };

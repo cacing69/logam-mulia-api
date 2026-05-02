@@ -139,4 +139,5 @@ Deployment project ini di Vercel berstatus **paused** (tidak lagi melayani reque
 | 22 | [Sampoerna Gold](https://sampoernagold.com/) | new |
 
 Jika ada referensi website harga emas lain, silakan tambahkan komentar disini : [List of websites that can be scraped for data #10](https://github.com/cacing69/logam-mulia-api/issues/10).
-Kalau ada tambahan listing, saran, atau kontribusi lain, bisa disampai via [Issue](https://github.com/cacing69/logam-mulia-api/issues).
+
+Kalau ada tambahan listing, saran, atau kontribusi lain, bisa disampaikan via [Issue](https://github.com/cacing69/logam-mulia-api/issues).

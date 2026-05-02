@@ -13,6 +13,8 @@ app.get('/', async (c) => {
 			buybackPrice: parseCurrency(raw.buybackPrice),
 			price: parseCurrency(raw.sellPrice),
 			info: raw.info,
+			weight: raw.weight ? Number(raw.weight) : 1,
+			weightUnit: raw.weightUnit || 'gr',
 		}),
 		defaultScrapingOptions
 	);
