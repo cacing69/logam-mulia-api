@@ -21,6 +21,7 @@ import hargaemasComFeature from './features/hargaemas-com';
 import treasuryFeature from './features/treasury';
 import logammuliaFeature from './features/logammulia';
 import emaskuFeature from './features/emasku';
+import { emaskuConfig } from './features/emasku/emasku.config';
 import hartadinataabadiFeature from './features/hartadinataabadi';
 import galeri24Feature from './features/galeri24';
 import sampoernagoldFeature from './features/sampoernagold';
@@ -30,6 +31,7 @@ const SUPPORTED_SOURCES = new Set([
 	anekalogamConfig.name,
 	bankbsiConfig.name,
 	brankaslmConfig.name,
+	emaskuConfig.name,
 ]);
 
 app.route('/', rootFeature);

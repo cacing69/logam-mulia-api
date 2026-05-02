@@ -49,7 +49,7 @@ contoh response
 | hargaemas-com | ✅ | [`/hargaemas-com`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-com) | - | ❌ |
 | treasury | ✅ | [`/treasury`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/treasury) | - | ❌ |
 | logammulia | ✅ | [`/logammulia`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/logammulia) | - | ❌ |
-| emasku | ✅ | [`/emasku`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/emasku) | - | ❌ |
+| emasku | ✅ | [`/emasku`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/emasku) | [`/emasku/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/emasku/history) | ✅ |
 | hartadinataabadi | ✅ | [`/hartadinataabadi`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hartadinataabadi) | - | ❌ |
 | galeri24 | ✅ | [`/galeri24`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/galeri24) | - | ❌ |
 | sampoernagold | ✅ | [`/sampoernagold`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/sampoernagold) | - | ❌ |
@@ -133,7 +133,7 @@ Deployment project ini di Vercel berstatus **paused** (tidak lagi melayani reque
 | 16 | [inbizia](https://www.inbizia.com/harga-emas-hari-ini-287964) | deprecated |
 | 17 | [Harga-Emas.com](https://www.hargaemas.com/) | migrated |
 | 18 | [Treasury](https://treasury.id/) | migrated |
-| 19 | [EmasKu](https://www.emasku.co.id/id) | new |
+| 19 | [EmasKu](https://www.emasku.co.id/id/gold-price) | migrated |
 | 20 | [Hartadinata Abadi](https://hartadinataabadi.co.id/) | new |
 | 21 | [Galeri 24](https://galeri24.co.id/harga-emas) | new |
 | 22 | [Sampoerna Gold](https://sampoernagold.com/) | new |
