@@ -50,6 +50,7 @@ jobs:
           hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-net?refresh=true" "hargaemas-net"
           hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-org?refresh=true" "hargaemas-org"
           hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/hartadinataabadi?refresh=true" "hartadinataabadi"
+          hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/indogold?refresh=true" "indogold"
           hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/emasku?refresh=true" "emasku"
           hit "https://logam-mulia-api.iamutaki.workers.dev/api/prices/galeri24?refresh=true" "galeri24"
 

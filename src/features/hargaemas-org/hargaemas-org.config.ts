@@ -1,6 +1,15 @@
 import { raw, type ScrapingConfig } from '../../lib/types/scraper.types';
 
-/** Tabel LM Antam/Pegadaian — hash CSS modules bisa berubah; pakai substring class. */
+/**
+ * Tabel LM Antam/Pegadaian.
+ *
+ * **Robust:** jangkar ke `table[class*="HistoryAntamTable_table"]` dan `td[class*="…"]`.
+ * **Hindari:** rantai dari `body` ke `.HistoryHargaPage_*__XFVpA` — sufiks `__…` adalah hash
+ * CSS Modules Next.js; bisa berubah saat deploy sehingga selector berhenti cocok walau DOM sama.
+ *
+ * Setara aman untuk harga Antam baris 1, kolom 2:
+ * `table[class*="HistoryAntamTable_table"] tbody tr:nth-child(1) td:nth-child(2) p`
+ */
 const antamTable = 'table[class*="HistoryAntamTable_table"]';
 
 function postProcessRow(rawData: Record<string, string>) {
