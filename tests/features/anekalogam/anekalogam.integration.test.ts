@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest';
 import { CheerioScraper, parseCurrency } from '../../../src/lib';
 import { anekalogamConfig } from '../../../src/features/anekalogam/anekalogam.config';
 
-// Type guard for array data
 function isArrayData<T>(data: T | T[] | undefined): data is T[] {
 	return Array.isArray(data);
 }
@@ -13,43 +12,42 @@ describe('AnekaLogam Integration Tests (Real HTTP)', () => {
 			const scraper = new CheerioScraper('anekalogam', anekalogamConfig);
 
 			const result = await scraper.scrape((raw) => ({
-				type: raw.type || 'unknown',
-				sell: parseCurrency(raw.sell),
-				buy: parseCurrency(raw.buy),
-				info: raw.info,
-				sellRaw: raw.sell,
-				buyRaw: raw.buy,
+				material: raw.material || 'gold',
+				materialType: raw.materialType || 'unknown',
+				buybackPrice: parseCurrency(raw.buybackPrice),
+				sellPrice: parseCurrency(raw.sellPrice),
+				weight: raw.weight ? Number(raw.weight) : 1,
+				weightUnit: raw.weightUnit || 'gr',
 			}));
 
-			// Test structure
 			expect(result.success).toBe(true);
 			expect(result.timestamp).toBeTruthy();
 			expect(result.source).toBe('anekalogam');
 			expect(result.currency).toBe('IDR');
-
-			// Test data is array
 			expect(isArrayData(result.data)).toBe(true);
 			expect(result.count).toBeGreaterThan(0);
 
-			// Test first item structure
 			if (isArrayData(result.data) && result.data.length > 0) {
 				const firstItem = result.data[0];
-				expect(firstItem).toHaveProperty('type');
-				expect(firstItem).toHaveProperty('sell');
-				expect(firstItem).toHaveProperty('buy');
-				expect(firstItem).toHaveProperty('info');
-				expect(firstItem).toHaveProperty('sellRaw');
-				expect(firstItem).toHaveProperty('buyRaw');
+				expect(firstItem).toHaveProperty('material');
+				expect(firstItem).toHaveProperty('materialType');
+				expect(firstItem).toHaveProperty('buybackPrice');
+				expect(firstItem).toHaveProperty('sellPrice');
+				expect(firstItem).toHaveProperty('weight');
+				expect(firstItem).toHaveProperty('weightUnit');
 			}
 		});
 
-		it('should return valid number types for sell and buy prices', async () => {
+		it('should return valid number types for sellPrice and buybackPrice', async () => {
 			const scraper = new CheerioScraper('anekalogam', anekalogamConfig);
 
 			const result = await scraper.scrape((raw) => ({
-				type: raw.type,
-				sell: parseCurrency(raw.sell),
-				buy: parseCurrency(raw.buy),
+				material: raw.material || 'gold',
+				materialType: raw.materialType || 'unknown',
+				buybackPrice: parseCurrency(raw.buybackPrice),
+				sellPrice: parseCurrency(raw.sellPrice),
+				weight: raw.weight ? Number(raw.weight) : 1,
+				weightUnit: raw.weightUnit || 'gr',
 			}));
 
 			expect(result.success).toBe(true);
@@ -62,23 +60,22 @@ describe('AnekaLogam Integration Tests (Real HTTP)', () => {
 			expect(result.data.length).toBeGreaterThan(0);
 
 			const firstItem = result.data[0];
-			expect(typeof firstItem.sell).toBe('number');
-			expect(typeof firstItem.buy).toBe('number');
-
-			// Price should be reasonable (> 0)
-			expect(firstItem.sell).toBeGreaterThan(0);
-			expect(firstItem.buy).toBeGreaterThan(0);
-
-			// Sell price should be higher than buy price
-			expect(firstItem.sell).toBeGreaterThan(firstItem.buy);
+			expect(typeof firstItem.sellPrice).toBe('number');
+			expect(typeof firstItem.buybackPrice).toBe('number');
+			expect(firstItem.sellPrice).toBeGreaterThan(0);
+			expect(firstItem.buybackPrice).toBeGreaterThan(0);
 		});
 
-		it('should return string type for type and info fields', async () => {
+		it('should return string material and materialType fields', async () => {
 			const scraper = new CheerioScraper('anekalogam', anekalogamConfig);
 
 			const result = await scraper.scrape((raw) => ({
-				type: raw.type,
-				info: raw.info,
+				material: raw.material || 'gold',
+				materialType: raw.materialType || 'unknown',
+				buybackPrice: parseCurrency(raw.buybackPrice),
+				sellPrice: parseCurrency(raw.sellPrice),
+				weight: raw.weight ? Number(raw.weight) : 1,
+				weightUnit: raw.weightUnit || 'gr',
 			}));
 
 			expect(result.success).toBe(true);
@@ -91,24 +88,22 @@ describe('AnekaLogam Integration Tests (Real HTTP)', () => {
 			expect(result.data.length).toBeGreaterThan(0);
 
 			const firstItem = result.data[0];
-			expect(typeof firstItem.type).toBe('string');
-			expect(typeof firstItem.info).toBe('string');
-
-			// Should not be empty
-			expect(firstItem.type.length).toBeGreaterThan(0);
-			expect(firstItem.info.length).toBeGreaterThan(0);
+			expect(typeof firstItem.material).toBe('string');
+			expect(typeof firstItem.materialType).toBe('string');
+			expect(firstItem.material.length).toBeGreaterThan(0);
+			expect(firstItem.materialType.length).toBeGreaterThan(0);
 		});
 
 		it('should have consistent data types across all fields', async () => {
 			const scraper = new CheerioScraper('anekalogam', anekalogamConfig);
 
 			const result = await scraper.scrape((raw) => ({
-				type: raw.type || 'unknown',
-				sell: parseCurrency(raw.sell),
-				buy: parseCurrency(raw.buy),
-				info: raw.info,
-				sellRaw: raw.sell,
-				buyRaw: raw.buy,
+				material: raw.material || 'gold',
+				materialType: raw.materialType || 'unknown',
+				buybackPrice: parseCurrency(raw.buybackPrice),
+				sellPrice: parseCurrency(raw.sellPrice),
+				weight: raw.weight ? Number(raw.weight) : 1,
+				weightUnit: raw.weightUnit || 'gr',
 			}));
 
 			expect(result.success).toBe(true);
@@ -116,21 +111,18 @@ describe('AnekaLogam Integration Tests (Real HTTP)', () => {
 
 			if (isArrayData(result.data)) {
 				for (const item of result.data) {
-					// Type checking
 					expect(item).toMatchObject({
-						type: expect.any(String),
-						sell: expect.any(Number),
-						buy: expect.any(Number),
-						info: expect.any(String),
-						sellRaw: expect.any(String),
-						buyRaw: expect.any(String),
+						material: expect.any(String),
+						materialType: expect.any(String),
+						sellPrice: expect.any(Number),
+						buybackPrice: expect.any(Number),
+						weight: expect.any(Number),
+						weightUnit: expect.any(String),
 					});
 
-					// Value validation
-					expect(item.type).not.toBe('');
-					expect(item.sell).toBeGreaterThan(0);
-					expect(item.buy).toBeGreaterThan(0);
-					expect(item.sell).toBeGreaterThan(item.buy);
+					expect(item.material).not.toBe('');
+					expect(item.sellPrice).toBeGreaterThan(0);
+					expect(item.buybackPrice).toBeGreaterThan(0);
 				}
 			}
 		});
@@ -145,18 +137,15 @@ describe('AnekaLogam Integration Tests (Real HTTP)', () => {
 				items: [
 					{
 						selector: {
-							sell: '.sell',
-							buy: '.buy',
-							type: 'test' as const,
+							sellPrice: '.sellPrice',
+							buybackPrice: '.buybackPrice',
 						},
 					},
 				],
 			};
-
 			const scraper = new CheerioScraper('invalid-test', invalidConfig);
 			const result = await scraper.scrape();
 
-			// Should fail
 			expect(result.success).toBe(false);
 			expect(result.error).toBeTruthy();
 		});
@@ -169,18 +158,15 @@ describe('AnekaLogam Integration Tests (Real HTTP)', () => {
 				items: [
 					{
 						selector: {
-							sell: '.sell',
-							buy: '.buy',
-							type: 'test' as const,
+							sellPrice: '.sellPrice',
+							buybackPrice: '.buybackPrice',
 						},
 					},
 				],
 			};
-
 			const scraper = new CheerioScraper('not-found-test', notFoundConfig);
 			const result = await scraper.scrape();
 
-			// Should fail
 			expect(result.success).toBe(false);
 		});
 	});

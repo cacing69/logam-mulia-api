@@ -10,14 +10,14 @@ describe('Lakuemas Integration Tests', () => {
 
 	it('should parse jual and beli prices from jina markdown content', async () => {
 		const mockMarkdown = `
-	# Grafik Harga Jual & Beli Emas Hari Ini Dari Lakuemas
+		# Grafik Harga Jual & Beli Emas Hari Ini Dari Lakuemas
 
-	## HARGA BELI EMAS HARI INI
-	### **IDR 2,639,000,-** /  Gram
+		## HARGA BELI EMAS HARI INI
+		### **IDR 2,639,000,-** /  Gram
 
-	## HARGA JUAL EMAS HARI INI
-	### **IDR 2,566,000,-** /  Gram
-	`;
+		## HARGA JUAL EMAS HARI INI
+		### **IDR 2,566,000,-** /  Gram
+		`;
 
 		vi.mocked(global.fetch).mockResolvedValueOnce({
 			ok: true,
@@ -34,9 +34,11 @@ describe('Lakuemas Integration Tests', () => {
 		expect(result.data).toHaveLength(1);
 
 		const firstItem = result.data[0];
-		expect(firstItem.sellRaw).toBe('IDR 2,566,000,-');
-		expect(firstItem.buyRaw).toBe('IDR 2,639,000,-');
-		expect(firstItem.sell).toBe(2566000);
-		expect(firstItem.buy).toBe(2639000);
+		expect(firstItem.material).toBe('gold');
+		expect(firstItem.materialType).toBe('lakuemas');
+		expect(firstItem.sellPrice).toBe(2566000);
+		expect(firstItem.buybackPrice).toBe(2639000);
+		expect(firstItem.weight).toBe(1);
+		expect(firstItem.weightUnit).toBe('gr');
 	});
 });
