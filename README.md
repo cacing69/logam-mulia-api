@@ -151,17 +151,7 @@ Status:
 
 ## Sponsor & dukungan
 
-API ini gratis dan open source. Jika proyek ini membantu pekerjaan atau produk Anda, pertimbangkan untuk mendukung pengembangan dan biaya infrastruktur (Workers, basis data, waktu perawatan).
-
-Di GitHub, tombol **Sponsor** pada halaman repository membaca konfigurasi dari [`.github/FUNDING.yml`](./.github/FUNDING.yml). Anda juga bisa membuka tautan berikut secara langsung:
-
-| Platform | Tautan |
-| -------- | ------ |
-| GitHub Sponsors | [github.com/sponsors/cacing69](https://github.com/sponsors/cacing69) |
-| Ko-fi | [ko-fi.com/cacing69](https://ko-fi.com/cacing69) |
-| Liberapay | [liberapay.com/cacing69](https://liberapay.com/cacing69) |
-| Saweria | [saweria.co/cacing69](https://saweria.co/cacing69) |
-| Trakteer | [trakteer.id/cacing69/tip](https://trakteer.id/cacing69/tip) |
+API ini gratis dan open source. Jika proyek ini membantu pekerjaan atau produk Anda, pertimbangkan untuk mendukung pengembangan.
 
 ### Program iklan (GitAds)
 
