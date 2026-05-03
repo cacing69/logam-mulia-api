@@ -1,54 +1,31 @@
-
 # Logam Mulia API
 
-Hobby only. Scraping beberapa website yang menyediakan informasi harga jual/beli logam mulia emas di Indonesia, dont worry to make pull request
+> API publik (gratis & open-source) untuk mengambil data harga jual / beli logam mulia (emas) di Indonesia, hasil _scraping_ dari berbagai website terpercaya.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-F38020?logo=cloudflare&logoColor=white)](https://workers.cloudflare.com/)
+[![Hono](https://img.shields.io/badge/Hono-Framework-E36002?logo=hono&logoColor=white)](https://hono.dev/)
+[![Issues](https://img.shields.io/github/issues/cacing69/logam-mulia-api)](https://github.com/cacing69/logam-mulia-api/issues)
+[![Stars](https://img.shields.io/github/stars/cacing69/logam-mulia-api?style=social)](https://github.com/cacing69/logam-mulia-api/stargazers)
+
+---
+
+## Tentang Proyek
+
+**Logam Mulia API** adalah _hobby project_ yang menyediakan _endpoint_ ringan untuk mengambil informasi harga emas dari berbagai sumber di Indonesia dalam format JSON yang konsisten. Cocok digunakan untuk dasbor harga emas, aplikasi tabungan emas, _bot_ notifikasi, atau riset data.
+
+## Base URL
 
 ```bash
-# inactive
-https://logam-mulia-api.vercel.app/
+https://logam-mulia-api.iamutaki.workers.dev
 ```
 
-```bash
-# active
-https://logam-mulia-api.iamutaki.workers.dev/
-```
-contoh response
+> Deployment lama di Vercel sudah **inactive** dan API sepenuhnya dilayani melalui Cloudflare Worker. Lihat bagian [Migrasi dari Vercel ke Cloudflare Worker](#migrasi-dari-vercel-ke-cloudflare-worker) untuk detailnya.
 
-```json
-// old response (deprecated)
-{
-  "data": [
-    {
-      "sell": 900000,
-      "buy": 850000,
-      "tipe": "antam",
-    }
-  ]
-}
+## Endpoint yang Tersedia
 
-// new response
-{
-  "data": [
-    {
-      "sellPrice": 900000,
-      "buybackPrice": 850000,
-      "materialType": "antam",
-      "weight": 1,
-      "weightUnit": "gr"
-    }
-  ]
-}
-
-```
-
-## GitAds Sponsored
-
-[![Sponsored by GitAds](https://gitads.dev/v1/ad-serve?source=cacing69/logam-mulia-api@github)](https://gitads.dev/v1/ad-track?source=cacing69/logam-mulia-api@github)
-
-## Endpoint Available Saat Ini (Cloudflare Worker)
-
-| Source | Status | Endpoint | History Endpoint | Cached |
-| ------ | ------ | -------- | ---------------- | ------ |
+| Source | Status | Endpoint Terkini | Endpoint History | Cached |
+| ------ | :----: | ---------------- | ---------------- | :----: |
 | anekalogam | ✅ | [`/anekalogam`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam) | [`/anekalogam/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam/history) | ✅ |
 | hargaemas-org | ✅ | [`/hargaemas-org`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-org) | [`/hargaemas-org/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/hargaemas-org/history) | ✅ |
 | lakuemas | ✅ | [`/lakuemas`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/lakuemas) | [`/lakuemas/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/lakuemas/history) | ✅ |
@@ -68,98 +45,141 @@ contoh response
 | brankaslm | ✅ | [`/brankaslm`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/brankaslm) | [`/brankaslm/history`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/brankaslm/history) | ✅ |
 | pegadaian | ✅ | [`/pegadaian`](https://logam-mulia-api.iamutaki.workers.dev/api/prices/pegadaian) | - | ❌ |
 
-## Available params on history
+## Format Response
 
-| Param | Type | Notes |
-| ----- | ---- | ----- |
-| page | int | Pagination page number |
-| length | int | Pagination length (max 1000) |
-| weight | int | Filter by weight |
-| materialType | string | Filter by material type (e.g. `ANTAM`, `UBS`, `GALERI 24`) |
+Format _response_ baru sudah konsisten dan menyertakan informasi berat serta satuan, sehingga lebih mudah diolah di sisi klien.
+
+```json
+// Response baru (current)
+{
+  "data": [
+    {
+      "sellPrice": 900000,
+      "buybackPrice": 850000,
+      "materialType": "antam",
+      "weight": 1,
+      "weightUnit": "gr"
+    }
+  ]
+}
+```
+
+### Response lama (deprecated)
+
+> Format ini sudah tidak digunakan lagi dan hanya disertakan untuk referensi historis.
+
+```json
+{
+  "data": [
+    {
+      "sell": 900000,
+      "buy": 850000,
+      "tipe": "antam"
+    }
+  ]
+}
+```
+
+## Contoh Penggunaan
 
 ```bash
-# Endpoint (latest price)
+# Ambil harga terbaru
 curl -X GET "https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam"
 ```
 
 ```bash
-# Endpoint (force refresh / skip cache)
+# Force refresh / lewati cache harian
 curl -X GET "https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam?refresh=true"
 ```
 
 ```bash
-# History (default pagination: page=1, length=20)
+# History (default: page=1, length=20)
 curl -X GET "https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam/history"
 ```
 
 ```bash
-# History with pagination
+# History dengan pagination
 curl -X GET "https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam/history?page=1&length=20"
 ```
 
 ```bash
-# History with weight filter
+# History dengan filter berat
 curl -X GET "https://logam-mulia-api.iamutaki.workers.dev/api/prices/anekalogam/history?weight=10"
 ```
 
 ```bash
-# History with materialType filter
+# History dengan filter materialType
 curl -X GET "https://logam-mulia-api.iamutaki.workers.dev/api/prices/galeri24/history?materialType=ANTAM"
 ```
 
 ```bash
-# History with combined filters
+# History dengan filter gabungan
 curl -X GET "https://logam-mulia-api.iamutaki.workers.dev/api/prices/galeri24/history?materialType=ANTAM&weight=1"
 ```
 
-Keterangan:
+## Parameter Query (History)
 
-- `Daily Cached` menggunakan Cloudflare D1
-- `History` menggunakan Turso
-- Akses D1: [Cloudflare Dashboard - D1](https://developers.cloudflare.com/d1/get-started/)
-- Akses Turso: [Turso Dashboard](https://app.turso.tech/)
+| Param | Tipe | Keterangan |
+| ----- | ---- | ---------- |
+| `page` | int | Nomor halaman pagination. |
+| `length` | int | Jumlah item per halaman (maks. `1000`). |
+| `weight` | int | Filter berdasarkan berat (mis. `1`, `5`, `10`). |
+| `materialType` | string | Filter berdasarkan jenis material (mis. `ANTAM`, `UBS`, `GALERI 24`). |
 
-## Progress Migration (On Progress)
+## Tech Stack
 
-Rewrite dan migrasi API sedang berjalan dari Vercel ke Cloudflare Worker.
+- **Runtime:** [Cloudflare Workers](https://workers.cloudflare.com/)
+- **Framework:** [Hono](https://hono.dev/)
 
-Base URL Cloudflare Worker:
+## Roadmap & Sumber Berikutnya
 
-- [https://logam-mulia-api.iamutaki.workers.dev](https://logam-mulia-api.iamutaki.workers.dev)
+Kami punya daftar panjang website yang **akan diintegrasikan** ke dalam API ini. Daftar lengkapnya beserta status pengerjaan dapat dilihat di sini:
 
-## Alasan migrasi ke Cloudflare Worker
+- **[Lihat `waiting-list.md`](./waiting-list.md)** — daftar antrean sumber data berikutnya beserta status (`[x]` selesai, `[ ]` belum dikerjakan).
+- Punya referensi sumber baru? Tambahkan komentar di issue: [List of websites that can be scraped for data #10](https://github.com/cacing69/logam-mulia-api/issues/10).
 
-Deployment project ini di Vercel berstatus **paused** (tidak lagi melayani request), seperti tangkapan layar berikut. Karena itu API dipindahkan ke **Cloudflare Worker** supaya endpoint tetap aktif dan bisa diakses publik.
+## Migrasi dari Vercel ke Cloudflare Worker
+
+API ini sebelumnya berjalan di **Vercel**, namun saat ini deployment Vercel berstatus **paused** (tidak lagi melayani request). Karena itu, seluruh endpoint dipindahkan ke **Cloudflare Worker** agar tetap aktif dan dapat diakses publik.
 
 ![Vercel deployment paused — alasan migrasi ke Cloudflare Worker](images/vercel_paused.png)
 
-### List website yang tersedia
+Status:
 
-| No | URL | Status |
-| -- | --- | ------ |
-| 1 | [Aneka Logam](https://www.anekalogam.co.id/id) | migrated |
-| 2 | [Logam Mulia](https://www.logammulia.com/id) | migrated |
-| 3 | [Harga-Emas.org](https://harga-emas.org) | migrated |
-| 4 | [Laku Emas](https://www.lakuemas.com/harga) | migrated |
-| 5 | [Tokopedia Emas](https://www.tokopedia.com/emas/harga-hari-ini/) | deprecated |
-| 6 | [Pegadaian](https://sahabat.pegadaian.co.id/harga-emas) | migrated |
-| 7 | [Sakumas](https://sakumas.asastapayment.com/) | migrated |
-| 8 | [Koin Works](https://koinworks.com/harga-emas-hari-ini/) | deprecated |
-| 9 | [Semar Nusantara](https://goldprice.semar.co.id/home/multi/smg_press/smg) | paused: mapping response |
-| 10 | [Kurs Dolar](http://kurs.dollar.web.id/harga-emas-hari-ini.php) | migrated |
-| 11 | [Cermati](https://www.cermati.com/artikel/harga-emas-hari-ini) | migrated |
-| 12 | [Bank Syariah Indonesia](https://www.bankbsi.co.id/) | migrated |
-| 13 | [Brankas Logam Mulia](https://www.brankaslm.com/dashboard) | migrated |
-| 14 | [Indo Gold](https://www.indogold.id/) | migrated |
-| 15 | [Harga-Emas.net](https://harga-emas.net/) | migrated |
-| 16 | [inbizia](https://www.inbizia.com/harga-emas-hari-ini-287964) | deprecated |
-| 17 | [Harga-Emas.com](https://www.hargaemas.com/) | migrated |
-| 18 | [Treasury](https://treasury.id/) | migrated |
-| 19 | [EmasKu](https://www.emasku.co.id/id/gold-price) | migrated |
-| 20 | [Hartadinata Abadi](https://hartadinataabadi.co.id/) | new |
-| 21 | [Galeri 24](https://galeri24.co.id/harga-emas) | new |
-| 22 | [Sampoerna Gold](https://sampoernagold.com/) | new |
+- ❌ `https://logam-mulia-api.vercel.app/` — _inactive_
+- ✅ `https://logam-mulia-api.iamutaki.workers.dev/` — _active_
 
-Jika ada referensi website harga emas lain, silakan tambahkan komentar disini : [List of websites that can be scraped for data #10](https://github.com/cacing69/logam-mulia-api/issues/10).
+## Sponsor & dukungan
 
-Kalau ada tambahan listing, saran, atau kontribusi lain, bisa disampaikan via [Issue](https://github.com/cacing69/logam-mulia-api/issues).
+API ini gratis dan open source. Jika proyek ini membantu pekerjaan atau produk Anda, pertimbangkan untuk mendukung pengembangan dan biaya infrastruktur (Workers, basis data, waktu perawatan).
+
+Di GitHub, tombol **Sponsor** pada halaman repository membaca konfigurasi dari [`.github/FUNDING.yml`](./.github/FUNDING.yml). Anda juga bisa membuka tautan berikut secara langsung:
+
+| Platform | Tautan |
+| -------- | ------ |
+| GitHub Sponsors | [github.com/sponsors/cacing69](https://github.com/sponsors/cacing69) |
+| Ko-fi | [ko-fi.com/cacing69](https://ko-fi.com/cacing69) |
+| Liberapay | [liberapay.com/cacing69](https://liberapay.com/cacing69) |
+| Saweria | [saweria.co/cacing69](https://saweria.co/cacing69) |
+| Trakteer | [trakteer.id/cacing69/tip](https://trakteer.id/cacing69/tip) |
+
+### Program iklan (GitAds)
+
+Repository ini berpartisipasi dalam [GitAds](https://gitads.dev/) — iklan sponsor ditampilkan melalui _badge_ di bawah (bukan konten dalam kode API).
+
+[![Sponsored by GitAds](https://gitads.dev/v1/ad-serve?source=cacing69/logam-mulia-api@github)](https://gitads.dev/v1/ad-track?source=cacing69/logam-mulia-api@github)
+
+## Kontribusi
+
+Kontribusi dalam bentuk apa pun sangat kami hargai! Anda dapat membantu dengan cara:
+
+1. Memberi _star_ pada repository ini.
+2. Menambahkan sumber baru dari [`waiting-list.md`](./waiting-list.md) — tinggal pilih item yang masih `[ ]`, lalu kirim _pull request_.
+3. Melaporkan _bug_ atau memberi saran melalui [Issues](https://github.com/cacing69/logam-mulia-api/issues).
+4. Memperbaiki dokumentasi atau contoh penggunaan.
+
+Sebelum mengirim PR, mohon pastikan kode lulus _test_ lokal (`npm run test`) dan ikuti _style_ yang sudah ada di repo. Terima kasih banyak atas waktu dan kontribusi Anda — proyek ini berkembang berkat dukungan komunitas!
+
+## Lisensi
+
+Proyek ini dirilis di bawah lisensi [MIT](LICENSE).
