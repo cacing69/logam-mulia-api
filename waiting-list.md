@@ -46,6 +46,8 @@
 
 - [x] <https://www.logammulia.com/id>
 
+## Blocked
+
 ---
 
 Tertarik membantu? Kontribusi dalam bentuk apapun sangat kami hargai — mulai dari menambahkan sumber baru, mengintegrasikan website yang masih dalam antrean, memperbaiki bug, hingga meningkatkan dokumentasi. Silakan buka _issue_ atau kirim _pull request_ kapan saja. Terima kasih banyak atas waktu, ide, dan kontribusi Anda untuk membuat proyek ini semakin bermanfaat!
