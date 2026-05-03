@@ -14,6 +14,12 @@
 
 **Logam Mulia API** adalah _hobby project_ yang menyediakan _endpoint_ ringan untuk mengambil informasi harga emas dari berbagai sumber di Indonesia dalam format JSON yang konsisten. Cocok digunakan untuk dasbor harga emas, aplikasi tabungan emas, _bot_ notifikasi, atau riset data.
 
+### Program iklan (GitAds)
+
+Repository ini berpartisipasi dalam [GitAds](https://gitads.dev/) - iklan sponsor ditampilkan melalui _badge_ di bawah (bukan konten dalam kode API).
+
+[![Sponsored by GitAds](https://gitads.dev/v1/ad-serve?source=cacing69/logam-mulia-api@github)](https://gitads.dev/v1/ad-track?source=cacing69/logam-mulia-api@github)
+
 ## Base URL
 
 ```bash
@@ -152,12 +158,6 @@ Status:
 ## Sponsor & dukungan
 
 API ini gratis dan open source. Jika proyek ini membantu pekerjaan atau produk Anda, pertimbangkan untuk mendukung pengembangan.
-
-### Program iklan (GitAds)
-
-Repository ini berpartisipasi dalam [GitAds](https://gitads.dev/) - iklan sponsor ditampilkan melalui _badge_ di bawah (bukan konten dalam kode API).
-
-[![Sponsored by GitAds](https://gitads.dev/v1/ad-serve?source=cacing69/logam-mulia-api@github)](https://gitads.dev/v1/ad-track?source=cacing69/logam-mulia-api@github)
 
 ## Kontribusi
 
