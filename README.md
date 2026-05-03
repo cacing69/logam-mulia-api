@@ -135,19 +135,19 @@ curl -X GET "https://logam-mulia-api.iamutaki.workers.dev/api/prices/galeri24/hi
 
 Kami punya daftar panjang website yang **akan diintegrasikan** ke dalam API ini. Daftar lengkapnya beserta status pengerjaan dapat dilihat di sini:
 
-- **[Lihat `waiting-list.md`](./waiting-list.md)** — daftar antrean sumber data berikutnya beserta status (`[x]` selesai, `[ ]` belum dikerjakan).
+- **[`waiting-list.md`](./waiting-list.md)** - daftar antrean sumber data berikutnya beserta status (`[x]` selesai, `[ ]` belum dikerjakan).
 - Punya referensi sumber baru? Tambahkan komentar di issue: [List of websites that can be scraped for data #10](https://github.com/cacing69/logam-mulia-api/issues/10).
 
 ## Migrasi dari Vercel ke Cloudflare Worker
 
 API ini sebelumnya berjalan di **Vercel**, namun saat ini deployment Vercel berstatus **paused** (tidak lagi melayani request). Karena itu, seluruh endpoint dipindahkan ke **Cloudflare Worker** agar tetap aktif dan dapat diakses publik.
 
-![Vercel deployment paused — alasan migrasi ke Cloudflare Worker](images/vercel_paused.png)
+![Vercel deployment paused - alasan migrasi ke Cloudflare Worker](images/vercel_paused.png)
 
 Status:
 
-- ❌ `https://logam-mulia-api.vercel.app/` — _inactive_
-- ✅ `https://logam-mulia-api.iamutaki.workers.dev/` — _active_
+- ❌ `https://logam-mulia-api.vercel.app/` - _inactive_
+- ✅ `https://logam-mulia-api.iamutaki.workers.dev/` - _active_
 
 ## Sponsor & dukungan
 
@@ -165,7 +165,7 @@ Di GitHub, tombol **Sponsor** pada halaman repository membaca konfigurasi dari [
 
 ### Program iklan (GitAds)
 
-Repository ini berpartisipasi dalam [GitAds](https://gitads.dev/) — iklan sponsor ditampilkan melalui _badge_ di bawah (bukan konten dalam kode API).
+Repository ini berpartisipasi dalam [GitAds](https://gitads.dev/) - iklan sponsor ditampilkan melalui _badge_ di bawah (bukan konten dalam kode API).
 
 [![Sponsored by GitAds](https://gitads.dev/v1/ad-serve?source=cacing69/logam-mulia-api@github)](https://gitads.dev/v1/ad-track?source=cacing69/logam-mulia-api@github)
 
@@ -174,11 +174,11 @@ Repository ini berpartisipasi dalam [GitAds](https://gitads.dev/) — iklan spon
 Kontribusi dalam bentuk apa pun sangat kami hargai! Anda dapat membantu dengan cara:
 
 1. Memberi _star_ pada repository ini.
-2. Menambahkan sumber baru dari [`waiting-list.md`](./waiting-list.md) — tinggal pilih item yang masih `[ ]`, lalu kirim _pull request_.
+2. Menambahkan sumber baru dari [`waiting-list.md`](./waiting-list.md) - tinggal pilih item yang masih `[ ]`, lalu kirim _pull request_.
 3. Melaporkan _bug_ atau memberi saran melalui [Issues](https://github.com/cacing69/logam-mulia-api/issues).
 4. Memperbaiki dokumentasi atau contoh penggunaan.
 
-Sebelum mengirim PR, mohon pastikan kode lulus _test_ lokal (`npm run test`) dan ikuti _style_ yang sudah ada di repo. Terima kasih banyak atas waktu dan kontribusi Anda — proyek ini berkembang berkat dukungan komunitas!
+Sebelum mengirim PR, mohon pastikan kode lulus _test_ lokal (`npm run test`) dan ikuti _style_ yang sudah ada di repo. Terima kasih banyak atas waktu dan kontribusi Anda - proyek ini berkembang berkat dukungan komunitas!
 
 ## Lisensi
 
