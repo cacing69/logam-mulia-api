@@ -25,8 +25,8 @@ function makeItem(row: number, col: number) {
 	const base = 'body > section.section.home-certicard > div > div.certicard-row.row-2 > div.certicard-left > table';
 	return {
 		selector: {
-			buybackPrice: `${base} > tbody > tr:nth-child(${row}) > td:nth-child(3) > span > span:nth-child(2)`,
-			sellPrice: `${base} > tbody > tr:nth-child(${row}) > td:nth-child(2) > span > span:nth-child(2)`,
+			buybackPrice: `${base} > tbody > tr:nth-child(${row}) > td:nth-child(2) > span > span:nth-child(2)`,
+			sellPrice: `${base} > tbody > tr:nth-child(${row}) > td:nth-child(3) > span > span:nth-child(2)`,
 			material: raw('gold'),
 			materialType: certicardMaterialTypeSelector,
 			weight: `${base} > tbody > tr:nth-child(${row}) > td:nth-child(1) > a`,
