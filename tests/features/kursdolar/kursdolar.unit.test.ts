@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CheerioScraper, parseCurrency } from '../../../src/lib';
-import { kursdolarConfig } from '../../../src/features/kursdolar/kursdolar.config';
+import { kursdolarConfig } from '../../../src/features/api/prices/kursdolar/config';
 
 function isArrayData<T>(data: T | T[] | undefined): data is T[] {
 	return Array.isArray(data);
@@ -118,5 +118,6 @@ describe('Kursdolar Unit Tests', () => {
 		const row2_5g = result.data[2];
 		expect(row2_5g.weight).toBe(2.5);
 		expect(row2_5g.sellPrice).toBe(2252500);
+		expect(row2_5g.buybackPrice).toBe(2486138);
 	});
 });

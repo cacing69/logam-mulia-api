@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { AxiosScraper } from '../../src/lib/scrapers/axios-scraper';
+import { JsonApiScraper } from '../../src/lib/scrapers/json-api-scraper';
 
 global.fetch = vi.fn();
 
-describe('AxiosScraper', () => {
+describe('JsonApiScraper', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
 	});
@@ -38,7 +38,7 @@ describe('AxiosScraper', () => {
 			],
 		};
 
-		const scraper = new AxiosScraper('treasury', config);
+		const scraper = new JsonApiScraper('treasury', config);
 		const result = await scraper.scrape();
 
 		expect(result.success).toBe(true);

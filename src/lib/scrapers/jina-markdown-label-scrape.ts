@@ -27,6 +27,9 @@ export interface JinaMarkdownLabelRowConfig {
 
 export interface JinaMarkdownLabelPriceConfig {
 	name: string;
+	displayName?: string;
+	logo?: string;
+	urlHomepage?: string;
 	url: string;
 	currency: string;
 	active: boolean;

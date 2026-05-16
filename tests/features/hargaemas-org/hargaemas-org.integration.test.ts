@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { CheerioScraper, parseCurrency } from '../../../src/lib';
-import { hargaemasOrgConfig } from '../../../src/features/hargaemas-org/hargaemas-org.config';
+import { HtmlScraper, parseCurrency } from '../../../src/lib';
+import { hargaemasOrgConfig } from '../../../src/features/api/prices/hargaemas-org/config';
 
 function isArrayData<T>(data: T | T[] | undefined): data is T[] {
 	return Array.isArray(data);
@@ -13,23 +13,38 @@ describe('HargaEmas.org Integration Tests', () => {
 		vi.resetAllMocks();
 	});
 
-	it('should scrape and split sell/buy values from raw price text', async () => {
+	it('should scrape sellPrice and buybackPrice from table rows', async () => {
 		const mockHtml = `
-      <html>
-        <head><title>Harga Emas Hari Ini</title></head>
-        <body>
-          <main>
-            <div class="layout_footer-buy-sell-wrapper__8es4r">
-              <div>
-                <div class="layout_content__49Kn9">
-                  <div class="layout_light-text__rQYRl">Rp2.531.927/g | Rp2.640.551/g</div>
-                </div>
-              </div>
-            </div>
-          </main>
-        </body>
-      </html>
-    `;
+			<html>
+				<head><title>Harga Emas Hari Ini</title></head>
+				<body>
+					<table class="HistoryAntamTable_table">
+						<thead>
+							<tr>
+								<th><span>Gram</span></th>
+								<th><span>Antam</span></th>
+								<th><span>Pegadaian</span></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td class="HistoryAntamTable_gram-list"><p>1 gr</p></td>
+								<td><p>Rp2.640.551</p></td>
+								<td><p>Rp2.531.927</p></td>
+							</tr>
+							<tr>
+								<td class="HistoryAntamTable_gram-list"><p>2 gr</p></td>
+								<td><p>Rp5.281.102</p></td>
+								<td><p>Rp5.063.854</p></td>
+							</tr>
+							<tr>
+								<td colspan="3"><p>pembelian kembali: Rp2.531.927</p></td>
+							</tr>
+						</tbody>
+					</table>
+				</body>
+			</html>
+		`;
 
 		vi.mocked(global.fetch).mockResolvedValueOnce({
 			ok: true,
@@ -37,15 +52,15 @@ describe('HargaEmas.org Integration Tests', () => {
 			text: async () => mockHtml,
 		} as Response);
 
-		const scraper = new CheerioScraper('hargaemas-org', hargaemasOrgConfig);
+		const scraper = new HtmlScraper('hargaemas-org', hargaemasOrgConfig);
 
 		const result = await scraper.scrape((raw) => ({
-			type: raw.type || 'unknown',
-			sell: parseCurrency(raw.sell),
-			buy: parseCurrency(raw.buy),
-			sellRaw: raw.sell,
-			buyRaw: raw.buy,
-			info: raw.info,
+			material: raw.material || 'gold',
+			materialType: raw.materialType || 'unknown',
+			buybackPrice: parseCurrency(raw.buybackPrice),
+			sellPrice: parseCurrency(raw.sellPrice),
+			weight: raw.weight ? Number(raw.weight) : 1,
+			weightUnit: raw.weightUnit || 'gr',
 		}));
 
 		expect(result.success).toBe(true);
@@ -59,16 +74,11 @@ describe('HargaEmas.org Integration Tests', () => {
 
 		const firstItem = result.data[0];
 		expect(firstItem).toMatchObject({
-			type: expect.any(String),
-			sell: expect.any(Number),
-			buy: expect.any(Number),
-			sellRaw: expect.any(String),
-			buyRaw: expect.any(String),
+			material: expect.any(String),
+			sellPrice: expect.any(Number),
+			weightUnit: expect.any(String),
 		});
 
-		expect(firstItem.sell).toBeGreaterThan(0);
-		expect(firstItem.buy).toBeGreaterThan(0);
-		expect(firstItem.sellRaw.length).toBeGreaterThan(0);
-		expect(firstItem.buyRaw.length).toBeGreaterThan(0);
+		expect(firstItem.sellPrice).toBeGreaterThan(0);
 	});
 });

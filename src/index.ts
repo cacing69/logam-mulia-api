@@ -1,55 +1,24 @@
-import { Hono } from 'hono';
+import { OpenAPIHono } from '@hono/zod-openapi';
+import { Scalar } from '@scalar/hono-api-reference';
 import { createErrorResponse, getHistoryBySource } from './lib';
+import { registerPriceFeatures } from './lib/feature-registry';
 import type { Bindings } from './types';
-import rootFeature from './features/root';
-import healthFeature from './features/health';
-import anekalogamFeature from './features/anekalogam';
-import { anekalogamConfig } from './features/anekalogam/anekalogam.config';
-import hargaEmasOrgFeature, { hargaemasOrgConfig } from './features/hargaemas-org';
-import lakuemasFeature, { lakuemasConfig } from './features/lakuemas';
-import pegadaianFeature, { pegadaianConfig } from './features/pegadaian';
-import sakumasFeature, { sakumasConfig } from './features/sakumas';
-import kursdolarFeature, { kursdolarConfig } from './features/kursdolar';
-import cermatiFeature, { cermatiConfig } from './features/cermati';
-import bankbsiFeature from './features/bankbsi';
-import { bankbsiConfig } from './features/bankbsi/bankbsi.config';
-import brankaslmFeature from './features/brankaslm';
-import { brankaslmConfig } from './features/brankaslm/brankaslm.config';
-import indogoldFeature, { indogoldConfig } from './features/indogold';
-import hargaemasNetFeature, { hargaemasNetConfig } from './features/hargaemas-net';
-import hargaemasComFeature, { hargaemasComConfig } from './features/hargaemas-com';
-import treasuryFeature, { treasuryConfig } from './features/treasury';
-import logammuliaFeature, { logammuliaConfig } from './features/logammulia';
-import emaskuFeature from './features/emasku';
-import { emaskuConfig } from './features/emasku/emasku.config';
-import hartadinataabadiFeature, { hartadinataabadiConfig } from './features/hartadinataabadi';
-import galeri24Feature, { galeri24Config } from './features/galeri24';
-import sampoernagoldFeature, { sampoernagoldConfig } from './features/sampoernagold';
+import rootRoute from './features/root';
+import healthRoute from './features/health';
+import { listSourcesRoute, historyRoute } from './lib/openapi-helpers';
 
-const app = new Hono<{ Bindings: Bindings }>();
-const SUPPORTED_SOURCES = new Set([
-	anekalogamConfig.name,
-	bankbsiConfig.name,
-	brankaslmConfig.name,
-	cermatiConfig.name,
-	emaskuConfig.name,
-	galeri24Config.name,
-	hargaemasComConfig.name,
-	hargaemasNetConfig.name,
-	hargaemasOrgConfig.name,
-	hartadinataabadiConfig.name,
-	indogoldConfig.name,
-	kursdolarConfig.name,
-	lakuemasConfig.name,
-	logammuliaConfig.name,
-	// pegadaianConfig.name,
-	// sakumasConfig.name,
-	// sampoernagoldConfig.name,
-	// treasuryConfig.name,
-]);
+const app = new OpenAPIHono<{ Bindings: Bindings }>();
 
-app.route('/', rootFeature);
-app.route('/health', healthFeature);
+app.route('/', rootRoute);
+app.route('/health', healthRoute);
+
+const SOURCES = registerPriceFeatures(app);
+
+app.openapi(listSourcesRoute, (c) => {
+	return c.json({ data: SOURCES });
+});
+
+const SUPPORTED_SOURCES = new Set(SOURCES.map((s) => s.name));
 
 app.get('/api/prices/:source/history', async (c) => {
 	const source = c.req.param('source');
@@ -61,6 +30,7 @@ app.get('/api/prices/:source/history', async (c) => {
 		page: c.req.query('page'),
 		length: c.req.query('length'),
 		weight: c.req.query('weight'),
+		material: c.req.query('material'),
 		materialType: c.req.query('materialType'),
 	});
 
@@ -72,23 +42,24 @@ app.get('/api/prices/:source/history', async (c) => {
 	return c.json(result);
 });
 
-app.route('/api/prices/anekalogam', anekalogamFeature);
-app.route('/api/prices/hargaemas-org', hargaEmasOrgFeature);
-app.route('/api/prices/lakuemas', lakuemasFeature);
-app.route('/api/prices/pegadaian', pegadaianFeature);
-app.route('/api/prices/sakumas', sakumasFeature);
-app.route('/api/prices/kursdolar', kursdolarFeature);
-app.route('/api/prices/cermati', cermatiFeature);
-app.route('/api/prices/bankbsi', bankbsiFeature);
-app.route('/api/prices/brankaslm', brankaslmFeature);
-app.route('/api/prices/indogold', indogoldFeature);
-app.route('/api/prices/hargaemas-net', hargaemasNetFeature);
-app.route('/api/prices/hargaemas-com', hargaemasComFeature);
-app.route('/api/prices/treasury', treasuryFeature);
-app.route('/api/prices/logammulia', logammuliaFeature);
-app.route('/api/prices/emasku', emaskuFeature);
-app.route('/api/prices/hartadinataabadi', hartadinataabadiFeature);
-app.route('/api/prices/galeri24', galeri24Feature);
-app.route('/api/prices/sampoernagold', sampoernagoldFeature);
+app.openAPIRegistry.registerPath(historyRoute);
+
+app.doc('/api/docs/json', {
+	openapi: '3.0.3',
+	info: {
+		title: 'Logam Mulia API',
+		description:
+			'API harga emas dan logam mulia dari berbagai sumber di Indonesia. Data discrape secara real-time dan di-cache per hari.',
+		version: '1.0.0',
+	},
+	servers: [{ url: 'http://localhost:8787', description: 'Development' }],
+	tags: [
+		{ name: 'System', description: 'Root & health check' },
+		{ name: 'Sources', description: 'Daftar & harga dari sumber logam mulia' },
+		{ name: 'History', description: 'Riwayat harga' },
+	],
+});
+
+app.get('/api/docs', Scalar({ url: '/api/docs/json' }));
 
 export default app;

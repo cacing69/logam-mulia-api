@@ -28,6 +28,13 @@ https://logam-mulia-api.iamutaki.workers.dev
 
 > Deployment lama di Vercel sudah **inactive** dan API sepenuhnya dilayani melalui Cloudflare Worker. Lihat bagian [Migrasi dari Vercel ke Cloudflare Worker](#migrasi-dari-vercel-ke-cloudflare-worker) untuk detailnya.
 
+## API Documentation
+
+Dokumentasi interaktif OpenAPI 3.0 (auto-generated via `@hono/zod-openapi`) tersedia di:
+
+- **Scalar API Reference:** [`/api/docs`](https://logam-mulia-api.iamutaki.workers.dev/api/docs)
+- **OpenAPI JSON:** [`/api/docs/json`](https://logam-mulia-api.iamutaki.workers.dev/api/docs/json)
+
 ## Endpoint yang Tersedia
 
 | Source | Status | Endpoint Terkini | Endpoint History | Cached |
@@ -53,36 +60,30 @@ https://logam-mulia-api.iamutaki.workers.dev
 
 ## Format Response
 
-Format _response_ baru sudah konsisten dan menyertakan informasi berat serta satuan, sehingga lebih mudah diolah di sisi klien.
-
 ```json
-// Response baru (current)
 {
+  "success": true,
   "data": [
     {
-      "sellPrice": 900000,
-      "buybackPrice": 850000,
-      "materialType": "antam",
+      "source": "anekalogam",
+      "material": "gold",
+      "materialType": "Antam",
       "weight": 1,
-      "weightUnit": "gr"
+      "weightUnit": "gr",
+      "sellPrice": 2700000,
+      "buybackPrice": 2650000,
+      "currency": "IDR",
+      "recordedDate": "2026-05-16",
+      "lineKey": "",
+      "url": "/api/prices/anekalogam",
+      "displayName": "Aneka Logam",
+      "logo": "",
+      "urlHomepage": "https://www.anekalogam.co.id"
     }
-  ]
-}
-```
-
-### Response lama (deprecated)
-
-> Format ini sudah tidak digunakan lagi dan hanya disertakan untuk referensi historis.
-
-```json
-{
-  "data": [
-    {
-      "sell": 900000,
-      "buy": 850000,
-      "tipe": "antam"
-    }
-  ]
+  ],
+  "count": 1,
+  "timestamp": "2026-05-16T05:06:58.888Z",
+  "cached": true
 }
 ```
 
@@ -130,12 +131,14 @@ curl -X GET "https://logam-mulia-api.iamutaki.workers.dev/api/prices/galeri24/hi
 | `page` | int | Nomor halaman pagination. |
 | `length` | int | Jumlah item per halaman (maks. `1000`). |
 | `weight` | int | Filter berdasarkan berat (mis. `1`, `5`, `10`). |
-| `materialType` | string | Filter berdasarkan jenis material (mis. `ANTAM`, `UBS`, `GALERI 24`). |
+| `material` | string | Filter berdasarkan jenis logam (mis. `gold`, `silver`). |
+| `materialType` | string | Filter berdasarkan tipe material (mis. `ANTAM`, `UBS`, `GALERI 24`). |
 
 ## Tech Stack
 
 - **Runtime:** [Cloudflare Workers](https://workers.cloudflare.com/)
 - **Framework:** [Hono](https://hono.dev/)
+- **API Docs:** [`@hono/zod-openapi`](https://github.com/honojs/middleware/tree/main/packages/zod-openapi) + [Scalar](https://scalar.com)
 
 ## Roadmap & Sumber Berikutnya
 

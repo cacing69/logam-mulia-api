@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import app from '../../../src/features/lakuemas/lakuemas.route';
+import app from '../../../src/features/api/prices/lakuemas/route';
 
 global.fetch = vi.fn();
 
@@ -25,17 +25,19 @@ describe('Lakuemas Integration Tests', () => {
 			text: async () => mockMarkdown,
 		} as Response);
 
-		const res = await app.request('/', undefined, { JINA_API_KEY: 'test-key' });
+		const res = await app.request('/', undefined, {
+			JINA_API_KEY: 'test-key',
+			TURSO_DATABASE_URL: undefined,
+			TURSO_AUTH_TOKEN: undefined,
+		});
 		const result = await res.json();
 
 		expect(result.success).toBe(true);
-		expect(result.source).toBe('lakuemas');
-		expect(result.currency).toBe('IDR');
 		expect(result.data).toHaveLength(1);
 
 		const firstItem = result.data[0];
 		expect(firstItem.material).toBe('gold');
-		expect(firstItem.materialType).toBe('lakuemas');
+		expect(firstItem.materialType).toBe('Laku Emas');
 		expect(firstItem.sellPrice).toBe(2566000);
 		expect(firstItem.buybackPrice).toBe(2639000);
 		expect(firstItem.weight).toBe(1);
