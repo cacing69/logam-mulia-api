@@ -38,7 +38,7 @@ function makeItemPegadaian(row: number) {
 
 export const hargaemasComConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'material' | 'materialType' | 'weight' | 'weightUnit'> = {
 	name: 'hargaemas-com',
-	displayName: 'Harga Emas',
+	displayName: 'Harga Emas.com',
 	logo: '',
 	urlHomepage: 'https://www.hargaemas.com',
 	engine: 'cheerio',
