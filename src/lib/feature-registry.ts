@@ -1,4 +1,4 @@
-import { Hono } from 'hono';
+import type { Hono } from 'hono';
 import type { Bindings } from '../types';
 
 export interface FeatureRegistration {
@@ -57,25 +57,27 @@ export function registerPriceFeatures(
 		const { name, displayName, logo, urlHomepage, route } = mod.register();
 		const sourceUrl = `/api/prices/${name}`;
 
-		const wrapper = new Hono<{ Bindings: Bindings }>();
-		wrapper.use('*', async (c, next) => {
+		app.use(sourceUrl, async (c, next) => {
 			await next();
 			try {
 				const clone = c.res.clone();
-				const json = await clone.json();
-				c.res = c.json({
-					...(json as Record<string, unknown>),
-					url: sourceUrl,
-					displayName,
-					logo,
-					urlHomepage,
-				});
+				const json = (await clone.json()) as Record<string, unknown>;
+				const meta = { url: sourceUrl, displayName, logo, urlHomepage };
+
+				if (Array.isArray(json.data)) {
+					json.data = (json.data as Record<string, unknown>[]).map(
+						(item) => ({ ...item, ...meta }),
+					);
+				} else if (json.data && typeof json.data === 'object') {
+					json.data = { ...(json.data as Record<string, unknown>), ...meta };
+				}
+
+				c.res = c.json(json);
 			} catch {
 				// non-JSON response, skip metadata injection
 			}
 		});
-		wrapper.route('/', route);
-		app.route(sourceUrl, wrapper);
+		app.route(sourceUrl, route);
 
 		return { name, displayName, logo, url: sourceUrl, urlHomepage };
 	});
