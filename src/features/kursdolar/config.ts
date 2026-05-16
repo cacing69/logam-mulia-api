@@ -22,8 +22,8 @@ function makeItem(row: number) {
 	return {
 		selector: {
 			weight: `${bsiPriceTable} tbody tr:nth-child(${row}) > td.bold`,
-			sellPrice: `${bsiPriceTable} tbody tr:nth-child(${row}) > td:nth-child(3)`,
-			buybackPrice: `${bsiPriceTable} tbody tr:nth-child(${row}) > td:nth-child(2)`,
+			sellPrice: `${bsiPriceTable} tbody tr:nth-child(${row}) > td:nth-child(2)`,
+			buybackPrice: `${bsiPriceTable} tbody tr:nth-child(${row}) > td:nth-child(3)`,
 			material: raw('gold'),
 			materialType: `${schemaTableBlock} > h2:nth-child(5)`,
 			weightUnit: raw('gr'),

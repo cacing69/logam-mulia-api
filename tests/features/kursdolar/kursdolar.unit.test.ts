@@ -118,5 +118,6 @@ describe('Kursdolar Unit Tests', () => {
 		const row2_5g = result.data[2];
 		expect(row2_5g.weight).toBe(2.5);
 		expect(row2_5g.sellPrice).toBe(2252500);
+		expect(row2_5g.buybackPrice).toBe(2486138);
 	});
 });

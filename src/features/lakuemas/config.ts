@@ -1,9 +1,9 @@
 import type { JinaMarkdownLabelPriceConfig } from '../../lib/scrapers/jina-markdown-label-scrape';
 
-const lakuemasBuybackPriceRe =
+const lakuemasSellPriceRe =
 	/HARGA JUAL EMAS HARI INI\s*(?:\n\s*)?###\s*\*\*IDR\s*([\d,.-]+)/i;
 
-const lakuemasSellPriceRe =
+const lakuemasBuybackPriceRe =
 	/HARGA BELI EMAS HARI INI\s*(?:\n\s*)?###\s*\*\*IDR\s*([\d,.-]+)/i;
 
 export const lakuemasConfig: JinaMarkdownLabelPriceConfig = {
