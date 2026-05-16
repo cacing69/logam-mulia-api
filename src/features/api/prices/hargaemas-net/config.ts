@@ -36,7 +36,7 @@ function makeItem(row: number) {
 
 export const hargaemasNetConfig: ScrapingConfig<'buybackPrice' | 'sellPrice' | 'weight' | 'weightUnit' | 'material' | 'materialType'> = {
 	name: 'hargaemas-net',
-	displayName: 'Harga Emas',
+	displayName: 'Harga Emas.net',
 	logo: '',
 	urlHomepage: 'https://harga-emas.net',
 	engine: 'cheerio',

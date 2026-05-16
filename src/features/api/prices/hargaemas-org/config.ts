@@ -61,7 +61,7 @@ export const hargaemasOrgConfig: ScrapingConfig<
 	'buybackPrice' | 'sellPrice' | 'weight' | 'weightUnit' | 'material' | 'materialType'
 > = {
 	name: 'hargaemas-org',
-	displayName: 'Harga Emas',
+	displayName: 'Harga Emas.org',
 	logo: '',
 	urlHomepage: 'https://harga-emas.org',
 	engine: 'cheerio',

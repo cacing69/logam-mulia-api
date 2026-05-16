@@ -57,11 +57,15 @@ export type AnyScraperConfig<T extends string = string> =
 
 /** @deprecated Use HtmlScraperConfig */
 export type ScrapingConfig<T extends string = string> = HtmlScraperConfig<T>;
+
 /** @deprecated Use HtmlScraperConfig */
 export type CheerioScrapingConfig<T extends string = string> = HtmlScraperConfig<T>;
+
 /** @deprecated Use JsonApiConfig */
 export type AxiosScrapingConfig = JsonApiConfig;
+
 /** @deprecated Use BaseConfig */
 export type BaseScrapingConfig = BaseConfig;
+
 /** @deprecated Use AnyScraperConfig */
 export type AnyScrapingConfig<T extends string = string> = AnyScraperConfig<T>;
