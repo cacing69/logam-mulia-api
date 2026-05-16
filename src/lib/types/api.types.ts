@@ -7,6 +7,10 @@ export interface ApiResponse<T = unknown> {
 	currency?: string;
 	count?: number;
 	inactive?: boolean;
+	url?: string;
+	displayName?: string;
+	logo?: string;
+	urlHomepage?: string;
 }
 
 /** @deprecated Use ApiResponse */

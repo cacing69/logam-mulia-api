@@ -23,6 +23,10 @@ export interface FetchResult {
 	timestamp: string;
 	cached: boolean;
 	error?: string;
+	url?: string;
+	displayName?: string;
+	logo?: string;
+	urlHomepage?: string;
 }
 
 function toPublicRows(rows: PriceRow[]): PublicPriceHistoryRow[] {

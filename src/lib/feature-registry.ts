@@ -1,4 +1,4 @@
-import type { Hono } from 'hono';
+import { Hono } from 'hono';
 import type { Bindings } from '../types';
 
 export interface FeatureRegistration {
@@ -55,8 +55,28 @@ export function registerPriceFeatures(
 ): SourceInfo[] {
 	return priceModules.map((mod) => {
 		const { name, displayName, logo, urlHomepage, route } = mod.register();
-		app.route(`/api/prices/${name}`, route);
+		const sourceUrl = `/api/prices/${name}`;
 
-		return { name, displayName, logo, url: `/api/prices/${name}`, urlHomepage };
+		const wrapper = new Hono<{ Bindings: Bindings }>();
+		wrapper.use('*', async (c, next) => {
+			await next();
+			try {
+				const clone = c.res.clone();
+				const json = await clone.json();
+				c.res = c.json({
+					...(json as Record<string, unknown>),
+					url: sourceUrl,
+					displayName,
+					logo,
+					urlHomepage,
+				});
+			} catch {
+				// non-JSON response, skip metadata injection
+			}
+		});
+		wrapper.route('/', route);
+		app.route(sourceUrl, wrapper);
+
+		return { name, displayName, logo, url: sourceUrl, urlHomepage };
 	});
 }
