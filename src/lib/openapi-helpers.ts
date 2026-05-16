@@ -65,10 +65,14 @@ export const historyRoute = createRoute({
 				.string()
 				.optional()
 				.openapi({ description: 'Filter berat (gram)' }),
+			material: z
+				.string()
+				.optional()
+				.openapi({ description: 'Filter material (e.g. gold, silver)' }),
 			materialType: z
 				.string()
 				.optional()
-				.openapi({ description: 'Filter tipe material' }),
+				.openapi({ description: 'Filter tipe material (e.g. Antam, UBS)' }),
 		}),
 	},
 	responses: {

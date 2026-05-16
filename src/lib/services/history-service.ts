@@ -35,6 +35,7 @@ export interface HistoryResponse {
 
 export interface HistoryFilters {
 	weight?: number;
+	material?: string;
 	materialType?: string;
 }
 
@@ -42,6 +43,7 @@ export interface HistoryQueryParams {
 	page?: string;
 	length?: string;
 	weight?: string;
+	material?: string;
 	materialType?: string;
 }
 
@@ -95,7 +97,7 @@ export function normalizePagination(pageRaw?: string, lengthRaw?: string): {
 	};
 }
 
-function normalizeFilters(weightRaw?: string, materialTypeRaw?: string): { ok: true; filters: HistoryFilters } | { ok: false; error: string } {
+function normalizeFilters(weightRaw?: string, materialRaw?: string, materialTypeRaw?: string): { ok: true; filters: HistoryFilters } | { ok: false; error: string } {
 	const filters: HistoryFilters = {};
 
 	if (weightRaw !== undefined && weightRaw !== '') {
@@ -107,6 +109,10 @@ function normalizeFilters(weightRaw?: string, materialTypeRaw?: string): { ok: t
 			return { ok: false, error: 'weight must be a positive number' };
 		}
 		filters.weight = weight;
+	}
+
+	if (materialRaw !== undefined && materialRaw !== '') {
+		filters.material = materialRaw.trim();
 	}
 
 	if (materialTypeRaw !== undefined && materialTypeRaw !== '') {
@@ -131,7 +137,7 @@ export async function getHistoryBySource(
 	}
 
 	const { page, length, offset } = pagination;
-	const filtersParsed = normalizeFilters(query.weight, query.materialType);
+	const filtersParsed = normalizeFilters(query.weight, query.material, query.materialType);
 	if (!filtersParsed.ok) {
 		return {
 			success: false,
@@ -161,6 +167,10 @@ export async function getHistoryBySource(
 		if (filters.weight !== undefined) {
 			conditions.push('weight = ?');
 			whereArgs.push(filters.weight);
+		}
+		if (filters.material !== undefined) {
+			conditions.push('material = ?');
+			whereArgs.push(filters.material);
 		}
 		if (filters.materialType !== undefined) {
 			conditions.push('material_type = ?');

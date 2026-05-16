@@ -1,16 +1,15 @@
 import type { JinaMarkdownLabelPriceConfig } from '../../lib/scrapers/jina-markdown-label-scrape';
 
-const lakuemasSellPriceRe =
+const lakuemasBuybackPriceRe =
 	/HARGA JUAL EMAS HARI INI\s*(?:\n\s*)?###\s*\*\*IDR\s*([\d,.-]+)/i;
 
-const lakuemasBuybackPriceRe =
+const lakuemasSellPriceRe =
 	/HARGA BELI EMAS HARI INI\s*(?:\n\s*)?###\s*\*\*IDR\s*([\d,.-]+)/i;
 
 export const lakuemasConfig: JinaMarkdownLabelPriceConfig = {
 	name: 'lakuemas',
 	displayName: 'Laku Emas',
 	logo: '',
-	urlHomepage: 'https://lakuemas.com',
 	url: 'http://lakuemas.com/harga',
 	currency: 'IDR',
 	active: true,

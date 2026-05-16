@@ -30,6 +30,7 @@ app.get('/api/prices/:source/history', async (c) => {
 		page: c.req.query('page'),
 		length: c.req.query('length'),
 		weight: c.req.query('weight'),
+		material: c.req.query('material'),
 		materialType: c.req.query('materialType'),
 	});
 
