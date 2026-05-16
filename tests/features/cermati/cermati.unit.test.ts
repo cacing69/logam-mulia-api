@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CheerioScraper, parseCurrency } from '../../../src/lib';
-import { cermatiConfig } from '../../../src/features/cermati/config';
+import { cermatiConfig } from '../../../src/features/api/prices/cermati/config';
 
 function isArrayData<T>(data: T | T[] | undefined): data is T[] {
 	return Array.isArray(data);

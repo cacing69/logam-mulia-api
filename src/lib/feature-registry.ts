@@ -25,25 +25,25 @@ export interface PriceFeatureModule {
 }
 
 // --- Price feature imports ---
-// To add a new price source: (1) create src/features/{name}/, (2) add one import + one entry below.
-import * as anekalogam from '../features/anekalogam';
-import * as bankbsi from '../features/bankbsi';
-import * as brankaslm from '../features/brankaslm';
-import * as cermati from '../features/cermati';
-import * as emasku from '../features/emasku';
-import * as galeri24 from '../features/galeri24';
-import * as hargaemasCom from '../features/hargaemas-com';
-import * as hargaemasNet from '../features/hargaemas-net';
-import * as hargaemasOrg from '../features/hargaemas-org';
-import * as hartadinataabadi from '../features/hartadinataabadi';
-import * as indogold from '../features/indogold';
-import * as kursdolar from '../features/kursdolar';
-import * as lakuemas from '../features/lakuemas';
-import * as logammulia from '../features/logammulia';
-import * as pegadaian from '../features/pegadaian';
-import * as sakumas from '../features/sakumas';
-import * as sampoernagold from '../features/sampoernagold';
-import * as treasury from '../features/treasury';
+// To add a new price source: (1) create src/features/api/prices/{name}/, (2) add one import + one entry below.
+import * as anekalogam from '../features/api/prices/anekalogam';
+import * as bankbsi from '../features/api/prices/bankbsi';
+import * as brankaslm from '../features/api/prices/brankaslm';
+import * as cermati from '../features/api/prices/cermati';
+import * as emasku from '../features/api/prices/emasku';
+import * as galeri24 from '../features/api/prices/galeri24';
+import * as hargaemasCom from '../features/api/prices/hargaemas-com';
+import * as hargaemasNet from '../features/api/prices/hargaemas-net';
+import * as hargaemasOrg from '../features/api/prices/hargaemas-org';
+import * as hartadinataabadi from '../features/api/prices/hartadinataabadi';
+import * as indogold from '../features/api/prices/indogold';
+import * as kursdolar from '../features/api/prices/kursdolar';
+import * as lakuemas from '../features/api/prices/lakuemas';
+import * as logammulia from '../features/api/prices/logammulia';
+import * as pegadaian from '../features/api/prices/pegadaian';
+import * as sakumas from '../features/api/prices/sakumas';
+import * as sampoernagold from '../features/api/prices/sampoernagold';
+import * as treasury from '../features/api/prices/treasury';
 
 const priceModules: PriceFeatureModule[] = [
 	anekalogam, bankbsi, brankaslm, cermati, emasku, galeri24,

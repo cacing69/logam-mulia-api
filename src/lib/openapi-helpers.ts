@@ -13,7 +13,7 @@ export const listSourcesRoute = createRoute({
 	request: {},
 	responses: {
 		200: {
-			content: { 'application/json': { schema: z.array(sourceInfoSchema) } },
+			content: { 'application/json': { schema: z.object({ data: z.array(sourceInfoSchema) }) } },
 			description: 'Daftar sumber yang tersedia',
 		},
 	},

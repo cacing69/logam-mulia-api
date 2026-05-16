@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import app from '../../../src/features/lakuemas/route';
+import app from '../../../src/features/api/prices/lakuemas/route';
 
 global.fetch = vi.fn();
 

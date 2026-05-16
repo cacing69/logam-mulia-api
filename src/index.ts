@@ -15,7 +15,7 @@ app.route('/health', healthRoute);
 const SOURCES = registerPriceFeatures(app);
 
 app.openapi(listSourcesRoute, (c) => {
-	return c.json(SOURCES);
+	return c.json({ data: SOURCES });
 });
 
 const SUPPORTED_SOURCES = new Set(SOURCES.map((s) => s.name));

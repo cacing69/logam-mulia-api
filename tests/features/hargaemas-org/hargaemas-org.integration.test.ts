@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { HtmlScraper, parseCurrency } from '../../../src/lib';
-import { hargaemasOrgConfig } from '../../../src/features/hargaemas-org/config';
+import { hargaemasOrgConfig } from '../../../src/features/api/prices/hargaemas-org/config';
 
 function isArrayData<T>(data: T | T[] | undefined): data is T[] {
 	return Array.isArray(data);

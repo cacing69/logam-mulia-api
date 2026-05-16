@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { CheerioScraper, parseCurrency } from '../../../src/lib';
-import { anekalogamConfig } from '../../../src/features/anekalogam/config';
+import { anekalogamConfig } from '../../../src/features/api/prices/anekalogam/config';
 
 function isArrayData<T>(data: T | T[] | undefined): data is T[] {
 	return Array.isArray(data);
