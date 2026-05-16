@@ -28,6 +28,13 @@ https://logam-mulia-api.iamutaki.workers.dev
 
 > Deployment lama di Vercel sudah **inactive** dan API sepenuhnya dilayani melalui Cloudflare Worker. Lihat bagian [Migrasi dari Vercel ke Cloudflare Worker](#migrasi-dari-vercel-ke-cloudflare-worker) untuk detailnya.
 
+## API Documentation (Swagger)
+
+Dokumentasi interaktif OpenAPI 3.0 tersedia di:
+
+- **Swagger UI:** [`/api/docs`](https://logam-mulia-api.iamutaki.workers.dev/api/docs)
+- **OpenAPI JSON:** [`/api/docs/json`](https://logam-mulia-api.iamutaki.workers.dev/api/docs/json)
+
 ## Endpoint yang Tersedia
 
 | Source | Status | Endpoint Terkini | Endpoint History | Cached |

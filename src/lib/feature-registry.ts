@@ -1,5 +1,7 @@
-import type { Hono } from 'hono';
 import type { Bindings } from '../types';
+import { createPriceSourceRoute } from './openapi-helpers';
+import type { Hono } from 'hono';
+import type { OpenAPIHono } from '@hono/zod-openapi';
 
 export interface FeatureRegistration {
 	name: string;
@@ -51,11 +53,15 @@ const priceModules: PriceFeatureModule[] = [
 ];
 
 export function registerPriceFeatures(
-	app: Hono<{ Bindings: Bindings }>,
+	app: OpenAPIHono<{ Bindings: Bindings }>,
 ): SourceInfo[] {
+	const priceRoute = createPriceSourceRoute();
+
 	return priceModules.map((mod) => {
 		const { name, displayName, logo, urlHomepage, route } = mod.register();
 		const sourceUrl = `/api/prices/${name}`;
+
+		app.openAPIRegistry.registerPath({ ...priceRoute, path: sourceUrl });
 
 		app.use(sourceUrl, async (c, next) => {
 			await next();
