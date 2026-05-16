@@ -1,4 +1,8 @@
-export { treasuryConfig } from './treasury.config';
+import { treasuryConfig as config } from './config';
+import route from './route';
 
-import route from './treasury.route';
+export function register() {
+	return { name: config.name, displayName: config.displayName, logo: config.logo, urlHomepage: config.urlHomepage, route, cached: (config as any).cached ?? true };
+}
+export { config as treasuryConfig };
 export default route;

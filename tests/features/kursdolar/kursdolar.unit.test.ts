@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CheerioScraper, parseCurrency } from '../../../src/lib';
-import { kursdolarConfig } from '../../../src/features/kursdolar/kursdolar.config';
+import { kursdolarConfig } from '../../../src/features/kursdolar/config';
 
 function isArrayData<T>(data: T | T[] | undefined): data is T[] {
 	return Array.isArray(data);

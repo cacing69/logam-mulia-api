@@ -1,4 +1,8 @@
-export { sampoernagoldConfig } from './sampoernagold.config';
+import { sampoernagoldConfig as config } from './config';
+import route from './route';
 
-import route from './sampoernagold.route';
+export function register() {
+	return { name: config.name, displayName: config.displayName, logo: config.logo, urlHomepage: config.urlHomepage, route, cached: (config as any).cached ?? true };
+}
+export { config as sampoernagoldConfig };
 export default route;

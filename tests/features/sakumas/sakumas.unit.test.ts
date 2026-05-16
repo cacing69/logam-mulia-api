@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CheerioScraper, parseCurrency } from '../../../src/lib';
-import { sakumasConfig } from '../../../src/features/sakumas/sakumas.config';
+import { sakumasConfig } from '../../../src/features/sakumas/config';
 
 function isArrayData<T>(data: T | T[] | undefined): data is T[] {
 	return Array.isArray(data);

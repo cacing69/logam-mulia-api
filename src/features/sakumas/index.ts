@@ -1,4 +1,8 @@
-export { sakumasConfig } from './sakumas.config';
+import { sakumasConfig as config } from './config';
+import route from './route';
 
-import route from './sakumas.route';
+export function register() {
+	return { name: config.name, displayName: config.displayName, logo: config.logo, urlHomepage: config.urlHomepage, route, cached: (config as any).cached ?? true };
+}
+export { config as sakumasConfig };
 export default route;

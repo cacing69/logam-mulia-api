@@ -1,4 +1,8 @@
-export { pegadaianConfig } from './pegadaian.config';
+import { pegadaianConfig as config } from './config';
+import route from './route';
 
-import route from './pegadaian.route';
+export function register() {
+	return { name: config.name, displayName: config.displayName, logo: config.logo, urlHomepage: config.urlHomepage, route, cached: (config as any).cached ?? true };
+}
+export { config as pegadaianConfig };
 export default route;

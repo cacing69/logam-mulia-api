@@ -1,4 +1,8 @@
-export { lakuemasConfig } from './lakuemas.config';
+import { lakuemasConfig as config } from './config';
+import route from './route';
 
-import route from './lakuemas.route';
+export function register() {
+	return { name: config.name, displayName: config.displayName, logo: config.logo, urlHomepage: config.urlHomepage, route, cached: (config as any).cached ?? true };
+}
+export { config as lakuemasConfig };
 export default route;

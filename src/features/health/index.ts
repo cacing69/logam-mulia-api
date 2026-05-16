@@ -1,4 +1,4 @@
-import route from './health.route';
-export { healthService } from './health.service';
+import route from './route';
+export { healthService } from './service';
 
 export default route;

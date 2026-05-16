@@ -1,10 +1,12 @@
-export interface ApiErrorResponse {
+export interface ErrorResponse {
 	success: false;
 	error: string;
 	timestamp: string;
 }
 
-export function createErrorResponse(error: string): ApiErrorResponse {
+/** @deprecated Use ErrorResponse */ export type ApiErrorResponse = ErrorResponse;
+
+export function createErrorResponse(error: string): ErrorResponse {
 	return {
 		success: false,
 		error,

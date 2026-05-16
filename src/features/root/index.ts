@@ -1,4 +1,4 @@
-import route from './root.route';
+import route from './route';
 
 export { route };
 export default route;

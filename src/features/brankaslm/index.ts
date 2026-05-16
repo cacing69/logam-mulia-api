@@ -1,10 +1,14 @@
-export { brankaslmConfig } from './brankaslm.config';
-export { scrapeBrankaslmForFetchOrCache, scrapeBrankaslmPrices } from './brankaslm.scrape';
+import { brankaslmConfig as config } from './config';
+import route from './route';
+
+export function register() {
+	return { name: config.name, displayName: config.displayName, logo: config.logo, urlHomepage: config.urlHomepage, route, cached: (config as any).cached ?? true };
+}
+export { config as brankaslmConfig };
+export { scrapeBrankaslmForFetchOrCache, scrapeBrankaslmPrices } from './scrape';
 export type {
 	BrankaslmFetchOrCacheScrapeResult,
 	BrankaslmScrapeBody,
 	BrankaslmScrapeResult,
-} from './brankaslm.scrape';
-
-import route from './brankaslm.route';
+} from './scrape';
 export default route;

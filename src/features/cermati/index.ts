@@ -1,4 +1,8 @@
-export { cermatiConfig } from './cermati.config';
+import { cermatiConfig as config } from './config';
+import route from './route';
 
-import route from './cermati.route';
+export function register() {
+	return { name: config.name, displayName: config.displayName, logo: config.logo, urlHomepage: config.urlHomepage, route, cached: (config as any).cached ?? true };
+}
+export { config as cermatiConfig };
 export default route;

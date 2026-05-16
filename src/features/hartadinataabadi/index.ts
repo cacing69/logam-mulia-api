@@ -1,4 +1,8 @@
-export { hartadinataabadiConfig } from './hartadinataabadi.config';
+import { hartadinataabadiConfig as config } from './config';
+import route from './route';
 
-import route from './hartadinataabadi.route';
+export function register() {
+	return { name: config.name, displayName: config.displayName, logo: config.logo, urlHomepage: config.urlHomepage, route, cached: (config as any).cached ?? true };
+}
+export { config as hartadinataabadiConfig };
 export default route;

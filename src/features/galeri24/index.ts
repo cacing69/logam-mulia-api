@@ -1,4 +1,8 @@
-export { galeri24Config } from './galeri24.config';
+import { galeri24Config as config } from './config';
+import route from './route';
 
-import route from './galeri24.route';
+export function register() {
+	return { name: config.name, displayName: config.displayName, logo: config.logo, urlHomepage: config.urlHomepage, route, cached: (config as any).cached ?? true };
+}
+export { config as galeri24Config };
 export default route;

@@ -1,4 +1,8 @@
-export { hargaemasOrgConfig } from './hargaemas-org.config';
+import { hargaemasOrgConfig as config } from './config';
+import route from './route';
 
-import route from './hargaemas-org.route';
+export function register() {
+	return { name: config.name, displayName: config.displayName, logo: config.logo, urlHomepage: config.urlHomepage, route, cached: (config as any).cached ?? true };
+}
+export { config as hargaemasOrgConfig };
 export default route;

@@ -3,7 +3,7 @@ import { defineConfig } from 'drizzle-kit';
 const isRemote = !!process.env.TURSO_DATABASE_URL;
 
 export default defineConfig({
-	schema: './src/db/schema/turso.ts',
+	schema: './src/lib/db/schema/price-history.ts',
 	out: './migrations/turso',
 	dialect: 'sqlite',
 	dbCredentials: {
